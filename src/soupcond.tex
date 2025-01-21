@@ -8,7 +8,7 @@ Electrical motion in metallic or insulating materials is a very well studied and
 phenomenon. Electrons passing through any material, endure a varying amount of disturbance in their
 motion based on the type and structure of the material, this disturbance is known as resistivity $\rho$.
 Given a sample of a material of length $l$ and cross-section $A$ we can compute the resistivity as
-shown in \ref{eq:resistivity-cable}
+shown in equation \ref{eq:resistivity-cable}
 \begin{equation}
 	\label{eq:resistivity-cable}
 	\rho = \frac{RA}{l} = \frac{m}{ne^2\tau}
@@ -23,14 +23,15 @@ material can be seen as a function of:
 	      successive electronic collisions $\tau$.
 \end{itemize}
 
-The resistivity of any material at a certain temperature $\rho_T$ can be written as a function of
-the sample's resistivity, at a reference temperature $T_0$, $\rho_0$ and a regularization term
-known as the temperature coefficient of resistivity, which is the ratio of resistance change to
-temperature change.
+Given a material at temperature $T$ its resistivity can be indicated as $\rho_T$ and can be computed
+as a function of the resistivity of the material at a reference temperature $\rho_0$ and the
+temperature change $T - T_0$, where $T_0$ is the reference temperature.
 \begin{equation}
 	\label{eq:resistivity-func-of-temp}
 	\rho_T = \rho_0[1 + \alpha(T - T_0)]
 \end{equation}
+$\alpha$ is a regularization temperature known as the temperature coefficient of resistivity, which
+is the ratio of resistance change to temperature change.
 
 Based on their values of resistivity materials can be divided between metals and insulators. Metals
 will have a very low value of resistivity (usually less than $10^{-5}$) while insulators impede the
@@ -58,22 +59,24 @@ seen in figure \ref{img:mercury-resistance}, the mercury sample had reached the 
 Later studies discovered that many materials, pure and alloy, could be brought to the
 superconducting state as long as three conditions were met:
 \begin{itemize}
-	\item The temperature of the sample doesn't exceed the critical temperature $\tc$,
-	\item The current density passing through the sample doesn't exceed the critical current
+	\item The temperature of the sample didn't exceed the critical temperature $\tc$,
+	\item The current density passing through the sample didn't exceed the critical current
 	      density $\jc$,
-	\item The magnetic field acting on the material doesn't exceed the critical magnetic field $\bc$.
+	\item The magnetic field acting on the material didn't exceed the critical magnetic field $\bc$.
 \end{itemize}
 
 When a material reaches the superconducting state it exhibits perfect diamagnetism, which means that
 the material is able to perfectly repel magnetic fields, a simple experimental proof of this effect
 is given by magnetic levitation. This capacity to repel magnetic fields was first observed by
-Meissner and Ochsenfeld in 1933 \cite{meissner1933}. While the repulsion of the magnetic field is
-perfect it had already been proven by Geertruida de Haas-Lorentz in 1925 \cite{fokker1925physica}
-that magnetic fields do, in fact, penetrate the surface of the superconductor and in 1935 the
-original observation was confirmed by the London's equations \cite{london1935}.
+Meissner and Ochsenfeld in 1933 \cite{meissner1933}. In 1935 the London's equations proved that
+superconductors, in some situations, do not exhibit a perfectly diamagnetic behavior and allow the
+penetration of magnetic fields down to a certain depth, known as the London's penetration depth
+\cite{london1935}. This property of superconductors was actually already theorized by Dutch
+physicist Geertruida de Haas-Lorentz, who published some preliminary research in
+\cite{fokker1925physica}.
 
 The diamagnetic properties of superconductors depend on the strength of the applied magnetic field
-and the kind of maerial used for the sample. In general two different types of superconductors have
+and the kind of material used for the sample. In general two different types of superconductors have
 been found and studied based on their behaviour under the effect of strong magnetic fields.
 
 \section{Type I superconductors}
@@ -89,8 +92,8 @@ the applied magnetic field reaches $\bc$.
 		\cite{slimani2022superconducting}}
 	\label{img:type1-transition}
 \end{figure}
-Type I superconductors, as long as the applied magnetic field is less than $\bc$, have diamagnetic
-properties, but once the superconductor undergoes a transition to the normal-conducting
+As long as the applied magnetic field is less than $\bc$, Type I superconductors have diamagnetic
+properties, but once the material undergoes a transition to the normal-conducting
 state (which will be referred to as \emph{quench} from now on) the magnetic dipole exerted by the
 superconductor falls to zero (or a negligible value) allowing magnetic field penetration and making such materials unsuitable for the kind of environments and applications such the ones covered by this thesis.
 
@@ -124,3 +127,19 @@ Type II superconductors are usually the kind of materials used in applications s
 discussed in this thesis due to the high resilience to the influence of external magnetic fields.
 
 \section{Quench}
+As was said in a previous section, whenever a superconductor performs a transition to the
+normal-conducting state, therefore developing a resistance, it's undergoing a quench. This
+transition might be particularly destructive if left unchecked, because the presence of resistance
+in a superconductor that carries a very high current might cause it to burn. That is why, normally,
+in the field of accelerator physics, superconducting magnets are accompanied with QPS (Quench
+Protection Systems), which interrupt power delivery whenever one of the coils develops a voltage
+that is higher than a certain threshold value.
+
+The work for this thesis is built around the work done by Samuele Mariotto, INFN researcher, in
+\cite{mariotto2022} \cite{mariotto2022-generic}, the objective of the original papers was to find a
+way to reliably and analytically solve the QLP (Quench Location Problem) through the method or
+harmonic decomposition of the residual magnetic field registered in the superconductor after a
+discharge.
+
+In the following chapter I will be covering different concepts in the field of machine learning that
+have been important to solve the problems of QLP and QRP (Quench Recognition Problem).
