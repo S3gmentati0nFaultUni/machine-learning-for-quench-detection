@@ -1,108 +1,172 @@
 \chapter{Machine learning: an overview}
 \label{chp:ml}
-This chapter is dedicated to the theoretical exploration of the various models that have been used
-in the project, I will start by considering supervised models, which represent the majority of the
-models utilized, followed by a brief overview of the few unsupervised models used to extrapolate
-more information from the data.
-\section{The machine learning problem}
-Before devling into the topic of the actual machine learning models I want to spend a few lines to
-introduce the concept of 'machine learning problem', in the recent era, with the advent of ChatGPT
-and other AI assistants I think the border of the various AI-related subjects has become fuzzier
-than it already was in the beginning.
+This chapter is dedicated to the theoretical exploration of some of the most important concepts in
+machine learning alongside the various models that have been used in the project. I will begin with
+a concise explanation of the more basic concepts linked to machine learning, then I will move to a
+theoretical overview of the most important supervised models, followed by a brief introduction to
+unsupervised machine learning models.
 
-In the rest of the thesis I will be talking about machine learning, which is a subset of artificial
-intelligence, and is a technique that allows one to solve complex problems without the constraints
-of common problem-solving \cite{Rebala2019}. There are many different problems which solution is extremely hard to
-explain in terms of a set of well-defined rules to be applied in order to go from the inputs to the
-outputs, some easy examples that come to mind have usually to do with the classification of images:
+\section{Supervised machine learning}
+Due to the popularization of Artificial
+Intelligence in recent times, it's very important to establish the field to avoid the risk of
+incurring in misunderstandings. \emph{Machine learning} is a subset of artificial
+intelligence, and is a technique that allows us to solve a problem without the need to actually invent an
+algorithm to solve it (as long as there is enough data).  There are many different problems that
+either lack an algorithmic solution or have an inefficient one; in such cases, machine learning is
+an alternative worth exploring. The tradeoff of using machine learning instead of 'classic'
+problem-solving techniques is that the solution is going to be built using heuristic methods,
+therefore is never going to be a \emph{correct} solution for the problem \cite{Rebala2019}.
+
+\medskip
+
+A supervised machine learning model is a model $\model$ capable of learning a mapping between the
+input space $\ins$ and the output space $\outs$ and then apply this mapping to unseen
+data to predict the output \cite{Cunningham2008}.
+
+\smallskip
+
+Given instance of a problem $\problem$, for which a dataset $\dset$ is given, the solution can be
+computed by using a model $\model$ trained on $D$, the model is the result of a statistical process,
+therefore susceptible to change due to the statistical nature of the process. On a practical level
+the variability of the model can be kept to a minimum for reproducibility purposes by setting the
+seeds of the random number generators of the various libraries to a definite value.
+
+\medskip
+
+In the following I will make heavy use of examples to clarify concepts, since the problem solved in
+this thesis is complicated due to the amount of physics involved, the mock-problem that will be used
+from here on is: 'Is it going to rain tomorrow?', the prediction will have to be based on a dataset
+containing 365 days of atmospheric measurements alongside a flag that states whether it rained or
+not on the specific day.
+
+\medskip
+
+Let's consider an instance of a problem $\problem$ for which a dataset $\dset$ is given, the generic
+pair $(\mathbf{x}_i, y_i)$ couples a vector taken from an input space $\ins$, which is usually high dimensional,
+and an output value from an output space $\outs$, which can be a scalar or a vector, will be
+considered a scalar for simplicity. Single dimensions of the vector $\mathbf{x}_i$ are called \emph{features}, and are values (numerical or other) representing a particular aspect of the domain.
+
+If we consider, the mock-problem, each day with the corresponding flag is going to be a data-point,
+the \emph{inputs} are going to be the atmospheric measurements (e.g. humidity, exposure,
+temperature, \ldots), each of these measurements is going to be a \emph{feature} of the dataset. The
+\emph{outputs} are going to be the flags, which answer to the question 'did it rain on day $k$?'
+with a $1$ (true) or a $0$ (false).
+
+\medskip
+
+In general, a machine learning problem can be defined as the process of finding the mapping that
+relates the input space $\ins$ to the output space $\outs$ by abstracting patterns from
+a training set $\dset$, conventionally the output space can be interpreted in differently based on
+the problem:
 \begin{itemize}
-	\item Given a set of pictures of chihuahuas and muffins and taken one picture randomly,
-	      having a classic algorithm that can tell us whether the picture is a chihuahua or a muffin,
-	\item Given a set of pictures containing old women, having a classic algorithm that can tell
-	      us whether a picture taken randomly is representing our grandma or not.
+	\item $\outs = \{-1, 1\}$, for \emph{binary classification} problems, in which we
+	      usually want to find the hyperplane that is best suited to separate the data into
+	      two different classes. A very easy example of binary classification is our mock problem.
+	\item $\outs = \mathbb{R}$, for \emph{regression problems}, in which we want to find the
+	      function that best describes the behavior of data, an example of regression problem
+	      is: 'Based on the current amount of wins for Oklahoma City Thunder\footnote{An
+		      amazing \textsc{nba} team}, predict the team's win rate at the end of the season'.
+	\item $\outs = \{a_1,\ldots, a_m\}$, for \emph{multi-label classification} problems, in
+	      which an element can be part of one of the classes in a certain set, a classic
+	      example is the character recognition problem, in which a certain character given in input can belong to one of 10 different classes (the numbers from 0 to 9) \cite{pal2010handwritten}.
 \end{itemize}
-These examples can most likely be solved using image-processing techniques, but finding a solution
-that can work reliably is going to take a lot of time and effort. A machine learning algorithm
-allows us to abstract the complexity of the problem by allowing a model to find a pattern in our
-dataset and then applying the newfound pattern to data that it has never seen.
+
+Most machine learning models have to go through the same steps
+\begin{itemize}
+	\item Model selection, machine learning models are very customizable, therefore it's
+	      necessary to find the combination of parameters that yields the highest possible
+	      performance.
+	\item Model training, during the training procedure the instance of the model abstracts
+	      patterns from a sample of the dataset, which we will call \emph{training set} $T$.
+	\item Model testing, during the testing procedure the model performance is tested on a
+	      sample of the dataset, which we will call \emph{test set} $G$ (standing for \emph{generalization}),
+	      this test is meant to understand whether the performance found for model
+	      $\model$ is a statistical anomaly (therefore depending on the points
+	      chosen to build $G$) or extends also to unseen data.
+\end{itemize}
+
+There are many different approaches to splitting a dataset $D$ into a series of separate datasets
+for the various tasks involved in the machine learning problem resolution (e.g. model training,
+model testing, model selection, \ldots). In the following I will describe two non-trivial aspects of
+the basic procedure to split a dataset $D$ into a training dataset $T$ and a testing dataset $G$, a
+more complex splitting procedure will be introduced at a later time.
 
 \medskip
 
-Therefore, whenever machine learning is applied to a certain problem the complexity of defining an
-algorithm that can actually solve the problem is being exchanged with the complexity of finding a
-model can can solve the problem reliably, and that can find a pattern that can be easily generalized
-to other instances of the same problem.
-
-In general, machine learning problems can be divided into two macrocategories: \emph{classification}
-and \emph{regression}.
-
-\smallskip
-
-A regression problem is a problem that requires us to find the function that best \emph{fits} the
-data at our disposal and therefore will be able to give us the best possible predictions for unknown
-values. Very common regression problems are: Predicting the number of wins of a football team,
-Projecting the price of a house on the market, Predicting the temperature of a certain country a
-given number of years from now.
-
-\smallskip
-
-Classification problems, which are the ones that I will be considering in this chapter, can be
-binary or multiclass, and require us to find the function that can, with the highest accuracy,
-predict whether a certain datapoint belongs to a class or not. Some examples of binary
-classification problems can be: Identifying whether a random picture is a Chihuahua or a Muffin,
-Predicting whether there will be rain or not, Classifying an event as 'quench' or 'non-quench'.
+The first non-trivial aspect of the splitting procedure is that, depending on the problem, making
+sure that the distribution of training dataset $T$ and testing dataset $G$ is the same as the
+original dataset distribution can be important. To understand why, let's think about a dataset
+$\dset$ in which every $\mathbf{x}_i \in \ins$ is a vector of features describing a patient's
+conditions (e.g. age, sex, body temperature, blood saturation, \ldots) and every $y_i \in \outs$ is
+a string indicating which illness was diagnosed (e.g. flue, pneumonia, covid, ...). Supposing we want to find a
+model $\model$ capable of doing a diagnosis effectively, we need to make sure that the least
+represented illnesses (which are usually the more dangerous) are well represented in both $T$ and $G$. If this splitting process was not done correctly we might end up with a model $\model$ that can very reliably recognize a common flue but is very bad at identifying serious illnesses like pneumonia.
 
 \medskip
 
-Since the problem at hand as a high grade of difficulty due to the amount of physics involved, for
-the rest of this chapter, whenever an example is going to be needed to clarify a concept, I am going
-to refer to the more accessible binary classification problem of 'Is it going to rain today?'
-\section{Supervised models}
-In the following we consider a dataset $\dset$ to be a set of pairs
-in which $x_i$ are called \emph{features} and $y_i$ are called \emph{labels}. Labels, in the context
-of binary classification, represent the answer, 'Yes' or 'No', 'True' or 'False'; features are a set of
-values (numerical or other) that characterize the domain of the problem. In the context of our mock-problem, while
-labels represent whether on day $k$ it rained or not, features could be a series of meteorological
-information measured on day $k$ (e.g. humidity in the air, temperature, season, percentage of UV
-exposure\ldots).
+The second non-trivial aspect of the splitting procedure is that it's always necessary to make sure
+that the operation is carried out independently for each dataset, this means that data that is in the
+training set cannot be in the testing set, and vice versa. If this were not to be true then we would
+have a data leak from one set to the other.
 
-The problem that this thesis aims to solve is particularly suited for the application of supervised
-models since the data at our disposal had already been labelled in previous works
-\cite{mariotto2022-generic} \cite{mariotto2022}.
+\smallskip
 
-Before introducing theoretically the various models that have been used to solve the problems at
-hand I want to introduce two very important issues in the field of supervised machine learning.
-Let's suppose that we have at our disposal a dataset $\dset$, this dataset contains information
-about the last year, for every day it's known whether it rained or not. Independently of the kind of
-split taken to divide train and test dataset (let's suppose that the class distribution remains
-unaltered between test and train datasets), let's now suppose that we have at our disposal two
-different models: model $M_1$ has an accuracy of $100\%$ on the training set and an accuracy of
-$93\%$ on the test set, model $M_2$ has an accuracy of $92\%$ on the training set and an accuracy of
-$91\%$ on the test set.
+Whenever a data leak is identified from the training set $T$ to the testing set $G$, some points
+that were used to train $\model$ are used once more to test its performance, which leads to a higher
+performance metric, relaying higher and unjustifed confidence in the model performance.
 
-Independently of other metric measures (which are not useful for this specific example), which model
-would we rather take?
+\medskip
 
-Model $M_1$ is clearly suffering from \emph{overfitting}, this means that it's not abstracting
-enough from the training data and the result is that it's actually \emph{learning} the data, this is
-undoubtedly a bad practice because when the model learns the data instead of a pattern therein
-contained it's going to have very poor generalization performance.
+To close this section about supervised learning I want to introduce two issues specific to
+supervised learning models. Whenever we work in the field of supervised learning it's important to be aware of two classic issues: \emph{overfitting} and \emph{underfitting}.
+
+\smallskip
+
+Given the generic machine learning problem $\problem$ and a dataset $\dset$, the model $\model$ that
+solves $\problem$, is said to be overfitting if the training performance is better
+than the testing performance, which means that the mapping found by $\model$ to link $\ins$
+and $\outs$ is too closely related to the specific data chosen to do the training, therefore
+unable to generalize effectively. In other
+words, $\model$ is overfitting whenever, instead of abstracting some general patterns in the
+data, it actually learns some peculiarities of the specific training dataset $T$ \cite{ZhouZhi-Hua2021ML}
+which are not found later in the testing dataset $G$.
+
+\smallskip
 
 An 'orthogonal' problem to overfitting is the issue of \emph{underfitting}, which is usually caused
 by a model not being powerful enough to abstract information from a certain dataset.
 
+\medskip
+
+The problem that this thesis aims to solve takes full advantage of supervised models since the data at our
+disposal has already been analyzed and labelled in previous works \cite{mariotto2022}\cite{mariotto2022-generic}.
+
+\medskip
+
 In the following I will be discussing on a theoretical level the various supervised models deployed
 to solve the problem.
-\subsection{Decision Trees}
-Decision Trees, implemented in the \emph{DecisionTreeClassifier} class of scikit-learn are amongst the
-simplest and most effective machine learning models at our disposal. These models have a tree
-structure and in every internal node a logical condition is evaluated on a subset of the features
-in the dataset, while leaves contain the classification outcome.
 
-One of the most important characteristics of the decision tree model is its high grade of
-explainability, if we take the simple model built on the example in \cref{fig:simple-dt}, we can say
-that to reliably describe a rainy day all is necessary is a coefficient of humidity of at least
-$80\%$ and an outside temperature of at least $10C$.
+\section{Decision Trees}
+This section is a theoretical introduction to decision trees, the implementation I used for the
+model is the \emph{DecisionTreeClassifier} class contained in scikit-learn.
+
+\medskip
+
+A decision tree is a machine learning model based on a tree structure, an example of such a
+structure can be seen in \cref{fig:simple-dt}. Each internal node contains a condition that needs to
+be evaluated on one or more features (e.g. the root of \cref{fig:simple-dt} requires us to check
+whether the humidity feature of the input is $\geq 80\%$), if the result of the evaluation is true
+the computation proceeds with the left child, otherwise the right path will be taken. Once a leaf is
+reached the class associated to the point is identified. If we consider again \cref{fig:simple-dt}
+we could say that if the humidity of the input is $\geq 80\%$ and the temperature is $\geq 10C$ then
+the inputs will be classified as 'rain'.
+
+Any path leading from root to leaf is known as a \emph{decision path}. It's evident that such structures have a very high degree of explainability and that is why usually they are the first model chosen to solve a machine learning problem.
+
+\medskip
+
+Two are the theoretical concepts I wish to cover in this section: indices and node split
+computation, avoiding overfitting through pre- and post- pruning.
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[
@@ -115,9 +179,9 @@ $80\%$ and an outside temperature of at least $10C$.
 		]
 
 		% Root node
-		\node {Humidity $\geq$ 80}
+		\node {Humidity $\geq 80\%$}
 		% First level
-		child {node {Temperature $\geq$ 10}
+		child {node {Temperature $\geq 10C$}
 				% Second level
 				child {node {rain}}
 				child {node {no rain}}
@@ -127,7 +191,188 @@ $80\%$ and an outside temperature of at least $10C$.
 	\caption{A very simple example of decision tree built on the mock problem}
 	\label{fig:simple-dt}
 \end{figure}
-\subsection{Random Forests}
-\subsection{SVM}
+\subsection{Indices and node split computation}
+In \cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
+its regard could be: 'Why this structure and not another?'. Other than it being a simple example
+nothing is really preventing us from describing the 'rain' event based on different threshold values
+or different feature sets altogether.
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[
+			% Define styles for nodes
+			level 1/.style={sibling distance=40mm},
+			level 2/.style={sibling distance=40mm},
+			level 3/.style={sibling distance=40mm},
+			every node/.style={draw, rectangle, rounded corners, align=center, minimum size=8mm},
+			edge from parent/.style={draw, -latex}
+		]
+
+		% Root node
+		\node {Humidity $\geq 80\%$}
+		% First level
+		child {node {Temperature $< 4C$}
+				% Second level
+				child {node {no rain}}
+				child {node {atmospheric pressure $< 1.0015$ atm}
+						child{node {rain}}
+						child{node {no rain}}
+					}
+			}
+		child {node {no rain}};
+	\end{tikzpicture}
+	\caption{A very simple example of decision tree built on the mock problem}
+	\label{fig:simple-dt-alt}
+\end{figure}
+The mock tree shown in \cref{fig:simple-dt-alt} is a different tree compared to the one shown in
+\cref{fig:simple-dt} and yet they solve the same problem by characterizing it differently.
+\cref{algo:decision-tree} shows how the decision tree is built, line $9$ states that the best
+splitting feature needs to be selected with every iteration, this choice is taken based on a
+\emph{purity} index applied to nodes.
+
+\begin{algorithm}
+	\caption{The decision tree base algorithm taken from
+		\cite{ZhouZhi-Hua2021ML}}\label{algo:decision-tree}
+	\begin{algorithmic}[1]
+		\Require Training set $\dset$ and Feature set $A = \{a_1, \ldots,
+			a_d\}$.
+		\Ensure A decision tree with root node $i$
+		\Function{TreeGenerate}{$D$, $A$}
+		\State Generate node $i$;
+		\If{All samples in $D$ belong to the same class $C$}
+		\State Mark node $i$ as a class $C$ leaf node; \textbf{return}
+		\EndIf
+		\If{$A = \emptyset$ \textsc{or} all samples in $D$ take the same
+			value on $A$}
+		\State Mark node $i$ as a leaf node, its class label is
+		the majority in $D$; \textbf{return}
+		\EndIf
+		\State Select the optimal splitting feature $a_*$ from $A$;
+		\For{each value $a_*^v$ on $a_*$}
+		\State Generate a branch for node $i$; Let $D_v$ be the
+		subset of samples taking value $a_*^v$ on $a_*$;
+		\If{$D_v$ is empty}
+		\State Mark this child node as a leaf node, and
+		label t with the majority class of $D$;
+		\textbf{return}
+		\Else
+		\State use \textproc{TreeGenerate}$(D_v, A \setminus \{a_*\})$ as the child node.
+		\EndIf
+		\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\medskip
+
+The purity of a node defines how many samples belong to a single class \cite{ZhouZhi-Hua2021ML}, a
+split is going to be performed on feature $a$ only if the resulting purity increase is the best
+possible. There are many different indices used to compute purity, in the following I will be
+considering only the ones important for the model selection process that will be introduced in
+a future chapter: \emph{Entropy} and \emph{Gini index}.
+
+\subsubsection{Entropy}
+There are many different ways of defining information entropy, a more general definition, compared
+to the one found in \cite{ZhouZhi-Hua2021ML}, is found in \cite{gray2011entropy}. Let's consider a
+random variable $f$ built on the alphabet $B = \{b_1, \ldots, b_{|B|}\}$ we can define the
+partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} = f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger
+probability space $\Omega$, every partition is chosen based on the outcome of the
+measurement of the random variable $f$. In the case of a discrete random variable we can define the
+information entropy as shown in \cref{eq:information-entropy}
+\begin{equation}
+	\label{eq:information-entropy}
+	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|B|}{P(Q_i)\log{P(Q_i)}}
+\end{equation}
+this definition of entropy can be easily extended to the dataset case since:
+\begin{itemize}
+	\item The partition set $\mathcal{Q}$ can be mapped to the dataset $D$,
+	\item Every partition $Q_i$ can be mapped to the single class of the machine learning
+	      problem that is being considered,
+	\item The alphabet $B$ can be mapped to the set of possible outcomes of the machine learning
+	      problem.
+\end{itemize}
+Therefore, we can rewrite \cref{eq:information-entropy} as:
+\begin{equation}
+	H_p(D) = - \sum_{k = 1}^{|\outs|}p_k \log{p_k}
+\end{equation}
+$p_k$ denotes the proportion of the $k$-th class inside dataset $D$.
+
+If we consider the binary classification problem ('true' or 'false' response), whenever a splitting procedure
+is done on a node in the tree, the split is computed on every feature based on the possible
+values of the feature itself (only for discrete features), if we consider our mock-problem, a split could be computed on a
+feature called  'status of the sky' which can have one of two values $\{\text{overcast},
+	\text{clear}\}$ the new node could be built in two different ways and
+the class distribution for each is different, having different levels of purity based
+on how well the data is partitioned between the classes 'rain' and 'no rain'.
+
+\smallskip
+
+To choose which of the two nodes to take in our mock-problem using the entropy measure we need to
+introduce the concept of \emph{information gain}, which is expressed as follows:
+\begin{equation}
+	\label{eq:information-gain}
+	\textsc{Gain}(D, a) = H_p(D) - \sum_{v = 1}^V\frac{|D^v|}{|D|}H_p(D^v)
+\end{equation}
+The concept expressed by information gain in \cref{eq:information-gain} is that the amount of
+information gained by doing a split of dataset $D$ on feature $a$ is given by the entropy of dataset
+$D$ at the moment of the split from which we remove the entropy of the dataset resulting from the
+split of feature $a$ at every value $v$ scaled by the ratio between the cardinality of the new dataset to
+the cardinality of the original dataset.
+
+\smallskip
+
+The feature used to perform the actual splitting is going to be the one with the highest possible
+information gain. It's very important to notice that information gain is an index biased towards
+features that have many different values (and therefore $|D^v|$ is small). In the case of our mock
+problem, if we consider 'status of the sky' and we compare it to another feature containing many
+different splitting values for example 'cloud color' which might assume the following values
+$\{\text{white}, \text{light grey}, \text{grey}, \text{black}, \text{pink}, \text{orange},
+	\text{red}\}$ it's clear that the $|D^v|/|D|$ is going to be lower for each of them, therefore
+leading to a lower entropy decrease and a higher information gain.
+
+\medskip
+
+The alternative to using information gain is to use the \emph{gain ratio}
+\begin{equation}
+	\label{eq:gain-ratio}
+	\textsc{GainRatio}(D, a) = \frac{\textsc{Gain}(D, a)}{\textsc{iv}(a)}
+\end{equation}
+the \textsc{iv} function in \cref{eq:gain-ratio} is the \emph{intrinsic value} of feature $a$ and
+can be computed as shown in \cref{eq:intrinsic-value}.
+\begin{equation}
+	\label{eq:intrinsic-value}
+	\textsc{iv}(a) = - \sum_{v = 1}^V\frac{|D^v|}{|D|} \log{\frac{|D^v|}{|D|}}
+\end{equation}
+Due to how intrinsic value is defined the gain ratio corrects the bias of the information gain towards features
+with a higher number of values but is biased towards features with a lower amount of variables
+\cite{ZhouZhi-Hua2021ML}.
+
+In the actual implementation of the decision tree provided by scikit-learn an optimized version of
+the \textsc{cart} algorithm is used, which  is similar to the \textsc{c4.5} algorithm proposed by Quinlan in
+\cite{quinlan2014c4}.
+
+\subsubsection{Gini index}
+The original \textsc{cart} algorithm conceptualized by Breiman et al. in 1984
+\cite{breiman1984classification} used Gini index to compute the best splitting feature for every
+node. The Gini value of a dataset can be computed as shown in \cref{eq:gini-value}
+\begin{equation}
+	\label{eq:gini-value}
+	\textsc{Gini}(D) = \sum_{k = 1}^{|\outs|}\sum_{k' \neq k} p_kp_{k'} = 1 - \sum_{k =
+		1}^{|\outs|}p_k^2
+\end{equation}
+As explained in \cite{ZhouZhi-Hua2021ML}, \cref{eq:gini-value} can be interpreted as the
+likelihood of taking samples from two different classes by drawing them randomly from the
+dataset, the lower the $\textsc{Gini}(D)$, the higher the purity of a node. Gini index can be
+computed as the weighted sum of all the Gini values for the dataset after the split, as shown in
+\cref{eq:gini-index}.
+\begin{equation}
+	\label{eq:gini-index}
+	\textsc{GiniIdx}(D) = \sum_{v = 1}^V\frac{|D^v|}{|D|} \textsc{Gini}(D^v)
+\end{equation}
+
+The best splitting feature is going to be the one with the smallest Gini index overall.
+
+\subsection{Avoiding overfitting through pre- and post- pruning}
+\section{Random Forests}
+\section{SVM}
 \section{Unsupervised models}
-\subsection{Clustering with k\-means}
+\section{Clustering with k\-means}
