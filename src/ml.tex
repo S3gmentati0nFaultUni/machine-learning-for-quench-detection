@@ -7,6 +7,7 @@ theoretical overview of the most important supervised models, followed by a brie
 unsupervised machine learning models.
 
 \section{Supervised machine learning}
+\label{sec:sml}
 Due to the popularization of Artificial
 Intelligence in recent times, it's very important to establish the field to avoid the risk of
 incurring in misunderstandings. \emph{Machine learning} is a subset of artificial
@@ -147,6 +148,7 @@ In the following I will be discussing on a theoretical level the various supervi
 to solve the problem.
 
 \section{Decision Trees}
+\label{sec:dt}
 This section is a theoretical introduction to decision trees, the implementation I used for the
 model is the \emph{DecisionTreeClassifier} class contained in scikit-learn.
 
@@ -372,7 +374,269 @@ computed as the weighted sum of all the Gini values for the dataset after the sp
 The best splitting feature is going to be the one with the smallest Gini index overall.
 
 \subsection{Avoiding overfitting through pre- and post- pruning}
+As was argued in the previous section decision trees have an extremely simple structure and they
+allow us to interpret the obtained results giving us an idea of how the machine is able to classify
+our points.
+
+Overfitting is probably the biggest drawback of decision trees, as shown in
+\cite{overfitting-dt-erblin}, since the model tries to partition the space based on the purity of
+the nodes it's important to make sure that the rules utilized to do partitioning do not become too
+specific. There are two techniques explained in the literature that can be used to prevent the model
+from overfitting: Pre-pruning and post-pruning.
+
+\medskip
+
+Pre-pruning consists in a set of rules that force the algorithm to an early stop whenever a series
+of conditions allow it. In the literature pre-pruning is sometimes associated only to a technique
+that stops the splitting procedure whenever the impurity decrease (or the purity increase) doesn't
+justify the split in the first place \cite{ZhouZhi-Hua2021ML}; I find myself more in line with
+the general definitions given in \cite{bramer2007principles}\cite{fisher1996learning}, which
+state that pre-pruning is a group of techniques meant to keep the size of the tree in check.
+
+The specific pre-pruning conditions that can be checked using the DecisionTreeClassifier class provided by
+scikit-learn are the following:
+\begin{itemize}
+	\item The tree \emph{depth}, avoiding a complex tree structure by cutting the depth is
+	      probably one of the easiest forms of pre-pruning.
+	\item The \emph{impurity decrease} stops nodes from splitting when the decrease in impurity
+	      of the children is not higher than a certain threshold, if the threshold is too high
+	      then the tree will probably underperform, if it's too low then the tree is going to
+	      overfit.
+	\item The \emph{number of elements to split} is basically a check that can be done on the
+	      number of points inside a node. Not splitting when the number of points
+	      contained in a node is too little is ax excellent way of avoiding overfitting.
+\end{itemize}
+
+\medskip
+
+Post-pruning is the alternative to pre-pruning, the essential difference between the two is that
+post-pruning is done after the tree has been fully constructed, therefore, in the a posteriori phase
+a series of branches will be chosen to be pruned based on the impurity decrease that they provide.
+There are different post-pruning techniques that can be implemented, scikit-learn is working with
+Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classification}.
+
 \section{Random Forests}
+\label{sec:rf}
+The second model that I used in the project is the \emph{RandomForestClassifier} part of the scikit-learn
+library. Random Forests are an \emph{ensemble} of trees, if different models are put together to solve a
+problem, the performance will surely be higher than using a single tree, this is especially true for
+weaker models, the reason why we chose to explore random forests is because the model is expected to
+perform better than single trees, especially in the case of weaker datasets (such as Bn, results
+will be introduced in a later chapter).
+
+\medskip
+
+Following the analysis done in \cite{ZhouZhi-Hua2021ML}, I will now prove that the error rate of a
+binary classifier based on an ensemble of models grows to zero based on the number of individuals
+used.
+
+Let's suppose that the error rate of each model in the ensemble is $\epsilon$, the ground truth
+function is $f$ and the single learner is $l_i$, then we can express the probability of the learner
+making a wrong prediction on $\vec{x} \in \ins$ as shown in \cref{eq:error-rate}.
+\begin{equation}
+	\label{eq:error-rate}
+	P(l_i(\vec{x}) \neq f(\vec{x})) = \epsilon
+\end{equation}
+Assuming that the prediction is $y \in \{-1, +1\}$ and the ensemble aggregates the predictions by
+using a simple majority algorithm, then the aggregated prediction can be described as shown in
+\cref{eq:ensemble-aggregation}.
+\begin{equation}
+	\label{eq:ensemble-aggregation}
+	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}l_i(\vec{x})\right)
+\end{equation}
+The probability of the ensemble being wrong is equal to computing the probability that more than
+half of the single learners are independently wrong. The number of estimators being wrong in the
+ensemble can be expressed as a binomial random variable $X \sim B(T, \epsilon)$. Therefore, we can finish our proof as shown in \cref{eq:binomial} and \cref{eq:hoeffding}
+\begin{equation}
+	\label{eq:binomial}
+	P(F(\vec{x}) \neq f(\vec{x})) = P(X > T / 2) = \sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 -
+	\epsilon)^k\epsilon^{T - k}
+\end{equation}
+Then for the Chernoff-Hoeffding inequality we can conclude that the error rate of the ensemble falls
+exponentially with the number of estimators.
+\begin{equation}
+	\label{eq:hoeffding}
+	\sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 - \epsilon)^k\epsilon^{T - k} \leq
+	exp\left(-\frac{1}{2}T(1 - 2\epsilon)^2\right)
+\end{equation}
+\comment{Make sure that the proof is correct}{There are a series of things that I have said in the
+proof that do not quite convince me}
+
+Random forests work on a subset of features of size $k$ picked randomly from the set of features,
+the size of the subset determines the behavior of the model, the splitting procedure works in the
+same way exposed in \cref{sec:dt} if $k = d$, if $k = 1$, the split will be operated on a random
+feature every time. In scikit-learn random forests are built out of trees that are constructed by
+bootstrap sampling, a new dataset is built by doing a repeated draws without deletion from the
+original dataset. The splitting process will be operated either by computing checking the whole
+feature set or by checking a random subset of the feature set which size is regulated by one of the
+attributes of the object.
+
+\comment{Think about something else to write}{The section feels empty compared to the one about
+decision trees}
+
 \section{SVM}
+\label{sec:svm}
+With this section we leave behind the tree-based models to talk about the benchmark model that we
+chose for this thesis, an \svm is a model with very high performance but low explainability, in this
+chapter I will give some theoretical context to the model. Most of what will be said in this section
+was taken from the main reference for the machine learning chapter \cite{ZhouZhi-Hua2021ML}.
+
+\medskip
+
+Let's consider a binary classification problem on dataset $\dset$ with labels $y \in \{-1, +1\}$,
+handling the classification task means to find a hyperplane that is able to divide the points in the
+dataset 'reasonably well', since the number of such hyperplanes is infinite there are two
+essential observations to be made:
+\begin{enumerate}
+	\item The space of the solutions cannot be checked thoroughly, therefore we will never know
+	      if the hyperplane chosen is the best one or if there is another that yields better
+	      performance.
+	\item The hyperplane that we are choosing will be fitted on the dataset used for training,
+	      but we can make sure that the generalization performance are good enough by making
+	      sure that there is enough \emph{margin} between the separator and the 'hardest'
+	      points contained within the dataset.
+\end{enumerate}
+The hardest points are the ones closest to the hyperplane and they are called \emph{support
+	vectors}.
+
+\medskip
+
+We can express any hyperplane in space as a function (\cref{eq:hyperplane}) of a vector $\vec{w}$ which is a normal vector
+controlling the direction of the hyperplane and a bias $b$ value which controls the distance from
+the origin.
+\begin{equation}
+	\label{eq:hyperplane}
+	\vec{w}^\top\vec{x} + b = 0
+\end{equation}
+For any given point in space we can compute its distance from the hyperplane as shown in
+\cref{eq:hyperdistance}.
+\begin{equation}
+	\label{eq:hyperdistance}
+	r = \frac{|\vec{w}^\top\vec{x} + b|}{||\vec{w}||}
+\end{equation}
+Let's suppose that the hyperplane can perfectly divide the points in the two classes, we can
+describe it as shown in \cref{eq:system}.
+\begin{equation}
+	\label{eq:system}
+	\begin{cases}
+		 & \vec{w}^\top\vec{x}_i + b > 0, \hspace{10pt} y_i = +1 \\
+		 & \vec{w}^\top\vec{x}_i + b < 0, \hspace{10pt} y_i = -1
+	\end{cases}
+\end{equation}
+\Cref{eq:svm-system} is valid for every point in the dataset, but we can give a stronger condition
+which only works for the support vectors and is based on the distance defined in
+\cref{eq:hyperdistance}. This new system is shown in \cref{eq:svm-system}.
+\begin{equation}
+	\label{eq:svm-system}
+	\begin{cases}
+		 & \vec{w}^\top\vec{x}_i + b \geq +1, \hspace{10pt} y_i = +1 \\
+		 & \vec{w}^\top\vec{x}_i + b \leq -1, \hspace{10pt} y_i = -1
+	\end{cases}
+\end{equation}
+The margin is the total distance between two support vectors belonging to different classes is
+called margin and is defined in \cref{eq:margin}.
+\begin{equation}
+	\label{eq:margin}
+	\gamma = \frac{2}{||\vec{w}||}
+\end{equation}
+
+\medskip
+
+As was said in the beginning of this section we want to find the best separating hyperplane,
+therefore the hyperplane that has a reasonable distance from the hardest points in the training set
+to guarantee good generalization performance. We can express this problem as a maximization problem:
+we want to maximize the margin in \cref{eq:margin} subject to the constraints of
+\cref{eq:svm-system}. Maximizing the margin means maximizing $||\vec{w}||^{-1}$ which is equivalent
+to minimizing $||\vec{w}||^2$, taken for simplicity purposes. The problem, as is formulated in
+\cref{eq:primal}, is the primal form of \svm.
+\begin{equation}
+	\label{eq:primal}
+	\begin{aligned}
+		 & \max_{\vec{w}, b}\frac{1}{2}||\vec{w}||^2                                                   \\
+		 & \text{s.t.}\hspace{10pt}y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
+	\end{aligned}
+\end{equation}
+This is a quadratic programming problem, there are libraries that provide solvers for the problem,
+but there are other methods that allow us to compute a solution with a higher grade of efficiency.
+We can introduce \emph{Lagrange multipliers} and the \emph{lagrangian} can be expressed as shown in
+\cref{eq:lagrangian}.
+\begin{equation}
+	\label{eq:lagrangian}
+	\lag(\vec{w}, b, \vec{\alpha}) = \frac{1}{2} ||\vec{w}||^2 + \sum_{i = 1}^{m}{\alpha_i (1 - y_i(\vec{w}^\top\vec{x}_i + b))}
+\end{equation}
+If we compute the partial derivatives of the lagrangian with respect to $\vec{w}$ and the bias $b$
+we obtain the two equations shown in \cref{eq:pd-lagrangian}.
+\begin{equation}
+	\label{eq:pd-lagrangian}
+	\begin{aligned}
+		 & \frac{\partial{\lag}}{\partial{\vec{w}}} = \vec{w} - \sum_{i = 1}^m
+		\alpha_iy_i\vec{x}_i                                                   \\
+		 & \frac{\partial{\lag}}{\partial{b}} = \sum_{i = 1}^m \alpha_iy_i
+	\end{aligned}
+\end{equation}
+By setting the partial derivatives just shown to zero and substituting the first in
+\cref{eq:lagrangian} we can get rid of the normal vector dependency and the \emph{dual} problem can
+be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is shown in \cref{eq:dual}.
+\begin{equation}
+	\label{eq:dual}
+	\begin{aligned}
+		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
+		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \vec{x}_i\vec{x}_j}\right)       \\
+		 & \text{s.t.} \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
+	\end{aligned}
+\end{equation}
+The hyperplane that we are looking for can be modelled as shon in \cref{eq:of}, the second
+formulation is virtue of the substitution found for $\vec{w}$ in \cref{eq:pd-lagrangian}.
+\begin{equation}
+	\label{eq:of}
+	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \left(\sum_{i =
+		1}^m\alpha_iy_i\vec{x}_i\right)^\top\vec{x} + b
+\end{equation}
+Since the primal problem \cref{eq:primal} is an optimization problem with inequality constraints we
+know from \cite{kkt1951} that solving it is equivalent to solving the dual problem based on the
+lagrangian defined in \cref{eq:lagrangian} subject to the \textsc{kkt} constraints shown in
+\cref{eq:kkt-constraints}.
+\begin{equation}
+	\label{eq:kkt-constraints}
+	\begin{cases}
+		 & \alpha_i \geq 0                   \\
+		 & y_if(\vec{x}_i) - 1 \geq 0        \\
+		 & \alpha_i(y_if(\vec{x}_i) - 1) = 0
+	\end{cases}
+\end{equation}
+For every point in the training set $(\vec{x}_i, y_i)$ only two scenarios are possible:
+\begin{enumerate}
+	\item Lagrange multiplier $\alpha_i = 0$, therefore the point is not impacting the
+	      hyperplane structure as was defined in \cref{eq:of}.
+	\item If the Lagrange multiplier $\alpha_i > 0$ then the third constraint in
+	      \cref{eq:kkt-constraints} yields $y_if(\vec{x}_i) = 1$ which means that the point is
+	      laying on the maximum margin hyperplanes, therefore it's a support vector.
+\end{enumerate}
+This reveals a very important detail: once the training is completed, the model can be entirely
+described by using only support vectors, since they are the ones that yield a contribution in the
+calculation of \cref{eq:of}.
+
+There are different techniques to solve \cref{eq:dual} one of the possibilities is to use quadratic
+programming solvers, another possibility is to use the \textsc{smo} method proposed in
+\cite{platt1998} and consisting in an iterative resolution of the problem by successive
+identifications of local approximations of the Lagrange multipliers $\alpha_i$ while keeping all
+other parameters frozen as constants.
+
+In the following I am going to remove a big assumption that was silently made in the beginning and I
+will provide some adjustments to the model.
+
+\subsubsection{Kernel funtions}
+Until now the topic was treated under the important assumption that the points in the dataset are
+linearly separable, but it's known that such a precondition is extremely strong, since most of the
+problems treated in the real world are not actually linearly separable. To address the issue the
+problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$. We know from
+Cover's theorem \cite{cover1965} that if the number of features is finite then there must be a
+projection to a high dimensionality space that provides linear separability for the data.
+
+
+
 \section{Unsupervised models}
+\label{sec:uml}
+
 \section{Clustering with k\-means}
+\label{sec:kmeans}
