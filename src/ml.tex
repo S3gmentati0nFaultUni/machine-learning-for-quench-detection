@@ -552,8 +552,8 @@ to minimizing $||\vec{w}||^2$, taken for simplicity purposes. The problem, as is
 \begin{equation}
 	\label{eq:primal}
 	\begin{aligned}
-		 & \max_{\vec{w}, b}\frac{1}{2}||\vec{w}||^2                                                   \\
-		 & \text{s.t.}\hspace{10pt}y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
+		\max_{\vec{w}, b} & \frac{1}{2}||\vec{w}||^2                                                   \\
+		 \text{s.t.}\hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
 This is a quadratic programming problem, there are libraries that provide solvers for the problem,
@@ -580,9 +580,9 @@ be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is
 \begin{equation}
 	\label{eq:dual}
 	\begin{aligned}
-		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \vec{x}_i\vec{x}_j}\right)       \\
-		 & \text{s.t.} \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
+		\max_{\vec{\alpha}} & \left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
+		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \vec{x}_i^\top\vec{x}_j}\right)       \\
+		 \text{s.t.} \hspace{10pt} & \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
 The hyperplane that we are looking for can be modelled as shon in \cref{eq:of}, the second
@@ -642,14 +642,60 @@ the $0/1$ loss function properties and, even though there are approximate method
 function \cite{nguyen2013}, most of the time a convex loss function is used to replace the $0/1$
 loss.
 
-Soft margin \svm is defined by substituting $0/1$ loss with hinge loss and then adding slack
-variables $\psi_i \geq 0$ the primal problem can be easily rewritten as shown in
-\cref{eq:sm-primal-final}.
+Soft margin \svm is defined by substituting $0/1$ loss with hinge loss, a convex function for binary
+classifiers defined as $\ell(y) = \max(0, 1 - ty)$ where $y$ is the raw output of the classifier and
+$t$ is the label associated to the output, and then adding slack variables $\xi_i \geq 0$ the primal problem can be easily rewritten as shown in \cref{eq:sm-primal-final}.
 \begin{equation}
-	\label{eq:sm-primal_final}
-	\min_{\vec{w}, b} \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \psi_i
+	\label{eq:sm-primal-final}
+	\begin{aligned}
+		\min_{\vec{w}, b} & \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i \\
+		\text{s.t.} \hspace{10pt}& y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 - \xi_i \\
+		& \xi_i \geq 0 \hspace{10pt}i = 1, \ldots, m
+	\end{aligned}
 \end{equation}
-
+If we apply the Lagrange multipliers method to \cref{eq:sm-primal-final} the lagrangian will be
+dependent on the slack variables, the normal vector $\vec{w}$, the lagrange multipliers
+$\vec{\alpha}$ and $\vec{\mu}$ and the bias $b$. The function can be expressed as shown in
+\cref{eq:sm-lagrangian}.
+\begin{equation}
+	\label{eq:sm-lagrangian}
+	\begin{aligned}
+		\mathcal{L}(\vec{w}, b, \vec{\alpha}, \vec{\xi}, \vec{\mu}) &=
+		\frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i \\ 
+		&+ \sum_{i = 1}^m \alpha_i(1 - \xi_i - y_i(\vec{w}^\top\vec{x}_i + b)) + \sum_{i = 1}^m\mu_i\xi_i
+	\end{aligned}
+\end{equation}
+By putting the various partial derivatives to $0$, just as was done for the generic \svm, and doing
+some substitutions we obtain the final form of the dual problem for the soft margin \svm, shown in
+\cref{eq:sm-dual-final}
+\begin{equation}
+	\label{eq:sm-dual=final}
+	\begin{aligned}
+		\max_{\vec{\alpha}} & \sum_{i = 1}^m \alpha_i - \frac{1}{2}\sum_{i = 1}^m\sum_{j =
+		1}^m\alpha_i\alpha_jy_iy_j\vec{x}_i^\top\vec{x}_j \\
+		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^m\alpha_iy_i = 0 \\
+		& 0 \leq \alpha_i \leq C \hspace{10pt} i = 1, \ldots, m
+	\end{aligned}
+\end{equation}
+Since the dual problem has a structure which is very similar to the one shown in \cref{eq:dual} the
+same conclusions apply, we can also extract the \textsc{kkt} conditions which are shown in
+\cref{eq:sm-kkt}.
+\begin{equation}
+	\label{eq:sm-kkt}
+	\begin{cases}
+		& \alpha_i \geq 0, \hspace{10pt}\mu_i \geq 0 \\
+		 & y_if(\vec{x}_i) - 1 + \xi_i \geq 0 \\
+		 & \alpha_i(y_if(\vec{x}_i) - 1 + \xi_i) = 0 \\
+		 & \xi_i \geq 0, \hspace{10pt} \mu_i\xi_i = 0
+	\end{cases}
+\end{equation}
+As was said earlier beginning with \textsc{kkt} conditions we can reach the following conclusions
+given a point $(\vec{x}_i, y_i)$:
+\begin{itemize}
+	\item If $\alpha_i = 0$ then the sample has no impact on the hyperplane's equation.
+	\item When $\alpha_i > 0$ then $y_if(\vec{x}_i) = 1 - \xi_i$, therefore the point is a
+		support vector.
+\end{itemize}
 
 In the following I am going to remove a big assumption that was silently made in the beginning and I
 will provide some adjustments to the model.
@@ -671,7 +717,7 @@ dimensionality space we can rewrite \cref{eq:hyperplane} to incorporate this map
 \end{equation}
 Using \cref{ep:hd-hyperplane} and following the reasoning shown in the beginning of the section,
 it's possible to redefine both the primal (\cref{eq:primal}) and the dual (\cref{eq:dual}) problems
-as shown in \cref{eq:hd-primal} and \cref{eq:hd-dual}
+as shown in \cref{eq:hd-primal} and \cref{eq:hd-dual}.
 \begin{equation}
 	\label{eq:hd-primal}
 	\begin{aligned}
