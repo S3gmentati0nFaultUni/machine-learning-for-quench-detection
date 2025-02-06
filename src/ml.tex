@@ -155,11 +155,11 @@ model is the \emph{DecisionTreeClassifier} class contained in scikit-learn.
 \medskip
 
 A decision tree is a machine learning model based on a tree structure, an example of such a
-structure can be seen in \cref{fig:simple-dt}. Each internal node contains a condition that needs to
-be evaluated on one or more features (e.g. the root of \cref{fig:simple-dt} requires us to check
+structure can be seen in \Cref{fig:simple-dt}. Each internal node contains a condition that needs to
+be evaluated on one or more features (e.g. the root of \Cref{fig:simple-dt} requires us to check
 whether the humidity feature of the input is $\geq 80\%$), if the result of the evaluation is true
 the computation proceeds with the left child, otherwise the right path will be taken. Once a leaf is
-reached the class associated to the point is identified. If we consider again \cref{fig:simple-dt}
+reached the class associated to the point is identified. If we consider again \Cref{fig:simple-dt}
 we could say that if the humidity of the input is $\geq 80\%$ and the temperature is $\geq 10C$ then
 the inputs will be classified as 'rain'.
 
@@ -194,7 +194,7 @@ computation, avoiding overfitting through pre- and post- pruning.
 	\label{fig:simple-dt}
 \end{figure}
 \subsection{Indices and node split computation}
-In \cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
+In \Cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
 its regard could be: 'Why this structure and not another?'. Other than it being a simple example
 nothing is really preventing us from describing the 'rain' event based on different threshold values
 or different feature sets altogether.
@@ -225,9 +225,9 @@ or different feature sets altogether.
 	\caption{A very simple example of decision tree built on the mock problem}
 	\label{fig:simple-dt-alt}
 \end{figure}
-The mock tree shown in \cref{fig:simple-dt-alt} is a different tree compared to the one shown in
-\cref{fig:simple-dt} and yet they solve the same problem by characterizing it differently.
-\cref{algo:decision-tree} shows how the decision tree is built, line $9$ states that the best
+The mock tree shown in \Cref{fig:simple-dt-alt} is a different tree compared to the one shown in
+\Cref{fig:simple-dt} and yet they solve the same problem by characterizing it differently.
+\Cref{algo:decision-tree} shows how the decision tree is built, line $9$ states that the best
 splitting feature needs to be selected with every iteration, this choice is taken based on a
 \emph{purity} index applied to nodes.
 
@@ -279,7 +279,7 @@ random variable $f$ built on the alphabet $B = \{b_1, \ldots, b_{|B|}\}$ we can 
 partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} = f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger
 probability space $\Omega$, every partition is chosen based on the outcome of the
 measurement of the random variable $f$. In the case of a discrete random variable we can define the
-information entropy as shown in \cref{eq:information-entropy}
+information entropy as shown in \Cref{eq:information-entropy}
 \begin{equation}
 	\label{eq:information-entropy}
 	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|B|}{P(Q_i)\log{P(Q_i)}}
@@ -292,7 +292,7 @@ this definition of entropy can be easily extended to the dataset case since:
 	\item The alphabet $B$ can be mapped to the set of possible outcomes of the machine learning
 	      problem.
 \end{itemize}
-Therefore, we can rewrite \cref{eq:information-entropy} as:
+Therefore, we can rewrite \Cref{eq:information-entropy} as:
 \begin{equation}
 	H_p(D) = - \sum_{k = 1}^{|\outs|}p_k \log{p_k}
 \end{equation}
@@ -314,7 +314,7 @@ introduce the concept of \emph{information gain}, which is expressed as follows:
 	\label{eq:information-gain}
 	\textsc{Gain}(D, a) = H_p(D) - \sum_{v = 1}^V\frac{|D^v|}{|D|}H_p(D^v)
 \end{equation}
-The concept expressed by information gain in \cref{eq:information-gain} is that the amount of
+The concept expressed by information gain in \Cref{eq:information-gain} is that the amount of
 information gained by doing a split of dataset $D$ on feature $a$ is given by the entropy of dataset
 $D$ at the moment of the split from which we remove the entropy of the dataset resulting from the
 split of feature $a$ at every value $v$ scaled by the ratio between the cardinality of the new dataset to
@@ -338,8 +338,8 @@ The alternative to using information gain is to use the \emph{gain ratio}
 	\label{eq:gain-ratio}
 	\textsc{GainRatio}(D, a) = \frac{\textsc{Gain}(D, a)}{\textsc{iv}(a)}
 \end{equation}
-the \textsc{iv} function in \cref{eq:gain-ratio} is the \emph{intrinsic value} of feature $a$ and
-can be computed as shown in \cref{eq:intrinsic-value}.
+the \textsc{iv} function in \Cref{eq:gain-ratio} is the \emph{intrinsic value} of feature $a$ and
+can be computed as shown in \Cref{eq:intrinsic-value}.
 \begin{equation}
 	\label{eq:intrinsic-value}
 	\textsc{iv}(a) = - \sum_{v = 1}^V\frac{|D^v|}{|D|} \log{\frac{|D^v|}{|D|}}
@@ -355,17 +355,17 @@ the \textsc{cart} algorithm is used, which  is similar to the \textsc{c4.5} algo
 \subsubsection{Gini index}
 The original \textsc{cart} algorithm conceptualized by Breiman et al. in 1984
 \cite{breiman1984classification} used Gini index to compute the best splitting feature for every
-node. The Gini value of a dataset can be computed as shown in \cref{eq:gini-value}
+node. The Gini value of a dataset can be computed as shown in \Cref{eq:gini-value}
 \begin{equation}
 	\label{eq:gini-value}
 	\textsc{Gini}(D) = \sum_{k = 1}^{|\outs|}\sum_{k' \neq k} p_kp_{k'} = 1 - \sum_{k =
 		1}^{|\outs|}p_k^2
 \end{equation}
-As explained in \cite{ZhouZhi-Hua2021ML}, \cref{eq:gini-value} can be interpreted as the
+As explained in \cite{ZhouZhi-Hua2021ML}, \Cref{eq:gini-value} can be interpreted as the
 likelihood of taking samples from two different classes by drawing them randomly from the
 dataset, the lower the $\textsc{Gini}(D)$, the higher the purity of a node. Gini index can be
 computed as the weighted sum of all the Gini values for the dataset after the split, as shown in
-\cref{eq:gini-index}.
+\Cref{eq:gini-index}.
 \begin{equation}
 	\label{eq:gini-index}
 	\textsc{GiniIdx}(D) = \sum_{v = 1}^V\frac{|D^v|}{|D|} \textsc{Gini}(D^v)
@@ -432,21 +432,21 @@ used.
 
 Let's suppose that the error rate of each model in the ensemble is $\epsilon$, the ground truth
 function is $f$ and the single learner is $l_i$, then we can express the probability of the learner
-making a wrong prediction on $\vec{x} \in \ins$ as shown in \cref{eq:error-rate}.
+making a wrong prediction on $\vec{x} \in \ins$ as shown in \Cref{eq:error-rate}.
 \begin{equation}
 	\label{eq:error-rate}
 	P(l_i(\vec{x}) \neq f(\vec{x})) = \epsilon
 \end{equation}
 Assuming that the prediction is $y \in \{-1, +1\}$ and the ensemble aggregates the predictions by
 using a simple majority algorithm, then the aggregated prediction can be described as shown in
-\cref{eq:ensemble-aggregation}.
+\Cref{eq:ensemble-aggregation}.
 \begin{equation}
 	\label{eq:ensemble-aggregation}
 	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}l_i(\vec{x})\right)
 \end{equation}
 The probability of the ensemble being wrong is equal to computing the probability that more than
 half of the single learners are independently wrong. The number of estimators being wrong in the
-ensemble can be expressed as a binomial random variable $X \sim B(T, \epsilon)$. Therefore, we can finish our proof as shown in \cref{eq:binomial} and \cref{eq:hoeffding}
+ensemble can be expressed as a binomial random variable $X \sim B(T, \epsilon)$. Therefore, we can finish our proof as shown in \Cref{eq:binomial} and \Cref{eq:hoeffding}
 \begin{equation}
 	\label{eq:binomial}
 	P(F(\vec{x}) \neq f(\vec{x})) = P(X > T / 2) = \sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 -
@@ -464,7 +464,7 @@ proof that do not quite convince me}
 
 Random forests work on a subset of features of size $k$ picked randomly from the set of features,
 the size of the subset determines the behavior of the model, the splitting procedure works in the
-same way exposed in \cref{sec:dt} if $k = d$, if $k = 1$, the split will be operated on a random
+same way exposed in \Cref{sec:dt} if $k = d$, if $k = 1$, the split will be operated on a random
 feature every time. In scikit-learn random forests are built out of trees that are constructed by
 bootstrap sampling, a new dataset is built by doing a repeated draws without deletion from the
 original dataset. The splitting process will be operated either by computing checking the whole
@@ -476,12 +476,10 @@ decision trees}
 
 \section{SVM}
 \label{sec:svm}
-\comment{Check this section}{Check this section for errors or stuff that can be phrased better, the
-content should be ok}
 With this section we leave behind the tree-based models to talk about the benchmark model that we
-chose for this thesis, an \svm is a model with very high performance but low explainability, in this
-chapter I will give some theoretical context to the model. Most of what will be said in this section
-was taken from the main reference for the machine learning chapter \cite{ZhouZhi-Hua2021ML}.
+chose for this thesis, an \textsc{svm} is a model with very high performance but low explainability,
+in this chapter we will understand the theoretical foundations of this model. The main reference for
+this chapter is going to be \cite{ZhouZhi-Hua2021ML}.
 
 \medskip
 
@@ -491,33 +489,33 @@ dataset 'reasonably well', since the number of such hyperplanes is infinite ther
 essential observations to be made:
 \begin{enumerate}
 	\item The space of the solutions cannot be checked thoroughly, therefore we will never know
-	      if the hyperplane chosen is the best one or if there is another that yields better
+	      if the hyperplane chosen is the best, or if there is another one that yields better
 	      performance.
-	\item The hyperplane that we are choosing will be fitted on the dataset used for training,
-	      but we can make sure that the generalization performance are good enough by making
+	\item The chosen hyperplane will be fitted on the dataset used for training,
+	      but we can make sure that the generalization performance is good enough by making
 	      sure that there is enough \emph{margin} between the separator and the 'hardest'
-	      points contained within the dataset.
+	      points in the dataset.
 \end{enumerate}
-The hardest points are the ones closest to the hyperplane and they are called \emph{support
+The 'hardest' points are the ones closest to the hyperplane, referred to as \emph{support
 	vectors}.
 
 \medskip
 
-We can express any hyperplane in space as a function (\cref{eq:hyperplane}) of a vector $\vec{w}$ which is a normal vector
-controlling the direction of the hyperplane and a bias $b$ value which controls the distance from
-the origin.
+We can express any hyperplane in space as a function (\Cref{eq:hyperplane}) of a normal vector
+$\vec{w}$ controlling the direction of the hyperplane and a bias value $b$ controlling the distance
+of the hyperplane from the origin.
 \begin{equation}
 	\label{eq:hyperplane}
 	\vec{w}^\top\vec{x} + b = 0
 \end{equation}
 For any given point in space we can compute its distance from the hyperplane as shown in
-\cref{eq:hyperdistance}.
+\Cref{eq:hyperdistance}.
 \begin{equation}
 	\label{eq:hyperdistance}
 	r = \frac{|\vec{w}^\top\vec{x} + b|}{||\vec{w}||}
 \end{equation}
 Let's suppose that the hyperplane can perfectly divide the points in the two classes, we can
-describe it as shown in \cref{eq:system}.
+describe it as shown in \Cref{eq:system}.
 \begin{equation}
 	\label{eq:system}
 	\begin{cases}
@@ -527,7 +525,7 @@ describe it as shown in \cref{eq:system}.
 \end{equation}
 \Cref{eq:svm-system} is valid for every point in the dataset, but we can give a stronger condition
 which only works for the support vectors and is based on the distance defined in
-\cref{eq:hyperdistance}. This new system is shown in \cref{eq:svm-system}.
+\Cref{eq:hyperdistance}. This new system is shown in \Cref{eq:svm-system}.
 \begin{equation}
 	\label{eq:svm-system}
 	\begin{cases}
@@ -535,8 +533,7 @@ which only works for the support vectors and is based on the distance defined in
 		 & \vec{w}^\top\vec{x}_i + b \leq -1, \hspace{10pt} y_i = -1
 	\end{cases}
 \end{equation}
-The margin is the total distance between two support vectors belonging to different classes is
-called margin and is defined in \cref{eq:margin}.
+The margin, defined in \Cref{eq:margin}, is the total distance between two support vectors belonging to different classes.
 \begin{equation}
 	\label{eq:margin}
 	\gamma = \frac{2}{||\vec{w}||}
@@ -544,13 +541,13 @@ called margin and is defined in \cref{eq:margin}.
 
 \medskip
 
-As was said in the beginning of this section we want to find the best separating hyperplane,
+As was said in the beginning of this section, we want to find the best separating hyperplane,
 therefore the hyperplane that has a reasonable distance from the hardest points in the training set
-to guarantee good generalization performance. We can express this problem as a maximization problem:
-we want to maximize the margin in \cref{eq:margin} subject to the constraints of
-\cref{eq:svm-system}. Maximizing the margin means maximizing $||\vec{w}||^{-1}$ which is equivalent
+so that we can give some guarantees of the generalization performance. We can express this problem as a maximization problem:
+we want to maximize the margin in \Cref{eq:margin} subject to the constraints of
+\Cref{eq:svm-system}. Maximizing the margin means maximizing $||\vec{w}||^{-1}$ which is equivalent
 to minimizing $||\vec{w}||^2$, taken for simplicity purposes. The problem, as is formulated in
-\cref{eq:primal}, is the primal form of \svm.
+\Cref{eq:primal}, is the primal form of \textsc{svm}.
 \begin{equation}
 	\label{eq:primal}
 	\begin{aligned}
@@ -560,14 +557,14 @@ to minimizing $||\vec{w}||^2$, taken for simplicity purposes. The problem, as is
 \end{equation}
 This is a quadratic programming problem, there are libraries that provide solvers for the problem,
 but there are other methods that allow us to compute a solution with a higher grade of efficiency.
-We can introduce \emph{Lagrange multipliers} and the \emph{lagrangian} can be expressed as shown in
-\cref{eq:lagrangian}.
+We can introduce \emph{Lagrange multipliers} ($\alpha_i$ in \Cref{eq:lagrangian}), the resulting
+Lagrangian is the one in \Cref{eq:lagrangian}.
 \begin{equation}
 	\label{eq:lagrangian}
 	\lag(\vec{w}, b, \vec{\alpha}) = \frac{1}{2} ||\vec{w}||^2 + \sum_{i = 1}^{m}{\alpha_i (1 - y_i(\vec{w}^\top\vec{x}_i + b))}
 \end{equation}
-If we compute the partial derivatives of the lagrangian with respect to $\vec{w}$ and the bias $b$
-we obtain the two equations shown in \cref{eq:pd-lagrangian}.
+If we compute the partial derivatives of the Lagrangian with respect to $\vec{w}$ and the bias $b$
+we obtain the two equations shown in \Cref{eq:pd-lagrangian}.
 \begin{equation}
 	\label{eq:pd-lagrangian}
 	\begin{aligned}
@@ -576,9 +573,9 @@ we obtain the two equations shown in \cref{eq:pd-lagrangian}.
 		 & \frac{\partial{\lag}}{\partial{b}} = \sum_{i = 1}^m \alpha_iy_i
 	\end{aligned}
 \end{equation}
-By setting the partial derivatives just shown to zero and substituting the first in
-\cref{eq:lagrangian} we can get rid of the normal vector dependency and the \emph{dual} problem can
-be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is shown in \cref{eq:dual}.
+By setting the partial derivatives to zero, and substituting the first in
+\Cref{eq:lagrangian}, we can get rid of the normal vector dependency and the \emph{dual} problem can
+be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is shown in \Cref{eq:dual}.
 \begin{equation}
 	\label{eq:dual}
 	\begin{aligned}
@@ -587,16 +584,16 @@ be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is
 		 \text{s.t.} \hspace{10pt} & \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
-The hyperplane that we are looking for can be modelled as shon in \cref{eq:of}, the second
-formulation is virtue of the substitution found for $\vec{w}$ in \cref{eq:pd-lagrangian}.
+The hyperplane that we are looking for can be modelled as shon in \Cref{eq:of}, the second
+formulation is virtue of the substitution found for $\vec{w}$ in \Cref{eq:pd-lagrangian}.
 \begin{equation}
 	\label{eq:of}
 	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \sum_{i = 1}^m\alpha_iy_i\vec{x}_i\vec{x} + b
 \end{equation}
-Since the primal problem \cref{eq:primal} is an optimization problem with inequality constraints we
+Since \Cref{eq:primal} is an optimization problem with inequality constraints we
 know from \cite{kkt1951} that solving it is equivalent to solving the dual problem based on the
-lagrangian defined in \cref{eq:lagrangian} subject to the \textsc{kkt} constraints shown in
-\cref{eq:kkt-constraints}.
+Lagrangian defined in \Cref{eq:lagrangian} subject to the \textsc{kkt} constraints shown in
+\Cref{eq:kkt-constraints}.
 \begin{equation}
 	\label{eq:kkt-constraints}
 	\begin{cases}
@@ -607,46 +604,45 @@ lagrangian defined in \cref{eq:lagrangian} subject to the \textsc{kkt} constrain
 \end{equation}
 For every point in the training set $(\vec{x}_i, y_i)$ only two scenarios are possible:
 \begin{enumerate}
-	\item Lagrange multiplier $\alpha_i = 0$, therefore the point is not impacting the
-	      hyperplane structure as was defined in \cref{eq:of}.
+	\item Lagrange multiplier $\alpha_i = 0$, Therefore the point $(\vec{x}_i, y_i)$ is not
+		influencing \Cref{eq:of}.
 	\item If the Lagrange multiplier $\alpha_i > 0$ then the third constraint in
-	      \cref{eq:kkt-constraints} yields $y_if(\vec{x}_i) = 1$ which means that the point is
+	      \Cref{eq:kkt-constraints} yields $y_if(\vec{x}_i) = 1$ which means that the point is
 	      laying on the maximum margin hyperplanes, therefore it's a support vector.
 \end{enumerate}
 This reveals a very important detail: once the training is completed, the model can be entirely
 described by using only support vectors, since they are the ones that yield a contribution in the
-calculation of \cref{eq:of}.
+calculation of \Cref{eq:of}.
 
-There are different techniques to solve \cref{eq:dual} one of the possibilities is to use quadratic
-programming solvers, another possibility is to use the \textsc{smo} method proposed in
-\cite{platt1998} and consisting in an iterative resolution of the problem by successive
-identifications of local approximations of the Lagrange multipliers $\alpha_i$ while keeping all
+There are different techniques to solve the problem defined in \Cref{eq:dual}: one of the possibilities is to use quadratic
+programming solvers, another possibility is to use the \textsc{smo} method; Proposed in
+\cite{platt1998} and consisting of: an iterative resolution of the problem, by successive
+identifications of local approximations of the Lagrange multipliers $\alpha_i$, while keeping all
 other parameters frozen as constants.
 
 \medskip
 
-The method exposed in this section provides a solution to problem \cref{eq:primal} which is meant to
-have perfect accuracy, meaning that no classification errors are acceptable. This is a solution that
-is neither advisable nor possible in most cases due to the problem of linear separability addressed
-in \cref{sssec:kernel-functions}.
+The method explained until now provides a solution to problem shown in \Cref{eq:primal} which is meant to
+have perfect accuracy, meaning that no classification errors are accepted. This is a solution that
+is neither advisable nor possible in most cases, due to the problem of linear separability addressed
+in \Cref{sssec:kernel-functions}.
 
-For this reason the \emph{soft margin} \svm model was defined, such formulation of the solution
-allows a relaxation of the constraints and therefore a certain number of classification errors.
-Since the number of errors needs to be minimized we can rewrite the objective of \cref{eq:primal} as
-shown in \cref{eq:sm-primal}.
+For this reason the \emph{soft margin} \textsc{svm} model was defined, such formulation of the solution
+allows a relaxation of the constraints, therefore, a certain number of classification errors.
+Since the number of errors needs to be minimized, we can rewrite the objective of \Cref{eq:primal} as
+shown in \Cref{eq:sm-primal}.
 \begin{equation}
 	\label{eq:sm-primal}
 	\min_{\vec{w}, b} \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \ell_{0 / 1}(y_i (\vec{w}^\top \vec{x}_i + b) - 1)
 \end{equation}
-In equation \cref{eq:sm-primal} $C > 0$ is a regularization constant, $\ell_{0 / 1}$ is the $0/1$
-loss; solving directly the equation can be really complex due to the poor mathematical properties of
-the $0/1$ loss function properties and, even though there are approximate methods to minimize the
-function \cite{nguyen2013}, most of the time a convex loss function is used to replace the $0/1$
-loss.
+In equation \Cref{eq:sm-primal} $C > 0$ is a regularization constant and $\ell_{0 / 1}$ is the $0/1$
+loss. Solving directly the equation can be complicated, due to the poor mathematical properties of
+the $0/1$ loss function, even if there are approximate methods to minimize it \cite{nguyen2013},
+usually a convex loss function is used to replace it.
 
-Soft margin \svm is defined by substituting $0/1$ loss with hinge loss, a convex function for binary
+The soft margin \textsc{svm} is defined by substituting $0/1$ loss with hinge loss, a convex function for binary
 classifiers defined as $\ell(y) = \max(0, 1 - ty)$ where $y$ is the raw output of the classifier and
-$t$ is the label associated to the output, and then adding slack variables $\xi_i \geq 0$ the primal problem can be easily rewritten as shown in \cref{eq:sm-primal-final}.
+$t$ is the label associated to the output, and then adding slack variables $\xi_i \geq 0$. The primal problem can be easily rewritten as shown in \Cref{eq:sm-primal-final}.
 \begin{equation}
 	\label{eq:sm-primal-final}
 	\begin{aligned}
@@ -655,10 +651,10 @@ $t$ is the label associated to the output, and then adding slack variables $\xi_
 		& \xi_i \geq 0 \hspace{10pt}i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
-If we apply the Lagrange multipliers method to \cref{eq:sm-primal-final} the lagrangian will be
-dependent on the slack variables, the normal vector $\vec{w}$, the lagrange multipliers
+If we apply the Lagrange multipliers method to \Cref{eq:sm-primal-final} the Lagrangian will be
+dependent on the slack variables, the normal vector $\vec{w}$, the Lagrange multipliers
 $\vec{\alpha}$ and $\vec{\mu}$ and the bias $b$. The function can be expressed as shown in
-\cref{eq:sm-lagrangian}.
+\Cref{eq:sm-lagrangian}.
 \begin{equation}
 	\label{eq:sm-lagrangian}
 	\begin{aligned}
@@ -667,11 +663,11 @@ $\vec{\alpha}$ and $\vec{\mu}$ and the bias $b$. The function can be expressed a
 		&+ \sum_{i = 1}^m \alpha_i(1 - \xi_i - y_i(\vec{w}^\top\vec{x}_i + b)) + \sum_{i = 1}^m\mu_i\xi_i
 	\end{aligned}
 \end{equation}
-By putting the various partial derivatives to $0$, just as was done for the generic \svm, and doing
-some substitutions we obtain the final form of the dual problem for the soft margin \svm, shown in
-\cref{eq:sm-dual-final}
+By setting the partial derivatives to $0$, just as was done for the generic \textsc{svm}, and doing
+some substitutions we obtain the final form of the dual problem for the soft margin \textsc{svm}, shown in
+\Cref{eq:sm-dual-final}
 \begin{equation}
-	\label{eq:sm-dual=final}
+	\label{eq:sm-dual-final}
 	\begin{aligned}
 		\max_{\vec{\alpha}} & \sum_{i = 1}^m \alpha_i - \frac{1}{2}\sum_{i = 1}^m\sum_{j =
 		1}^m\alpha_i\alpha_jy_iy_j\vec{x}_i^\top\vec{x}_j \\
@@ -679,9 +675,8 @@ some substitutions we obtain the final form of the dual problem for the soft mar
 		& 0 \leq \alpha_i \leq C \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
-Since the dual problem has a structure which is very similar to the one shown in \cref{eq:dual} the
-same conclusions apply, we can also extract the \textsc{kkt} conditions which are shown in
-\cref{eq:sm-kkt}.
+Since the dual problem has a similar structure to \Cref{eq:dual}, the same conclusions apply. We can
+also extract the \textsc{kkt} conditions, which are shown in \Cref{eq:sm-kkt}.
 \begin{equation}
 	\label{eq:sm-kkt}
 	\begin{cases}
@@ -691,35 +686,39 @@ same conclusions apply, we can also extract the \textsc{kkt} conditions which ar
 		 & \xi_i \geq 0, \hspace{10pt} \mu_i\xi_i = 0
 	\end{cases}
 \end{equation}
-As was said earlier beginning with \textsc{kkt} conditions we can reach the following conclusions
-given a point $(\vec{x}_i, y_i)$:
+As was done previously, we can draw conclusions by checking the \textsc{kkt} constraints:
 \begin{itemize}
-	\item If $\alpha_i = 0$ then the sample has no impact on the hyperplane's equation.
-	\item When $\alpha_i > 0$ then $y_if(\vec{x}_i) = 1 - \xi_i$, therefore the point is a
+	\item If $\alpha_i = 0$, then the sample has no impact on the hyperplane's equation.
+	\item When $\alpha_i > 0$, $y_if(\vec{x}_i) = 1 - \xi_i$, therefore the point is a
 		support vector.
 \end{itemize}
 
-In the following I am going to remove a big assumption that was silently made in the beginning and I
-will provide some adjustments to the model.
+In the following section we will address an important assumption that was made in the beginning of
+this chapter and then provide adjustments to the model.
 
 \subsubsection{Kernel funtions}
 \label{sssec:kernel-functions}
 Until now the topic was treated under the important assumption that the points in the dataset are
-linearly separable, but it's known that commonly this condition doesn't hold, since most problems
-treated in the real world are not linearly separable. To address the issue the
+linearly separable, but it's known that this condition rarely holds in practice. To address the issue the
 problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$. We know from
-Cover's theorem \cite{cover1965} that if the number of features is finite then there must be a
-projection to a high dimensionality space that provides linear separability for the data.
+\cite{cover1965} that the problem of finding out whether a dataset is linearly separable or not is a
+problem that can be solved by enhancing the number of dimensions of the space we are solving the
+problem in. This is due to a theorem that states that the number of ways a dataset can be linearly
+separable depends on the number of points in the split and the number of dimensions of the space we
+are using.
 
-If we define $\phi(\vec{x})$ the mapping of a data-point $\vec{x} \in \ins$ to the high
-dimensionality space we can rewrite \cref{eq:hyperplane} to incorporate this mapping.
+\comment{Check out whether the phrasing is good}{The final phrase seems to be very long and quite
+confusing}
+
+If we call $\phi(\vec{x})$, the mapping of a data-point $\vec{x} \in \ins$ to the high
+dimensionality space, then \Cref{eq:hyperplane} can be rewritten to incorporate it.
 \begin{equation}
 	\label{ep:hd-hyperplane}
 	f(\vec{x}) = \vec{w}^\top \phi(\vec{x}) + b
 \end{equation}
-Using \cref{ep:hd-hyperplane} and following the reasoning shown in the beginning of the section,
-it's possible to redefine both the primal (\cref{eq:primal}) and the dual (\cref{eq:dual}) problems
-as shown in \cref{eq:hd-primal} and \cref{eq:hd-dual}.
+Using \Cref{ep:hd-hyperplane} and following the steps used in the beginning of the chapter,
+it's possible to redefine both the primal (\Cref{eq:primal}) and the dual (\Cref{eq:dual}) problems
+as shown in \Cref{eq:hd-primal} and \Cref{eq:hd-dual}.
 \begin{equation}
 	\label{eq:hd-primal}
 	\begin{aligned}
@@ -736,16 +735,15 @@ as shown in \cref{eq:hd-primal} and \cref{eq:hd-dual}.
 	\end{aligned}
 \end{equation}
 
-As was done in the beginning of the section it would now be necessary to compute a solution of the
+As was done in the beginning of the chapter, it would now be necessary to compute a solution for the
 dual problem, which means computing the internal product $\langle\phi(\vec{x}_i),
-\phi(\vec{x}_j)\rangle$, since the problem was moved to a high dimensional space it might be
+\phi(\vec{x}_j)\rangle$. Since the problem was moved to a high dimensional space, it might be
 computationally expensive to handle, especially because the number of dimensions of the final space
 is not known.
 
-To avoid having to compute such a product we define a function, known as \emph{kernel} function
+To avoid having to compute such a product, we define a function, known as \emph{kernel} function
 $\kappa(\cdot, \cdot)$,
-which is an approximation of the actual value of the inner product computed by using a function in
-the input space. We can rewrite \cref{eq:hd-dual} to use the newly introduced function.
+which is an approximation of the actual value of the inner product. We can rewrite \Cref{eq:hd-dual} to use the newly introduced function.
 \begin{equation}
 	\label{eq:hd-dual-kf}
 	\begin{aligned}
@@ -757,19 +755,19 @@ the input space. We can rewrite \cref{eq:hd-dual} to use the newly introduced fu
 	\end{aligned}
 \end{equation}
 
-If we solve the problem using the same procedure applied in the beginning of the section we obtain
+If we solve the problem using the same procedure applied in the beginning of the chapter, we obtain
 an expression of the hyperplane which is dependent from the kernel function $\kappa$.
 \begin{equation}
 	\label{eq:hd-of}
 	f(\vec{x}) = \sum_{i = 1}^m\alpha_iy_i\kappa(\vec{x}, \vec{x}) + b
 \end{equation}
 
-The kernel function was introduced earlier but no definition was given for it, since it depends on
-the structure of the mapping $\phi$. Such mapping is unknown in most practical cases, however a
-theorem grants us that if we can find a symmetric function $\kappa(\cdot, \cdot): \ins \rightarrow
+An explanation of the kernel function was given, but no definition was provided, that is due to its
+dependence from the mapping $\phi$. Such mapping is unknown in most practical cases, however a
+theorem \cite{learning-with-kernels} grants us that if we can find a symmetric function $\kappa(\cdot, \cdot): \ins \times \ins \rightarrow
 \ins$, then $\kappa$ is going to be a kernel function if and only if, however chosen the dataset $D
 = \{\vec{x}_1, \ldots, \vec{x}_m\}$, the kernel matrix $\mathbf{K}$ is going to be positive
-semidefinite. Matrix $\mathbf{K}$ is constructed as shown in \cref{eq:kernel-matrix}.
+semidefinite. Matrix $\mathbf{K}$ is constructed as shown in \Cref{eq:kernel-matrix}.
 \begin{equation}
 	\label{eq:kernel-matrix}
 	\mathbf{K} = 
