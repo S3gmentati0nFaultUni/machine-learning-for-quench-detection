@@ -900,6 +900,50 @@ external, for completeness's sake I will include some examples of internal indic
 		\end{equation*}
 \end{itemize}
 
+Now that external indices have been introduced we will spend the last part of this section to talk
+about internal indices. Given a partition $\mathcal{C} = \{C_1, \ldots, C_k\}$ the indices that will
+be introduced shortly are based on terms in: \Cref{eq:cluster-avg}, \Cref{eq:cluster-diam},
+\Cref{eq:inter-cluster-distance} and \Cref{eq:cluster-centroid-distance}.
+
+If we define the distance between two vectors as a function $dist(\cdot, \cdot)$ then, \Cref{eq:cluster-avg} defines the average distance between samples within a cluster.
+\begin{equation}
+	\label{eq:cluster-avg}
+	avg(C) = \frac{2}{|C|(|C| - 1)}\sum_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j)
+\end{equation}
+
+\Cref{eq:cluster-diam} defines the diameter of a cluster, which is he maximum distance between any
+two given points within the cluster.
+\begin{equation}
+	\label{eq:cluster-diam}
+	diam(C) = \max_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j)
+\end{equation}
+
+\Cref{eq:inter-cluster-distance} is the minimum distance between two nearest samples in cluster
+$C_i$ and $C_j$.
+\begin{equation}
+	\label{eq:inter-cluster-distance}
+	d_{min}(C_i, C_j) = \min_{\vec{x}_i \in C_i, \vec{x}_j \in C_j} dist(\vec{x}_i, \vec{x}_j)
+\end{equation}
+
+If we define $\vec{\mu} = \frac{1}{|C|} \sum_{1 \leq i \leq |C|} \vec{x}_i$ the \emph{centroid} of
+cluster $C$, \Cref{eq:cluster-centroid-distance} is a function that computes the distance between
+clusters by computing the distance between centroids.
+\begin{equation}
+	\label{eq:cluster-centroid-distance}
+	d_{cen}(C_i, C_j) = dist(\vec{\mu}_i, \vec{\mu}_j)
+\end{equation}
+
+By using the concepts defined above we can define many different scores, in two examples that will
+follow are the scores that I used to grade the quality of the clustering results.
+
+\begin{itemize}
+	\item Davies-Bouldin Index (\textsc{dbi})\cite{bouldin1979}.
+		\begin{equation*}
+			\textsc{dbi} = \frac{1}{k}\sum_{i = 1}^k\max_{j \neq i}\left(\frac{avg(C_i) + avg(C_j)}{d_{cen}(C_i, C_j)}\right)
+		\end{equation*}
+	\item Silhouette score 
+\end{itemize}
+
 \subsubsection{Distance calculation}
 \label{ssec:distance-calculation}
 
