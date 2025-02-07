@@ -1,22 +1,21 @@
 \chapter{Machine learning: an overview}
 \label{chp:ml}
 This chapter is dedicated to the theoretical exploration of some of the most important concepts in
-machine learning alongside the various models that have been used in the project. I will begin with
-a concise explanation of the more basic concepts linked to machine learning, then I will move to a
-theoretical overview of the most important supervised models, followed by a brief introduction to
+machine learning alongside the various models that have been used in the project. We will begin with
+a concise explanation of the more basic concepts linked to machine learning, then we will move to a
+theoretical overview of the supervised models used for the project, followed by a brief introduction to
 unsupervised machine learning models.
 
 \section{Supervised machine learning}
 \label{sec:sml}
-Due to the popularization of Artificial
-Intelligence in recent times, it's very important to establish the field to avoid the risk of
+Due to the popularization of artificial intelligence in recent times, it's very important to establish the field to avoid the risk of
 incurring in misunderstandings. \emph{Machine learning} is a subset of artificial
 intelligence, and is a technique that allows us to solve a problem without the need to actually invent an
-algorithm to solve it (as long as there is enough data).  There are many different problems that
+algorithm to solve it (as long as there is enough data). There are many different problems that
 either lack an algorithmic solution or have an inefficient one; in such cases, machine learning is
 an alternative worth exploring. The tradeoff of using machine learning instead of 'classic'
-problem-solving techniques is that the solution is going to be built using heuristic methods,
-therefore is never going to be a \emph{correct} solution for the problem \cite{Rebala2019}.
+problem-solving techniques is that the solution is built using heuristic methods,
+therefore is not \emph{correct} for the problem \cite{Rebala2019}.
 
 \medskip
 
@@ -26,82 +25,86 @@ data to predict the output \cite{Cunningham2008}.
 
 \smallskip
 
-Given instance of a problem $\problem$, for which a dataset $\dset$ is given, the solution can be
-computed by using a model $\model$ trained on $D$, the model is the result of a statistical process,
-therefore susceptible to change due to the statistical nature of the process. On a practical level
-the variability of the model can be kept to a minimum for reproducibility purposes by setting the
-seeds of the random number generators of the various libraries to a definite value.
+Given a problem $\problem$, a specific instance of $\problem$, $\problem_i$, is characterized by a pair
+$(\vec{x}_i, y_i)$ where $\vec{x}_i \in \ins$ are vectors taken from an input space $\ins$, usually
+highly dimensional, and $y_i \in \outs$ are the expected solutions, which can be scalar or
+vector\footnote{Outcomes will be considered scalars for the rest of this thesis unless explicitly
+	stated}. The single components of every input vector, $\vec{x}_i$, are called
+\emph{features}, and are values (numerical or other) representing a particular aspect of the domain.
+
+A \emph{dataset} is a set containing $m$ problem instances $\dset$, and
+a supervised machine learning model $\model$, trained on $D$, can be used to predict the outcome,
+$\hat{y}$, of any instance of the problem $\problem_i$. Note that a machine learning model is the result of a
+statistical process, therefore is susceptible to change unless the randomicity is kept under control.
+On a practical level we can make sure that, for reproducibility purposes, the random number
+generators associated to the various libraries are set to a definite value.
 
 \medskip
 
-In the following I will make heavy use of examples to clarify concepts, since the problem solved in
-this thesis is complicated due to the amount of physics involved, the mock-problem that will be used
-from here on is: 'Is it going to rain tomorrow?', the prediction will have to be based on a dataset
-containing 365 days of atmospheric measurements alongside a flag that states whether it rained or
-not on the specific day.
+To clarify the concepts just introduced, let us consider the following mock-problem: 'Is it going to rain
+tomorrow?'. The dataset $D$ contains $365$ instances of the problem, one per day, for a year. The
+input vector for every problem is a set of atmospheric measurements (e.g., temperature, atmospheric
+pressure, exposure, humidity, \ldots), each measurement a different feature of the dataset. The
+output of every instance $\problem_i$ is a flag answering the question 'did it rain on day $i$?'
+with a $1$, for True, and a $0$, for False.
 
-\medskip
-
-Let's consider an instance of a problem $\problem$ for which a dataset $\dset$ is given, the generic
-pair $(\mathbf{x}_i, y_i)$ couples a vector taken from an input space $\ins$, which is usually high dimensional,
-and an output value from an output space $\outs$, which can be a scalar or a vector, will be
-considered a scalar for simplicity. Single dimensions of the vector $\mathbf{x}_i$ are called \emph{features}, and are values (numerical or other) representing a particular aspect of the domain.
-
-If we consider, the mock-problem, each day with the corresponding flag is going to be a data-point,
-the \emph{inputs} are going to be the atmospheric measurements (e.g. humidity, exposure,
-temperature, \ldots), each of these measurements is going to be a \emph{feature} of the dataset. The
-\emph{outputs} are going to be the flags, which answer to the question 'did it rain on day $k$?'
-with a $1$ (true) or a $0$ (false).
+Due to the high grade of complexity of the problem solved in this thesis, future concepts will be clarified
+using this exact mock-problem or its variations.
 
 \medskip
 
 In general, a machine learning problem can be defined as the process of finding the mapping that
 relates the input space $\ins$ to the output space $\outs$ by abstracting patterns from
-a training set $\dset$, conventionally the output space can be interpreted in differently based on
+a training set. Conventionally, the output space can be interpreted differently based on
 the problem:
 \begin{itemize}
-	\item $\outs = \{-1, 1\}$, for \emph{binary classification} problems, in which we
-	      usually want to find the hyperplane that is best suited to separate the data into
-	      two different classes. A very easy example of binary classification is our mock problem.
-	\item $\outs = \mathbb{R}$, for \emph{regression problems}, in which we want to find the
-	      function that best describes the behavior of data, an example of regression problem
-	      is: 'Based on the current amount of wins for Oklahoma City Thunder\footnote{An
-		      amazing \textsc{nba} team}, predict the team's win rate at the end of the season'.
-	\item $\outs = \{a_1,\ldots, a_m\}$, for \emph{multi-label classification} problems, in
+	\item $\outs = \{-1, 1\}$, for \emph{binary classification} problems, which are usually
+	      associated with pattern recognition tasks, a very easy example of binary classification is our mock-problem.
+	\item $\outs = \{a_1,\ldots, a_m\}$, for \emph{multi-class classification} problems, in
 	      which an element can be part of one of the classes in a certain set, a classic
 	      example is the character recognition problem, in which a certain character given in input can belong to one of 10 different classes (the numbers from 0 to 9) \cite{pal2010handwritten}.
+	\item $\outs = \mathbb{R}$, for \emph{regression problems}, which are usually associated
+	      with function approximation tasks, an example of regression problem
+	      is: 'Based on the current amount of wins for Oklahoma City Thunder\footnote{An
+		      amazing \textsc{nba} team}, predict the team's win rate at the end of the season'.
 \end{itemize}
 
-Most machine learning models have to go through the same steps
+Most machine learning models have to go through the same steps, described here below
 \begin{itemize}
-	\item Model selection, machine learning models are very customizable, therefore it's
-	      necessary to find the combination of parameters that yields the highest possible
-	      performance.
-	\item Model training, during the training procedure the instance of the model abstracts
+	\item \emph{Model selection}: if we consider an instance of a decision tree (introduced in
+	      \Cref{sec:dt}), the model can be described through a set of characteristics (e.g.,
+	      number of nodes, depth, splitting method, \ldots), all of these are known as
+	      \emph{hyperparameters}. An important step of solving a machine learning problem is
+	      doing an exploration, even if not thorough, due to the exponential complexity of the
+	      task, of the hyperparameter space, to find the best possible combination for the
+	      problem.
+	\item \emph{Model training}: during the training procedure, the instance of the model abstracts
 	      patterns from a sample of the dataset, which we will call \emph{training set} $T$.
-	\item Model testing, during the testing procedure the model performance is tested on a
-	      sample of the dataset, which we will call \emph{test set} $G$ (standing for \emph{generalization}),
-	      this test is meant to understand whether the performance found for model
+	\item \emph{Model testing}: during the testing procedure the model performance is tested on a
+	      part of the dataset, which we will call \emph{test set} $G$ (standing for
+	      \emph{generalization}). This set is used to understand whether the performance found for model
 	      $\model$ is a statistical anomaly (therefore depending on the points
-	      chosen to build $G$) or extends also to unseen data.
+	      chosen to build $T$) or extends also to unseen data.
 \end{itemize}
 
-There are many different approaches to splitting a dataset $D$ into a series of separate datasets
-for the various tasks involved in the machine learning problem resolution (e.g. model training,
+There are many different approaches to splitting a dataset $D$ into a series of separate parts
+for the various tasks involved in the machine learning problem resolution (e.g., model training,
 model testing, model selection, \ldots). In the following I will describe two non-trivial aspects of
-the basic procedure to split a dataset $D$ into a training dataset $T$ and a testing dataset $G$, a
+the basic procedure to split a dataset $D$ into a training dataset $T$ and a testing dataset $G$ and a
 more complex splitting procedure will be introduced at a later time.
 
 \medskip
 
-The first non-trivial aspect of the splitting procedure is that, depending on the problem, making
+As a first non-trivial aspect of the splitting procedure is that, depending on the problem, making
 sure that the distribution of training dataset $T$ and testing dataset $G$ is the same as the
-original dataset distribution can be important. To understand why, let's think about a dataset
+original dataset distribution is important. To understand why, let's think about a dataset
 $\dset$ in which every $\mathbf{x}_i \in \ins$ is a vector of features describing a patient's
-conditions (e.g. age, sex, body temperature, blood saturation, \ldots) and every $y_i \in \outs$ is
-a string indicating which illness was diagnosed (e.g. flue, pneumonia, covid, ...). Supposing we want to find a
-model $\model$ capable of doing a diagnosis effectively, we need to make sure that the least
-represented illnesses (which are usually the more dangerous) are well represented in both $T$ and $G$. If this splitting process was not done correctly we might end up with a model $\model$ that can very reliably recognize a common flue but is very bad at identifying serious illnesses like pneumonia.
+conditions (e.g., age, sex, body temperature, blood saturation, \ldots) and every $y_i \in \outs$ is
+a string indicating which illness was diagnosed (e.g., flu, pneumonia, \textsc{covid}, ...). Supposing we want to find a
+model $\model$ capable of doing a diagnosis effectively: we need to make sure that the least
+represented illnesses (which are usually the more dangerous ones) are well represented in both $T$
+and $G$. If this splitting process was not done correctly we might end up with a model $\model$ that
+can reliably recognize a common flu but can't correctly identify serious illnesses like pneumonia.
 
 \medskip
 
@@ -118,14 +121,14 @@ performance metric, relaying higher and unjustifed confidence in the model perfo
 
 \medskip
 
-To close this section about supervised learning I want to introduce two issues specific to
+To close this section about supervised learning, we will be introduced to two issues specific to
 supervised learning models. Whenever we work in the field of supervised learning it's important to be aware of two classic issues: \emph{overfitting} and \emph{underfitting}.
 
 \smallskip
 
 Given the generic machine learning problem $\problem$ and a dataset $\dset$, the model $\model$ that
-solves $\problem$, is said to be overfitting if the training performance is better
-than the testing performance, which means that the mapping found by $\model$ to link $\ins$
+solves $\problem$, is said to be overfitting when the training performance is acceptable, but the
+testing performance is unacceptably bad; this means that the mapping found by $\model$ to link $\ins$
 and $\outs$ is too closely related to the specific data chosen to do the training, therefore
 unable to generalize effectively. In other
 words, $\model$ is overfitting whenever, instead of abstracting some general patterns in the
@@ -135,31 +138,34 @@ which are not found later in the testing dataset $G$.
 \smallskip
 
 An 'orthogonal' problem to overfitting is the issue of \emph{underfitting}, which is usually caused
-by a model not being powerful enough to abstract information from a certain dataset.
+by a model not being powerful enough to abstract information from a certain dataset. Whenever a
+machine learning model is underfitted for a problem $\problem$, the performance metrics obtained
+during training and testing are unacceptably bad, independently of the train and test set
+utilized.
 
 \medskip
 
-The problem that this thesis aims to solve takes full advantage of supervised models since the data at our
+The problem that this thesis aims to solve takes full advantage of supervised models, since the data at our
 disposal has already been analyzed and labelled in previous works \cite{mariotto2022}\cite{mariotto2022-generic}.
 
 \medskip
 
-In the following I will be discussing on a theoretical level the various supervised models deployed
+In the following we will be discussing, on a theoretical level, the various supervised models deployed
 to solve the problem.
 
 \section{Decision Trees}
 \label{sec:dt}
-This section is a theoretical introduction to decision trees, the implementation I used for the
+This section is a theoretical introduction to decision trees, the implementation we used for the
 model is the \emph{DecisionTreeClassifier} class contained in scikit-learn.
 
 \medskip
 
 A decision tree is a machine learning model based on a tree structure, an example of such a
 structure can be seen in \Cref{fig:simple-dt}. Each internal node contains a condition that needs to
-be evaluated on one or more features (e.g. the root of \Cref{fig:simple-dt} requires us to check
+be evaluated on one or more features (e.g.,  the root of \Cref{fig:simple-dt} requires us to check
 whether the humidity feature of the input is $\geq 80\%$), if the result of the evaluation is true
 the computation proceeds with the left child, otherwise the right path will be taken. Once a leaf is
-reached the class associated to the point is identified. If we consider again \Cref{fig:simple-dt}
+reached, the class associated to the point is identified. If we consider again \Cref{fig:simple-dt}
 we could say that if the humidity of the input is $\geq 80\%$ and the temperature is $\geq 10C$ then
 the inputs will be classified as 'rain'.
 
@@ -195,7 +201,7 @@ computation, avoiding overfitting through pre- and post- pruning.
 \end{figure}
 \subsection{Indices and node split computation}
 In \Cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
-its regard could be: 'Why this structure and not another?'. Other than it being a simple example
+its regard could be: 'Why this structure and not another one?'. Other than it being a simple example
 nothing is really preventing us from describing the 'rain' event based on different threshold values
 or different feature sets altogether.
 \begin{figure}
@@ -222,7 +228,8 @@ or different feature sets altogether.
 			}
 		child {node {no rain}};
 	\end{tikzpicture}
-	\caption{A very simple example of decision tree built on the mock problem}
+	\caption{Another decision tree built on the mock-problem and alternative to
+		\Cref{fig:simple-dt}}
 	\label{fig:simple-dt-alt}
 \end{figure}
 The mock tree shown in \Cref{fig:simple-dt-alt} is a different tree compared to the one shown in
@@ -237,25 +244,26 @@ splitting feature needs to be selected with every iteration, this choice is take
 	\begin{algorithmic}[1]
 		\Require Training set $\dset$ and Feature set $A = \{a_1, \ldots,
 			a_d\}$.
-		\Ensure A decision tree with root node $i$
+		\Ensure A decision tree
 		\Function{TreeGenerate}{$D$, $A$}
 		\State Generate node $i$;
 		\If{All samples in $D$ belong to the same class $C$}
-		\State Mark node $i$ as a class $C$ leaf node; \textbf{return}
+		\State Mark node $i$ as a class $C$ leaf node; \textbf{return node $i$}
 		\EndIf
 		\If{$A = \emptyset$ \textsc{or} all samples in $D$ take the same
 			value on $A$}
 		\State Mark node $i$ as a leaf node, its class label is
-		the majority in $D$; \textbf{return}
+		the majority in $D$;
+		\State \textbf{return node $i$}
 		\EndIf
 		\State Select the optimal splitting feature $a_*$ from $A$;
 		\For{each value $a_*^v$ on $a_*$}
-		\State Generate a branch for node $i$; Let $D_v$ be the
-		subset of samples taking value $a_*^v$ on $a_*$;
+		\State Generate a branch for node $i$;
+		\State Let $D_v$ be the subset of samples taking value $a_*^v$ on $a_*$;
 		\If{$D_v$ is empty}
-		\State Mark this child node as a leaf node, and
-		label t with the majority class of $D$;
-		\textbf{return}
+		\State Mark this child node as a leaf node;
+		\State label t with the majority class of $D$;
+		\textbf{return node $i$}
 		\Else
 		\State use \textproc{TreeGenerate}$(D_v, A \setminus \{a_*\})$ as the child node.
 		\EndIf
@@ -266,8 +274,11 @@ splitting feature needs to be selected with every iteration, this choice is take
 
 \medskip
 
-The purity of a node defines how many samples belong to a single class \cite{ZhouZhi-Hua2021ML}, a
-split is going to be performed on feature $a$ only if the resulting purity increase is the best
+The purity of a node defines how heterogeneous are the samples associated to it. Intuitively, in the
+context of our mock-problem: if the distribution of samples arriving to a node $i$ is $15$ labelled
+$1$, and $1$ labelled $0$, then the purity of the node is going to be very high.
+
+A split is going to be performed on feature $a$ only if the resulting purity increase is the best
 possible. There are many different indices used to compute purity, in the following I will be
 considering only the ones important for the model selection process that will be introduced in
 a future chapter: \emph{Entropy} and \emph{Gini index}.
@@ -551,8 +562,8 @@ to minimizing $||\vec{w}||^2$, taken for simplicity purposes. The problem, as is
 \begin{equation}
 	\label{eq:primal}
 	\begin{aligned}
-		\max_{\vec{w}, b} & \frac{1}{2}||\vec{w}||^2                                                   \\
-		 \text{s.t.}\hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
+		\max_{\vec{w}, b}        & \frac{1}{2}||\vec{w}||^2                                            \\
+		\text{s.t.}\hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
 This is a quadratic programming problem, there are libraries that provide solvers for the problem,
@@ -579,9 +590,9 @@ be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is
 \begin{equation}
 	\label{eq:dual}
 	\begin{aligned}
-		\max_{\vec{\alpha}} & \left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \vec{x}_i^\top\vec{x}_j}\right)       \\
-		 \text{s.t.} \hspace{10pt} & \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
+		\max_{\vec{\alpha}}       & \left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
+		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \vec{x}_i^\top\vec{x}_j}\right)               \\
+		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
 The hyperplane that we are looking for can be modelled as shon in \Cref{eq:of}, the second
@@ -646,9 +657,9 @@ $t$ is the label associated to the output, and then adding slack variables $\xi_
 \begin{equation}
 	\label{eq:sm-primal-final}
 	\begin{aligned}
-		\min_{\vec{w}, b} & \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i \\
-		\text{s.t.} \hspace{10pt}& y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 - \xi_i \\
-		& \xi_i \geq 0 \hspace{10pt}i = 1, \ldots, m
+		\min_{\vec{w}, b}         & \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i \\
+		\text{s.t.} \hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 - \xi_i    \\
+		                          & \xi_i \geq 0 \hspace{10pt}i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
 If we apply the Lagrange multipliers method to \Cref{eq:sm-primal-final} the Lagrangian will be
@@ -658,9 +669,9 @@ $\vec{\alpha}$ and $\vec{\mu}$ and the bias $b$. The function can be expressed a
 \begin{equation}
 	\label{eq:sm-lagrangian}
 	\begin{aligned}
-		\mathcal{L}(\vec{w}, b, \vec{\alpha}, \vec{\xi}, \vec{\mu}) &=
-		\frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i \\ 
-		&+ \sum_{i = 1}^m \alpha_i(1 - \xi_i - y_i(\vec{w}^\top\vec{x}_i + b)) + \sum_{i = 1}^m\mu_i\xi_i
+		\mathcal{L}(\vec{w}, b, \vec{\alpha}, \vec{\xi}, \vec{\mu}) & =
+		\frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i                                                                                                               \\
+		                                                            & + \sum_{i = 1}^m \alpha_i(1 - \xi_i - y_i(\vec{w}^\top\vec{x}_i + b)) + \sum_{i = 1}^m\mu_i\xi_i
 	\end{aligned}
 \end{equation}
 By setting the partial derivatives to $0$, just as was done for the generic \textsc{svm}, and doing
@@ -669,10 +680,10 @@ some substitutions we obtain the final form of the dual problem for the soft mar
 \begin{equation}
 	\label{eq:sm-dual-final}
 	\begin{aligned}
-		\max_{\vec{\alpha}} & \sum_{i = 1}^m \alpha_i - \frac{1}{2}\sum_{i = 1}^m\sum_{j =
-		1}^m\alpha_i\alpha_jy_iy_j\vec{x}_i^\top\vec{x}_j \\
-		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^m\alpha_iy_i = 0 \\
-		& 0 \leq \alpha_i \leq C \hspace{10pt} i = 1, \ldots, m
+		\max_{\vec{\alpha}}       & \sum_{i = 1}^m \alpha_i - \frac{1}{2}\sum_{i = 1}^m\sum_{j =
+		1}^m\alpha_i\alpha_jy_iy_j\vec{x}_i^\top\vec{x}_j                                        \\
+		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^m\alpha_iy_i = 0                                \\
+		                          & 0 \leq \alpha_i \leq C \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
 Since the dual problem has a similar structure to \Cref{eq:dual}, the same conclusions apply. We can
@@ -680,9 +691,9 @@ also extract the \textsc{kkt} conditions, which are shown in \Cref{eq:sm-kkt}.
 \begin{equation}
 	\label{eq:sm-kkt}
 	\begin{cases}
-		& \alpha_i \geq 0, \hspace{10pt}\mu_i \geq 0 \\
-		 & y_if(\vec{x}_i) - 1 + \xi_i \geq 0 \\
-		 & \alpha_i(y_if(\vec{x}_i) - 1 + \xi_i) = 0 \\
+		 & \alpha_i \geq 0, \hspace{10pt}\mu_i \geq 0 \\
+		 & y_if(\vec{x}_i) - 1 + \xi_i \geq 0         \\
+		 & \alpha_i(y_if(\vec{x}_i) - 1 + \xi_i) = 0  \\
 		 & \xi_i \geq 0, \hspace{10pt} \mu_i\xi_i = 0
 	\end{cases}
 \end{equation}
@@ -700,15 +711,15 @@ this chapter and then provide adjustments to the model.
 \label{sssec:kernel-functions}
 Until now the topic was treated under the important assumption that the points in the dataset are
 linearly separable, but it's known that this condition rarely holds in practice. To address the issue the
-problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$. We know from
-\cite{cover1965} that the problem of finding out whether a dataset is linearly separable or not is a
-problem that can be solved by enhancing the number of dimensions of the space we are solving the
-problem in. This is due to a theorem that states that the number of ways a dataset can be linearly
-separable depends on the number of points in the split and the number of dimensions of the space we
-are using.
-
-\comment{Check out whether the phrasing is good}{The final phrase seems to be very long and quite
-confusing}
+problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$, this is done in
+the hope that increasing the number of dimensions will make the data linearly separable.
+From \cite{cover1965} we have the guarantee that given a set of $N$ points in Euclidean $d$
+dimensional space, then \Cref{eq:dichotomies} is the number of ways we can split the points in two
+non-intersecting sets.
+\begin{equation}
+	\label{eq:dichotomies}
+	C(N, d) = 2 \sum_{k = 0}^{d - 1}\binom{k}{N - 1}
+\end{equation}
 
 If we call $\phi(\vec{x})$, the mapping of a data-point $\vec{x} \in \ins$ to the high
 dimensionality space, then \Cref{eq:hyperplane} can be rewritten to incorporate it.
@@ -722,7 +733,7 @@ as shown in \Cref{eq:hd-primal} and \Cref{eq:hd-dual}.
 \begin{equation}
 	\label{eq:hd-primal}
 	\begin{aligned}
-		 & \max_{\vec{w}, b}\frac{1}{2}||\vec{w}||^2                                                   \\
+		 & \max_{\vec{w}, b}\frac{1}{2}||\vec{w}||^2                                                         \\
 		 & \text{s.t.}\hspace{10pt}y_i(\vec{w}^\top\phi(\vec{x}_i) + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
@@ -730,7 +741,7 @@ as shown in \Cref{eq:hd-primal} and \Cref{eq:hd-dual}.
 	\label{eq:hd-dual}
 	\begin{aligned}
 		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right)       \\
+		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right) \\
 		 & \text{s.t.} \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
@@ -747,10 +758,10 @@ which is an approximation of the actual value of the inner product. We can rewri
 \begin{equation}
 	\label{eq:hd-dual-kf}
 	\begin{aligned}
-		&\text{since} \hspace{10pt} \kappa(\vec{x}_i, \vec{x}_j) = \langle\phi(\vec{x}_i),
-\phi(\vec{x}_j)\rangle \\
+		 & \text{since} \hspace{10pt} \kappa(\vec{x}_i, \vec{x}_j) = \langle\phi(\vec{x}_i),
+		\phi(\vec{x}_j)\rangle                                                                      \\
 		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right)       \\
+		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right) \\
 		 & \text{s.t.} \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
@@ -764,26 +775,26 @@ an expression of the hyperplane which is dependent from the kernel function $\ka
 
 An explanation of the kernel function was given, but no definition was provided, that is due to its
 dependence from the mapping $\phi$. Such mapping is unknown in most practical cases, however a
-theorem \cite{learning-with-kernels} grants us that if we can find a symmetric function $\kappa(\cdot, \cdot): \ins \times \ins \rightarrow
-\ins$, then $\kappa$ is going to be a kernel function if and only if, however chosen the dataset $D
-= \{\vec{x}_1, \ldots, \vec{x}_m\}$, the kernel matrix $\mathbf{K}$ is going to be positive
-semidefinite. Matrix $\mathbf{K}$ is constructed as shown in \Cref{eq:kernel-matrix}.
+theorem \cite{learning-with-kernels} grants us that if we can find a symmetric function
+$\kappa(\cdot, \cdot): \ins \times \ins \rightarrow \ins$, then $\kappa$ is a kernel function if and
+only if, however chosen the dataset $D = \{\vec{x}_1, \ldots, \vec{x}_m\}$, the kernel matrix
+$\mathbf{K}$ (\Cref{eq:kernel-matrix}) is positive semidefinite.
 \begin{equation}
 	\label{eq:kernel-matrix}
-	\mathbf{K} = 
+	\mathbf{K} =
 	\begin{bmatrix}
 		\kappa(\vec{x}_1, \vec{x}_1) & \kappa(\vec{x}_1, \vec{x}_2) & \ldots &
-		\kappa(\vec{x}_1, \vec{x}_m) \\
+		\kappa(\vec{x}_1, \vec{x}_m)                                                  \\
 		\kappa(\vec{x}_2, \vec{x}_1) & \kappa(\vec{x}_2, \vec{x}_2) & \ldots &
-		\kappa(\vec{x}_2, \vec{x}_m) \\
-		\ldots & \ldots & \ddots & \ldots \\
+		\kappa(\vec{x}_2, \vec{x}_m)                                                  \\
+		\ldots                       & \ldots                       & \ddots & \ldots \\
 		\kappa(\vec{x}_m, \vec{x}_1) & \kappa(\vec{x}_m, \vec{x}_2) & \ldots &
-		\kappa(\vec{x}_m, \vec{x}_m) \\
+		\kappa(\vec{x}_m, \vec{x}_m)                                                  \\
 	\end{bmatrix}
 \end{equation}
-Now that a reliable technique to find kernel functions has been defined it's important to find the
-best kernel function to the problem, since the choice of the kernel determines how the points are
-mapped in high-dimensional space and therefore how good of a hyperplane is found.
+Now that a reliable technique to find kernel functions has been defined, it's important to find the
+best kernel function since the choice of the kernel determines how the points are mapped in
+high-dimensional space, and therefore how good the separating hyperplane is going to be.
 
 \section{Unsupervised models}
 \label{sec:uml}
