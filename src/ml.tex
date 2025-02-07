@@ -941,13 +941,50 @@ follow are the scores that I used to grade the quality of the clustering results
 		\begin{equation*}
 			\textsc{dbi} = \frac{1}{k}\sum_{i = 1}^k\max_{j \neq i}\left(\frac{avg(C_i) + avg(C_j)}{d_{cen}(C_i, C_j)}\right)
 		\end{equation*}
-	\item Silhouette score 
+	\item The \emph{Silhouette Coefficient} built on a sample $i$ was defined in \cite{rousseuw1987}
+		is built using two different metrics: $e(i)$\footnote{Compared to the literature I
+		chose different names for the metrics used to compute the Silhouette index just to
+		avoid confusion, since they would have to be called $a$ and $b$, which were already
+		used to define the metrics used for external clustering indices}, which is the mean
+		distance between a point and all other points in the same class, and $f(i)$, which is
+		the mean distance between a point and all other points in the next nearest cluster.
+
+		\begin{equation*}
+			s(i) = \frac{f(i) - e(i)}{\max(e(i), f(i))}
+		\end{equation*}
 \end{itemize}
 
 \subsubsection{Distance calculation}
 \label{ssec:distance-calculation}
+A lot could be said about distance calculation but it would probably not result in a real benefit
+for this thesis, therefore we will not delve too deep in the topic, we will remain on the shore.
 
+Given a function $dist(\cdot, \cdot)$, the function is a \emph{distance measure} if it follows three
+fundamental axioms:
+\begin{enumerate}
+	\item \emph{Non-negativity}: $dist(\vec{x}_i, \vec{x}_j) \geq 0$,
+	\item \emph{Identity of indiscernibles}: $dist(\vec{x}_i, \vec{x}_j) = 0$ if and only if
+		$\vec{x}_i = \vec{x}_j$,
+	\item \emph{Symmetry}: $dist(\vec{x}_i, \vec{x}_j) = dist(\vec{x}_j, \vec{x}_i)$,
+	\item \emph{Triangle inequality}: $dist(\vec{x}_i, \vec{x}_j) \leq dist(\vec{x}_i,
+		\vec{x}_k) + dist(\vec{x}_k, \vec{x}_j)$.
+\end{enumerate}
+Given two samples $\vec{x}_i$ and $\vec{x}_j$, a commonly used measure is the \emph{Minkowski
+distance}, which is defined in \Cref{eq:mkd}.
+\begin{equation}
+	\label{eq:mkd}
+	dist_{mk}(\vec{x}_i, \vec{x}_j) = \left(\sum_{u = 1}^n|x_{iu} - x_{ju}|^p\right)^\frac{1}{p}
+\end{equation}
+Different distance measures are associated to different values of the $p$ parameter, when $p = 2$
+the resulting function is the \emph{Euclidean distance}, when $p = \infty$ the resulting function is
+the \emph{Chebyshev distance}.
 
+In the upcoming section we will be talking about the very well known $k$-means clustering algorithm.
+
+\subsection{K-means algorithm}
+The $k$-means algorithm is a very well known and studied \emph{prototype-based} clustering solution;
+such algorithms usually start from a \emph{prototype}, or a point in the dataset that represents
+what is going to be contained in the cluster, these prototypes are then updated and optimized.
 
 
 
