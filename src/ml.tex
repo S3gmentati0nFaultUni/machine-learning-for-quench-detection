@@ -982,10 +982,53 @@ the \emph{Chebyshev distance}.
 In the upcoming section we will be talking about the very well known $k$-means clustering algorithm.
 
 \subsection{K-means algorithm}
-The $k$-means algorithm is a very well known and studied \emph{prototype-based} clustering solution;
-such algorithms usually start from a \emph{prototype}, or a point in the dataset that represents
-what is going to be contained in the cluster, these prototypes are then updated and optimized.
+The $k$-means algorithm \cite{macqueen1967} \cite{lloyd1982} is a very well known and studied
+\emph{prototype-based} clustering solution; such algorithms usually start from a \emph{prototype},
+or a point in the dataset that represents what is going to be contained in the cluster, these
+prototypes are then updated and optimized. More formally, given a dataset $\udset$, the $k$-means
+algorithm minimizes the squared error (\Cref{eq:squared-error}) of clusters $\mathcal{C} = \{C_1,
+\ldots, C_k\}$.
 
+\begin{equation}
+	\label{eq:squared-error}
+	E = \sum_{i = 1}^k\sum{\vec{x} \in C_i}||\vec{x} - \vec{\mu})_i||_2^2
+\end{equation}
+
+thus the error is computed as the $L-2$ norm of the distance vector between every point in the
+cluster and the cluster's centroid, which we already encountered in the last section. A small error
+indicates a higher intra-cluster similarity. Since the process of minimizing
+\Cref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
+point for every possible cluster, the actual implementation of $k$-means takes a greedy approach
+(the algorithm is shown in \Cref{algo:kmeans}).
+\begin{algorithm}
+	\caption{The $k$-means algorithm taken from \cite{ZhouZhi-Hua2021ML}}\label{algo:kmeans}
+	\begin{algorithmic}[1]
+		\Require Dataset $\udset$ and Number of clusters $k$.
+		\Ensure A set of clusters $\mathcal{C} = \{C_1, \ldots, C_k\}$
+		\Function{kmeans}{$D$, $k$}
+		\State Randomly select $k$ samples as starting centroids $\{\vec{\mu}_1, \ldots,
+		\vec{\mu}_k\}$
+		\While {At least one centroid changes}
+		\State $\forall i \in {1, \ldots, k} \hspace{10pt} C_i = \emptyset$
+		\For {$j = 1, \ldots, n$}
+		\State $d_{ij} = ||\vec{x}_j - \mu_i|| \hspace{10pt} i \in \{1, \ldots, k\}$ 
+		\State Decide the cluster label $\lambda_j = \argmin_{i \in \{1, \ldots, k\}}d_{ij}$
+		\State $C_{\lambda_j} = C_{\lambda_j}\cup\{x_j\}$
+		\EndFor
+		\For {$i \in \{1, \ldots, k\}$}
+		\State Compute the new centroids $\vec{\mu}'_i = \frac{1}{|C_i|} \sum_{\vec{x} \in C_i}\vec{x}$
+		\EndFor
+		\If {$\vec{\mu}' _i \neq \vec{\mu}_i$}
+		\State $\vec{\mu}_i = \vec{\mu}'_i$
+		\EndIf
+		\EndWhile
+		\State \textbf{return} the set of clusters $\mathcal{C}$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+This procedure starts with a prototype of the mean vectors and updates them iteratively with the
+definition of the clusters, the procedure stops once the algorithm doesn't change after one
+iteration.
 
 
 
