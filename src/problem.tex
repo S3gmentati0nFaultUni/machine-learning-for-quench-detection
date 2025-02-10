@@ -1,5 +1,81 @@
 \chapter{The problem}
 \label{chp:problem}
-\section{The challenges}
+The problem that we solved in this thesis is to provide the \textsc{infn} with a machine learning
+capable of, given $15$ harmonics of magnetic field measured on a superconducting magnet:
+\begin{enumerate}
+	\item Recognize whether the magnet underwent a quench event during operation, we will refer
+	      to it as Quench Recognition Problem (\qrp) from now on,
+	\item Recognize, if the superconductor quenched, how many coils underwent the quench
+	      transition and specifically which coils in the magnet transitioned; we will refer to
+	      it as Quench Localization Problem (\qlp) from now on.
+\end{enumerate}
+A field harmonic is a complex function capable of descibing the contribution of a certain multipolar
+field (e.g. the coefficient associated with the dipole is $C_0$, while $C_1$ is the quadrupolar
+coefficient) to the entirety of the magnetic field, which is a vectorial and continuous quantity.
+
+This problem, as was already said in previous chapters, is a natural extension of the work of
+Samuele Mariotto \cite{mariotto2022}\cite{mariotto2022-generic}, who analyzed the behavior of
+a gamma of magnets differing in the number of poles. The original dataset only contained the quench
+events recorded for every type of magnet, since the number of events for every other magnet type was
+less than the number of quenches recorded for the sole quadrupoles (a total of $177$), we chose to
+aim for the creation of a model capable of identifying and locating quench events within a
+quadrupolar structure.
+
+As was shown in the theoretical introduction to machine learning (\Cref{chp:ml}) we were aiming to
+find models capable of giving a very good explanation of the classification outcomes. Having the
+ability of explaining what produced the event can be of great help in the context of magnet design,
+quench explanation and instrument calibration (e.g. If a new quench antenna needs to be designed the
+researchers know that some magnetic field harmonics can be ignored because they do not influence the
+result).
+
+In the following two sections we will explore the structure of the dataset used for the project and
+then we will learn about the constraints imposed for reproducibility's sake.
+
 \section{The datasets and their meaning}
+The dataset used for the project contained a set of four different measurements, each result of a
+previous manipulation done by researcher Mariotto on the original measurements of the magnetic field
+harmonics.
+
+\begin{itemize}
+	\item \emph{An}: the imaginary part of the magnetic field harmonics, since the measurements
+	      done for the original experiments were done in a \emph{skew}
+	      configuration\comment{\footnote{Magnets are said to be mounted in skew configuration when the
+		      positioning of the magnets is at an angle relative to each other, this improves
+		      performance and efficiency}}{Quote someone to make sure that the statement holds for
+	      accelerator physics. It's important o be able to understand this question: Why should we mount
+	      magnets skewed?} this was the
+	      table that supposedly contained more information;
+	\item \emph{Bn}: the real part of the magnetic field harmonics;
+	\item \emph{Cnmod}: the absolute value of the complex coefficient $C_n$;
+	\item \emph{Phi}: the phase of the magnetic field harmonics, since in the original
+	      analytical method the conclusions regarding the quenched coil within the maagnet were taken
+	      based on this value the naïve hypothesis was that the \qlp solution would strongly depend on
+	      this.
+\end{itemize}
+
 \section{Model selection and model testing procedures}
+Reproducibility is an extremely important property of any experiment, as was said in the chapter
+dedicated to a light introduction to machine learning theory (\Cref{chp:ml}), it's an important
+first step to set the value of the random number generators.
+
+The next step to enforce reproducibility is by use shared pipelines.
+
+Every dataset used in the project is processed using a common pipeline that builds three different
+dataframes that are serialized for later reuse:
+\begin{itemize}
+	\item The \emph{merged} dataframe contains all of the field harmonics for a certain table
+	      (e.g. An) or mix of tables (e.g. An, Bn, Cnmod), berfore serialization the dataframe is
+	      normalized using an instance of the StandardScaler class, contained in scikit-learn, trained
+	      on the dataframe just created (minus the label columns).
+	\item The \emph{safe} dataframe contains a small part of the overall data available to us
+	      (29 samples), these samples were kept away until the experiments were considered complete.
+	      This dataset allowed us to perform a blind test on the model to see whether it was able to
+	      generalize well what it learned.
+	\item The \emph{reduced} dataframe contains the rest of the points in the original table,
+	      it is the main dataframe used to perform all of the tests and experiments.
+\end{itemize}
+
+When it came to model selection and model testing we chose to perform a Nested Cross Validation
+procedure (\ncv). As was said in \Cref{chp:ml} the models used during the project were mostly
+supervised, and one of the biggest issues with such models is overfitting. With the single $k$-fold Cross
+Validation procedure the model is tested in such a way that overfitting is not an issue anymore.
