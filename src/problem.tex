@@ -177,8 +177,61 @@ If we consider once again $\Cref{fig:nested-cv}$ it's clear that what comes out 
 procedure are $5$ different models, which one should be considered the best model overall? \comment{We have the guarantee that the models obtained using this procedure are statistically
 equivalent}{Citation for this please}.
 
+The scikit-learn library contains many $\cv$ implementations that can give different or stronger
+guarantees if compared to the $\cv$ procedure shown in this section, the splitting procedure is also
+handled differently based on the type of KFold object used.
 
+The following section used to close this chapter will contain a summarization of the experiment's
+characteristics.
 
+\subsection{Experimental setup}
+The project was developed using the latest version of the Python programming language
+(\texttt{3.10.12} at the moment of writing), a virtual environment was set up to favor ease of use
+and the libraries were handled using the pip package manager (also in the last version, which is the
+\texttt{24.2}).
+
+Datasets were handled by using a mix of Pandas DataFrames and Numpy N-dimensional arrays. All the
+preprocessing and machine learning models used were taken from the scikit-learn library. All the
+libraries were used in the latest version available.
+
+The original data consisted of $279$ samples, for \qrp, each sample contained $15$ harmonics and a Label
+stating whether the sample represents a quench event or not, for \qlp, each sample had $4$ different
+labels associated to it representing whether one of the coils ($0$ for East, then: North, West and
+South) quenched or not.
+
+The seeds from the various random number generators have been set to the common value of $42$ to
+prevent too much deviation in the experiments.
+
+Dividing the dataset into reduced and safe was completed by using stratified sampling, if
+multiclass-classification was required I decided to use the stratified sampling technique provided
+in the scikit-multilearn library (\cite{skmlearn}).
+
+As far as the model selection, training and testing pipeline is concerned, as was said in the
+previous section, we chose to use a $5\times5 \ncv$ procedure, the model best model was the one
+contained in the \_best\_estimator attribute of the GridSearchCV procedure, the resulting
+model is then trained on the whole reduced dataset and serialized using pickle.
+
+Experiments were conducted on three different computers running different architectures and
+different operating systems, but the results did not change due to the standard-oriented approach,
+\Cref{tbl:computers} for a summary of the computers we used.
+\begin{center}
+	\begin{longtable}{|c|c|c|c|}
+		\caption{System information}\label{tbl:computers}
+		\\\textbf{} & \textbf{Pigna} & \textbf{Mattone} & \textbf{Topone} \\\hline\hline
+		\endfirsthead\hline\endlastfoot
+
+		\textbf{Manufacturer}               & Intel                                                                                                               & NVIDIA                                                              \\\hline
+
+		\textbf{Model}                      & Intel Xeon (V\footnote{V stands for virtualized, can't find the actual CPU model that is being mounted in servers}) & T4                                                                  \\\hline
+		\textbf{Launch Date}                & N.A.                                                                                                                & Oct 2018                                                            \\\hline
+		\textbf{\#Cores}                    & $2$ vcores                                                                                                          & $\num{2560}$ C\footnote{CUDA cores}, $320$ T\footnote{Tensor cores} \\\hline
+		\textbf{Clock Speed (GHz)}          & $\num{2.20}$ GHz                                                                                                    & Base: $0.585$ MHz, Boost: $1.59$ GHz                                \\\hline
+		\textbf{Memory / Cache}             & L3 Cache: $56$ MB                                                                                                   & VRAM: $16$ GB GDDR6                                                 \\\hline
+		\textbf{Memory Bandwidth}           & N.A.                                                                                                                & 300 GB/s                                                            \\\hline
+		\textbf{TDP (Thermal Design Power)} & N.A.                                                                                                                & $70$ W                                                              \\\hline
+		\textbf{Architecture}               & N.A.                                                                                                                & Turing
+	\end{longtable}
+\end{center}
 
 
 
