@@ -72,10 +72,118 @@ dataframes that are serialized for later reuse:
 	      This dataset allowed us to perform a blind test on the model to see whether it was able to
 	      generalize well what it learned.
 	\item The \emph{reduced} dataframe contains the rest of the points in the original table,
-	      it is the main dataframe used to perform all of the tests and experiments.
+	      it is the main dataframe used to perform all tests and experiments.
 \end{itemize}
 
 When it came to model selection and model testing we chose to perform a Nested Cross Validation
 procedure (\ncv). As was said in \Cref{chp:ml} the models used during the project were mostly
-supervised, and one of the biggest issues with such models is overfitting. With the single $k$-fold Cross
-Validation procedure the model is tested in such a way that overfitting is not an issue anymore.
+supervised, and one of the biggest issues with such models is overfitting. In the following section
+we will give a gentle introduction to Cross Validation as a solution to the overfitting problem.
+
+\subsubsection{Cross Validation}
+In \Cref{chp:ml} we talked about the simple train-test splitting procedure, now we will introduce an
+alternative technique for splitting that gives us a powerful tool to discover and prevent
+overfitting.
+
+In general, given a dataset $D$, $k$-fold $\cv$ \cite{ZhouZhi-Hua2021ML} is a technique for splitting a dataset in $k$
+different folds $\fold{i}$, the folds are non-overlapping and about the same size, therefore
+$\fold{i} \cap \fold{j} = \emptyset \hspace{5pt} \forall i, j \in k$, and the union of all the folds
+is the original dataset ($\bigcup_{i \in \{1, \ldots, k\}} \fold{i} = D$).
+
+The logic behind $\cv$ is to prevent biased decision on the human part by introducing a certain
+degree of repetition in the experiment. Let us consider a train-test environment, if we used the
+procedure introduced in \Cref{chp:ml}, we would do one splitting, one training run on the training
+set $T$ and one run of testing on the generalization set $G$; once the test is completed we have the
+performance of the model.
+
+\medskip
+
+'What if the split that was chosen was the lucky one and the performance are actually better than
+they would be if we took another generalization set?'
+
+\smallskip
+
+This is where $\cv$ comes in, to reduce the probability that the performance of the model
+are good just because of a statistical anomaly we increase the number of train-test splits, in fact,
+each of the $k$ folds will be used to do testing once, all other folds will be used to do training
+on the model.
+
+\medskip
+
+'What value of $k$ should be chosen?'
+
+\smallskip
+
+The number of folds to be used for $\cv$ becomes another hyperparameter of the problem, since it
+depends on many factors like the amount of data available to us, a very big value of $k$ will
+decrease the size of the testing or generalization fold, which reduces the trust that we can put in
+the generalization performance obtained for the model; too small a value of $k$ makes the $\cv$ less
+effective from a statistical point of view. There is also an extreme version of the $\cv$ procedure
+which is known as Leave One Out (\textsc{loo-cv}), it trains the model on the whole dataset minus
+one sample, which is later used for testing, due to the length and complexity this \textsc{loo-cv}
+is rarely used in real experiments (despite the high grade of reliability of the results obtained
+through it), an efficient version of \textsc{loo-cv} is discussed in \cite{shao2016}.
+
+Until now to explain $\cv$ we have used the simple example of splitting the dataset between train
+and test, to introduce Nested $\cv$ ($\ncv$) we will consider the very common case of having to
+choose a model and testing its generalization performance.
+
+In the base case a tripartition of the dataset $D$ can work:
+\begin{itemize}
+	\item \emph{Training set} $T$,
+	\item \emph{Validation set} $V$, this set of samples will be used to test the performance of the
+	      model found after the training step,
+	\item \emph{Generalization set} $G$, after the model is retrained on $T + V$ the performance are
+	      tested on $G$ to see if the model is capable of generalizing effectively.
+\end{itemize}
+
+\medskip
+
+'How can we guarantee that the model chosen is the best one, or at least is good enough?'
+
+\smallskip
+
+Quite simply, we can't give any guarantees, we might have gotten the worst possible mix of
+hyperparameters and still get good performance during the validation and generalization tests due to
+statistical anomalies.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=.3]{./img/nested-cv.png}
+	\label{fig:nested-cv}
+	\caption{Visualization of the nested cross validation procedure taken from \cite{pain2020}}
+\end{figure}
+\comment{If I want to add a picture for simple cross validation then something ad hoc should be
+created so that the style is kind of the same}
+
+The $\ncv$ is sketched in $\Cref{fig:nested-cv}$, this procedure consists in two simple $\cv$
+procedures nested, The outer one is used for testing the generalization performance of the model,
+the internal one is used to do model selection and is constructed on the training set used in the
+outer loop.
+
+Concretely in the project we chose to apply a $5 \times 5 \ncv$ procedure, which means that, out of
+the $250$ samples that form the original dataset $D$:
+\begin{itemize}
+	\item The data is first split between $50$ samples, that will be kept on the side for the
+	      generalization test of the model, and $200$ samples, which will be used to do both
+	      training and model selection;
+	\item The training set is now split again in $5$ folds, $160$ samples will be used to do
+	      model selection (therefore hyperparameter space search), $40$ samples will be used
+	      to validate the performance that has been found;
+	\item The model found at the previous step is retrained on the whole $200$ samples and then
+	      the performance are tested on the fold that was kept aside in the first step.
+\end{itemize}
+If we consider once again $\Cref{fig:nested-cv}$ it's clear that what comes out of the $\ncv$
+procedure are $5$ different models, which one should be considered the best model overall? \comment{We have the guarantee that the models obtained using this procedure are statistically
+equivalent}{Citation for this please}.
+
+
+
+
+
+
+
+
+
+
+
