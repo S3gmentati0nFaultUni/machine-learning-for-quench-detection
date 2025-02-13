@@ -214,22 +214,54 @@ model is then trained on the whole reduced dataset and serialized using pickle.
 Experiments were conducted on three different computers running different architectures and
 different operating systems, but the results did not change due to the standard-oriented approach,
 \Cref{tbl:computers} for a summary of the computers we used.
-\begin{center}
+\begin{center})
 	\begin{longtable}{|c|c|c|c|}
 		\caption{System information}\label{tbl:computers}
-		\\\textbf{} & \textbf{Pigna} & \textbf{Mattone} & \textbf{Topone} \\\hline\hline
+		\\\textbf{}                             & \textbf{Pigna}
+		                                                & \textbf{Mattone}
+		                                                & \textbf{Topone}
+		\\\hline\hline
 		\endfirsthead\hline\endlastfoot
 
-		\textbf{Manufacturer}               & Intel                                                                                                               & NVIDIA                                                              \\\hline
-
-		\textbf{Model}                      & Intel Xeon (V\footnote{V stands for virtualized, can't find the actual CPU model that is being mounted in servers}) & T4                                                                  \\\hline
-		\textbf{Launch Date}                & N.A.                                                                                                                & Oct 2018                                                            \\\hline
-		\textbf{\#Cores}                    & $2$ vcores                                                                                                          & $\num{2560}$ C\footnote{CUDA cores}, $320$ T\footnote{Tensor cores} \\\hline
-		\textbf{Clock Speed (GHz)}          & $\num{2.20}$ GHz                                                                                                    & Base: $0.585$ MHz, Boost: $1.59$ GHz                                \\\hline
-		\textbf{Memory / Cache}             & L3 Cache: $56$ MB                                                                                                   & VRAM: $16$ GB GDDR6                                                 \\\hline
-		\textbf{Memory Bandwidth}           & N.A.                                                                                                                & 300 GB/s                                                            \\\hline
-		\textbf{TDP (Thermal Design Power)} & N.A.                                                                                                                & $70$ W                                                              \\\hline
-		\textbf{Architecture}               & N.A.                                                                                                                & Turing
+		\textbf{CPU manufacturer}                       & Intel
+		                                                & AMD
+		                                                & Intel
+		\\\hline
+		\textbf{CPU model}                              & i$5$ $5287\textsc{u}$
+		                                                & Ryzen $3700\textsc{x}$
+		                                                & i$7$ $4770$
+		\\\hline
+		\textbf{CPU core count}                         & $2\textsc{c}$ $2\textsc{t}$
+		                                                & $8\textsc{c}$ $16\textsc{t}$
+		                                                & $4\textsc{c}$ $8\textsc{t}$
+		\\\hline
+		\textbf{Litography (nm)}                        & $14$
+		                                                & $7$
+		                                                & $22$
+		\\\hline
+		\textbf{Launch Date}                            & Q$1$ 2015
+		                                                & Q$2$ 2019
+		                                                & Q$2$ 2013
+		\\\hline
+		\textbf{Base frequency (GHz)}                   & $2.90$
+		                                                & $4.125$
+		                                                & $3.40$
+		\\\hline
+		\textbf{Boost frequency (GHz)}                  & $3.30$
+		                                                & $4.40$
+		                                                & $3.90$
+		\\\hline
+		\textbf{Cache} ($\textsc{mb}$)                  & $3$
+		                                                & L1: $0.512$, L2: $4$, L3:$32$
+		                                                & $8$
+		\\\hline
+		\textbf{TDP\footnote{Thermal Design Power} (W)} & 28
+		                                                & 84
+		                                                & 65
+		\\\hline
+		\textbf{Memory size} ($\textsc{gb}$)            & $8$
+		                                                & $16$
+		                                                & $16$
 	\end{longtable}
 \end{center}
 
