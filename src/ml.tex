@@ -555,14 +555,17 @@ be implemented based to avoid wasting data).
 
 \subsubsection{Random Forests}
 
-Random forests work on a subset of features of size $k$ picked randomly from the set of features,
-the size of the subset determines the behavior of the model, the splitting procedure works in the
-same way exposed in \Cref{sec:dt} if $k = d$, if $k = 1$, the split will be operated on a random
-feature every time. In scikit-learn random forests are built out of trees that are constructed by
-bootstrap sampling, a new dataset is built by doing a repeated draws without deletion from the
-original dataset. The splitting process will be operated either by computing checking the whole
-feature set or by checking a random subset of the feature set which size is regulated by one of the
-attributes of the object.
+Random forests are an extension of the Bagging model that was just described, they were introduced
+by Leo Breiman in \cite{Breiman2001}, while decision trees perform the splitting procedure for every
+node by selecting the feature that yields the best impurity reduction, random forests pick the
+feature that yields the best impurity decrease from a random subset of features of size $k$. The
+value of $k$ controls how random is the splitting procedure, if $k = d$, where $d$ is the size of
+the feature set, then the behavior of the random forest is the same as the decision tree introduced
+in the last section, if $k = 1$, then the split feature is chosen randomly.
+
+Despite the relative simplicity of the model random forests provide a high grade of performance,
+accompanied by the same grade of explainability of decision trees (with the added complexity of
+having to deal with more than one learner at the same time).
 
 \section{SVM}
 \label{sec:svm}
