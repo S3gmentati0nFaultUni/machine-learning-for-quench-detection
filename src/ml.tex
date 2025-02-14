@@ -430,47 +430,42 @@ Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classific
 
 \section{Ensemble learning}
 \label{sec:el}
-In the previous chapter I introduced decision trees, and we have talked at length about their
+In the previous chapter we introduced decision trees, and we have talked at length about their
 strength and weaknesses, providing some instruments to counter their shortcomings. Sometimes,
 despite our efforts, the decision tree model is simply not enough for the task at hand, if we don't
-want to give up the high explainability of tree models, in favor of higher performance, we can think
-of creating an ensemble.
+want to give up the explainability of tree models, in favor of higher performance, we can construct an ensemble.
 
-An ensemble is constructed by grouping weaker learners, which produces two main effects (to
-clarify the concepts we will consider a basketball roster):
+\medskip
+
+An ensemble contains a group of weaker learners, this produces a series of effects, two of which are
+very important (to clarify the concepts we will consider the dynamics of a basketball team during a
+game):
 \begin{itemize}
 	\item Different learners are able to grasp different sides of the problem, which would be
-		either impossible or complicated for single models, if we consider our example, each
-		player covers different positions which do not fit the other players (this doesn't
-		mean that key players or superstars cannot play in other positions due to their
-		performance).
-	\item Using a group of models alleviates the shortcomings of the weaker links in the chain,
-		if we consider our example, the weaker players, and lesser role players, can stay on the bench while the
-		main rotation is playing, but can still contribute with some quality minutes when
-		the main rotation is facing a difficulty.
+		either impossible or complicated for single models. If we consider our example, each
+		player covers different positions, which do not fit his teammates (this doesn't
+		entail that there is no player capable of, if needed, covering different positions;
+		which is usually a characteristic of the best players in the team).
+	\item Using a group of models alleviates the shortcomings of the weaker ones. If we consider our example, the weaker players, and lesser role players, stay on the bench while the main rotation is playing; but can still contribute with some quality minutes when the main rotation is facing a difficulty.
 \end{itemize}
+Below, we will prove the second statement following the procedure described in \cite{ZhouZhi-Hua2021ML}.
 
-Following the analysis done in \cite{ZhouZhi-Hua2021ML}, I will now prove that the error rate of a
-binary classifier based on an ensemble of models falls to zero exponentially with the number of individuals
-used.
+\medskip
 
-Let's suppose that the error rate of each model in the ensemble is $\epsilon$, the ground truth
-function is $f$ and the single learner is $h_i$, then we can express the probability of the learner
-making a wrong prediction on $\vec{x} \in \ins$ as shown in \Cref{eq:error-rate}.
+Let us consider an ensemble containing $T$ different versions of the same base model, if the ground
+truth function is $f$, and we call the $i$th learner in the ensemble $h_i$, then \Cref{eq:error-rate}
+describes the probability of learner $h_i$ misclassifying $\vec{x} \in \ins$.
 \begin{equation}
 	\label{eq:error-rate}
-	P(l_i(\vec{x}) \neq f(\vec{x})) = \epsilon
+	P(h_i(\vec{x}) \neq f(\vec{x})) = \epsilon
 \end{equation}
-Assuming that the prediction is $y \in \{-1, +1\}$, let's consider an ensemble in containing $T$
-base learners, independent of each other, the ensemble will aggregate the predictions by using a
-simple majority algorithm (\Cref{eq:ensemble-aggregation}).
+Assuming that the ensemble is supposed to solve a binary classification problem, then the class
+labels can be defined as $y \in \{-1, +1\}$. The ensemble will aggregate the predictions by using a simple majority algorithm (\Cref{eq:ensemble-aggregation}).
 \begin{equation}
 	\label{eq:ensemble-aggregation}
-	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}l_i(\vec{x})\right)
+	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}h_i(\vec{x})\right)
 \end{equation}
-Since the probability of a base learner of being correct is $1 - \epsilon$, then the ensemble
-correctly classifies a sample only if more than half of the learners correctly identify the sample.
-This is expressed by \Cref{eq:succ-probability}.
+If we assume the learners to be independent of each other, we can model the probability of the ensemble being correct as a Binomial. Since the probability of a base learner of being correct is $1 - \epsilon$, then the ensemble correctly classifies a sample only if more than half of the learners correctly identify the sample. This is expressed by \Cref{eq:succ-probability}.
 \begin{equation}
 	\label{eq:succ-probability}
 	\begin{aligned}
@@ -481,17 +476,15 @@ This is expressed by \Cref{eq:succ-probability}.
 			   \epsilon^{T - k}
 	\end{aligned}
 \end{equation}
-Since we are interested in finding a bound for ensemble error rate we are interested in the
+Since we are interested in finding a bound for the ensemble error rate, we are interested in the
 complement of $Pr(\text{success})$, which is $Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq
-f(\vec{x}))$. The ensemble misclassifies a sample only if the number of learners that can correctly classify the
-model is less than half, therefore $Pr(\text{insuccess})$ can be defined, starting from
-\Cref{eq:succ-probability} as shown in \Cref{eq:insucc-probability}.
+f(\vec{x}))$. The ensemble misclassifies a sample only if the number of learners that can correctly classify the model is less than half, therefore $Pr(\text{insuccess})$ can be defined, starting from \Cref{eq:succ-probability} as shown in \Cref{eq:insucc-probability}.
 \begin{equation}
 	\label{eq:insucc-probability}
 	Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq f(\vec{x})) = \sum_{k = 0}^{\lfloor{T / 2}\rfloor} \binom{T}{k} (1 - \epsilon)^k \epsilon^{T - k}
 \end{equation}
-Due to the independence assumption we can use Hoeffding's inequality on the sum of independent
-random variables \cite{ZhouZhi-Hua2021ML}, result is an upper bound of the error rate.
+Finally, we can exploit Hoeffding's inequality \cite{ZhouZhi-Hua2021ML} on
+\Cref{eq:insucc-probability}, the result is an upper bound for the error rate of the ensemble.
 \begin{equation}
 	\label{eq:hoeffding}
 	\sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 - \epsilon)^k\epsilon^{T - k} \leq
@@ -504,14 +497,14 @@ case, since the models are trained on the same dataset for the same problem $\pr
 
 \medskip
 
-Before doing a brief overview of the random forest model I will introduce Bagging, which is the
-technique at the base of the random forest model.
+In the next two sections I will introduce bagging and random forests, which are two very similar
+ensemble algorithms.
 
 \subsubsection{Bagging}
 
 Bagging, introduced by Leo Breiman in \cite{Breiman1996}, is a method for generating multiple
-version of a base predictor that are then aggregated in a single predictor, following
-\cite{ZhouZhi-Hua2021ML} the algorithm can be easily outlined in \Cref{algo:bagging}.
+versions of a base predictor that are then aggregated in a single model, the simple algorithm was
+outlined in \Cref{algo:bagging} following \cite{ZhouZhi-Hua2021ML} and \cite{Bauer1999}.
 \begin{algorithm}
 	\caption{The bagging algorithm, taken from \cite{Bauer1999}}\label{algo:bagging}
 	\begin{algorithmic}[1]
@@ -528,32 +521,29 @@ version of a base predictor that are then aggregated in a single predictor, foll
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
-The algorithm can be described as follows: given a dataset $\dset$, we create a new dataset of size
-$n$ ($D_{bs}$) in \Cref{algo:bagging} by randomly picking samples from $D$, if we repeat the
-procedure $T$ times we obtain $T$ different datasets of size $n$, which are used to train different
-base learners. Once the training is over, predictions can be done on inputs and the results of the
-prediction can be aggregated using different techniques (e.g., majority voting, averaging, etc...).
+
+The algorithm can be described as follows: given a dataset $\dset$ of size $n$, we create a new
+dataset of size $n$ ($D_{bs}$ in \Cref{algo:bagging}) by randomly picking samples from $D$ without
+removing them from it. If we repeat the procedure $T$ times we obtain $T$ different datasets of size
+$n$, which can be used to train different base learners. Once the training is over, predictions can be done on inputs and the results can be aggregated using different techniques (e.g., majority voting, averaging, etc...).
 
 \medskip
 
 Since $D_{bs}$ is being built from $D$ without removal it's interesting to give an
-estimate of the number of samples that are being actually used. Since the probability of being
-picked is $1 / m$, and doesn't change with the iteration, the probability of not being picked is $1
-- 1 / m$.
-
-\smallskip
+estimate of the number of samples that are not being used to build the $i$th dataset. Since the
+probability of being picked is $1 / m$, and doesn't change with the iteration, then the probability of not being picked is $1 - 1 / m$.
 
 If we compute the limit of the probability for an extremely large dataset we get
-\Cref{eq:bagging-limit}, telling us that we can expect that $36.8\%$ of the data remain unused.
+\Cref{eq:bagging-limit}, telling us that we can expect that $36.8\%$ of the data in $D$ to remain
+unused every time we build a new dataset with bootstrap.
 \begin{equation}
 	\label{eq:bagging-limit}
 	\lim_{m \rightarrow \infty} \left(1 - \frac{1}{m}\right) = \frac{1}{e} \approx 0.368
 \end{equation}
-Since this data would be 'lost' on the estimator, we can implement a different version of the
-train-test split seen in the beginning of the chapter: if we keep track of the data that ends in
-$D_{bs}$, what remains can be put in $V_{bs}$, which is a validation set and can be used to understand how much
-the single learner is able to generalize after training (this is one of the many approaches that can
-be implemented based to avoid wasting data).
+Since this data would be 'lost', we can implement different mechanisms to take advantage of this
+surplus, an example could be a variation of the train-test split seen in the beginning of the
+chapter: if we keep track of the data that ends in $D_{bs}$, what remains can be put in $V_{bs}$,
+which is called validation set, and can be used to understand how much the single learner is able to generalize after training.
 
 \subsubsection{Random Forests}
 
@@ -561,12 +551,11 @@ Random forests are an extension of the Bagging model that was just described, th
 by Leo Breiman in \cite{Breiman2001}, while decision trees perform the splitting procedure for every
 node by selecting the feature that yields the best impurity reduction, random forests pick the
 feature that yields the best impurity decrease from a random subset of features of size $k$. The
-value of $k$ controls how random is the splitting procedure, if $k = d$, where $d$ is the size of
-the feature set, then the behavior of the random forest is the same as the decision tree introduced
-in the last section, if $k = 1$, then the split feature is chosen randomly.
+value of $k$ controls how random the splitting procedure is going to be, if $k = d$, where $d$ is the size of the feature set, then the behavior of the random forest is the same as the decision tree introduced
+in the last section, if $k = 1$, then the splitting feature is chosen randomly.
 
-Despite the relative simplicity of the model random forests provide a high grade of performance,
-accompanied by the same grade of explainability of decision trees (with the added complexity of
+Despite the relative simplicity of the model, random forests provide a high level of performance,
+accompanied by the classic explainability of decision trees (with the added complexity of
 having to deal with more than one learner at the same time).
 
 \section{SVM}
