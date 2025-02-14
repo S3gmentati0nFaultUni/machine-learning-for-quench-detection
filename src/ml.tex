@@ -426,56 +426,134 @@ a series of branches will be chosen to be pruned based on the impurity decrease 
 There are different post-pruning techniques that can be implemented, scikit-learn is working with
 Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classification}.
 
-\section{Random Forests}
-\label{sec:rf}
+\section{Ensemble learning}
+\label{sec:el}
+In the previous chapter I introduced decision trees, and we have talked at length about their
+strength and weaknesses, providing some instruments to counter their shortcomings. Sometimes,
+despite our efforts, the decision tree model is simply not enough for the task at hand, if we don't
+want to give up the high explainability of tree models, in favor of higher performance, we can think
+of creating an ensemble.
 
-\comment{Almost empty section}{The section feels empty compared to the one about
-decision trees}
-
-The second model that I used in the project is the \emph{RandomForestClassifier} part of the scikit-learn
-library. Random Forests are an \emph{ensemble} of trees, if different models are put together to solve a
-problem, the performance will surely be higher than using a single tree, this is especially true for
-weaker models, the reason why we chose to explore random forests is because the model is expected to
-perform better than single trees, especially in the case of weaker datasets (such as Bn, results
-will be introduced in a later chapter).
-
-\medskip
+An ensemble is constructed by grouping weaker learners, which produces two main effects (to
+clarify the concepts we will consider a basketball roster):
+\begin{itemize}
+	\item Different learners are able to grasp different sides of the problem, which would be
+		either impossible or complicated for single models, if we consider our example, each
+		player covers different positions which do not fit the other players (this doesn't
+		mean that key players or superstars cannot play in other positions due to their
+		performance).
+	\item Using a group of models alleviates the shortcomings of the weaker links in the chain,
+		if we consider our example, the weaker players, and lesser role players, can stay on the bench while the
+		main rotation is playing, but can still contribute with some quality minutes when
+		the main rotation is facing a difficulty.
+\end{itemize}
 
 Following the analysis done in \cite{ZhouZhi-Hua2021ML}, I will now prove that the error rate of a
-binary classifier based on an ensemble of models grows to zero based on the number of individuals
+binary classifier based on an ensemble of models falls to zero exponentially with the number of individuals
 used.
 
 Let's suppose that the error rate of each model in the ensemble is $\epsilon$, the ground truth
-function is $f$ and the single learner is $l_i$, then we can express the probability of the learner
+function is $f$ and the single learner is $h_i$, then we can express the probability of the learner
 making a wrong prediction on $\vec{x} \in \ins$ as shown in \Cref{eq:error-rate}.
 \begin{equation}
 	\label{eq:error-rate}
 	P(l_i(\vec{x}) \neq f(\vec{x})) = \epsilon
 \end{equation}
-Assuming that the prediction is $y \in \{-1, +1\}$ and the ensemble aggregates the predictions by
-using a simple majority algorithm, then the aggregated prediction can be described as shown in
-\Cref{eq:ensemble-aggregation}.
+Assuming that the prediction is $y \in \{-1, +1\}$, let's consider an ensemble in containing $T$
+base learners, independent of each other, the ensemble will aggregate the predictions by using a
+simple majority algorithm (\Cref{eq:ensemble-aggregation}).
 \begin{equation}
 	\label{eq:ensemble-aggregation}
 	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}l_i(\vec{x})\right)
 \end{equation}
-The probability of the ensemble being wrong is equal to computing the probability that more than
-half of the single learners are independently wrong. The number of estimators being wrong in the
-ensemble can be expressed as a binomial random variable $X \sim B(T, \epsilon)$. Therefore, we can finish our proof as shown in \Cref{eq:binomial} and \Cref{eq:hoeffding}
+Since the probability of a base learner of being correct is $1 - \epsilon$, then the ensemble
+correctly classifies a sample only if more than half of the learners correctly identify the sample.
+This is expressed by \Cref{eq:succ-probability}.
 \begin{equation}
-	\label{eq:binomial}
-	P(F(\vec{x}) \neq f(\vec{x})) = P(X > T / 2) = \sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 -
-	\epsilon)^k\epsilon^{T - k}
+	\label{eq:succ-probability}
+	\begin{aligned}
+		Pr(\text{success}) & = Pr\left(\text{at least } \left\lceil{\frac{T}{2}}\right\rceil \text{ correctly identify
+		the sample}\right)
+		\\
+			   & = \sum_{k = \lceil{T / 2}\rceil}^T \binom{T}{k} (1 - \epsilon)^k
+			   \epsilon^{T - k}
+	\end{aligned}
 \end{equation}
-Then for the Chernoff-Hoeffding inequality we can conclude that the error rate of the ensemble falls
-exponentially with the number of estimators.
+Since we are interested in finding a bound for ensemble error rate we are interested in the
+complement of $Pr(\text{success})$, which is $Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq
+f(\vec{x}))$. The ensemble misclassifies a sample only if the number of learners that can correctly classify the
+model is less than half, therefore $Pr(\text{insuccess})$ can be defined, starting from
+\Cref{eq:succ-probability} as shown in \Cref{eq:insucc-probability}.
+\begin{equation}
+	\label{eq:insucc-probability}
+	Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq f(\vec{x})) = \sum_{k = 0}^{\lfloor{T / 2}\rfloor} \binom{T}{k} (1 - \epsilon)^k \epsilon^{T - k}
+\end{equation}
+Due to the independence assumption we can use Hoeffding's inequality on the sum of independent
+random variables \cite{ZhouZhi-Hua2021ML}, result is an upper bound of the error rate.
 \begin{equation}
 	\label{eq:hoeffding}
 	\sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 - \epsilon)^k\epsilon^{T - k} \leq
 	exp\left(-\frac{1}{2}T(1 - 2\epsilon)^2\right)
 \end{equation}
-\comment{Make sure that the proof is correct}{There are a series of things that I have said in the
-proof that do not quite convince me}
+\Cref{eq:hoeffding} is telling us that the error rate of the ensemble falls exponentially with the
+number of base learners $T$. This proof is based on the non-trivial assumption that the base
+learners are independent of each other, which is something that doesn't apply in the practical
+case, since the models are trained on the same dataset for the same problem $\problem$.
+
+\medskip
+
+Before doing a brief overview of the random forest model I will introduce Bagging, which is the
+technique at the base of the random forest model.
+
+\subsubsection{Bagging}
+
+Bagging, introduced by Leo Breiman in \cite{Breiman1996}, is a method for generating multiple
+version of a base predictor that are then aggregated in a single predictor, following
+\cite{ZhouZhi-Hua2021ML} the algorithm can be easily outlined in \Cref{algo:bagging}.
+\begin{algorithm}
+	\caption{The bagging algorithm, taken from \cite{Bauer1999}}\label{algo:bagging}
+	\begin{algorithmic}[1]
+		\Require A training dataset $\dset$, a base learner $\mathcal{L}$, a certain number
+		of training rounds $T$.
+		\Ensure An ensemble model capable of aggregating predictions.
+		\Function{Bagging}{$D$, $\mathcal{L}$, $T$}
+		\For {$t = 1, \ldots, T$}
+		\State $D_{bs}$ obtained by bootstrap sampling from $D$
+		\State $h_t = \mathcal{L}(D_{bs})$ 
+		\EndFor
+		\State \textbf{return} $H(\vec{x}) = \argmin_{y \in \outs}\sum_{t : h_t(\vec{x}) =
+		1} 1$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+The algorithm can be described as follows: given a dataset $\dset$, we create a new dataset of size
+$n$ ($D_{bs}$) in \Cref{algo:bagging} by randomly picking samples from $D$, if we repeat the
+procedure $T$ times we obtain $T$ different datasets of size $n$, which are used to train different
+base learners. Once the training is over, predictions can be done on inputs and the results of the
+prediction can be aggregated using different techniques (e.g., majority voting, averaging, etc...).
+
+\medskip
+
+Since $D_{bs}$ is being built from $D$ without removal it's interesting to give an
+estimate of the number of samples that are being actually used. Since the probability of being
+picked is $1 / m$, and doesn't change with the iteration, the probability of not being picked is $1
+- 1 / m$.
+
+\smallskip
+
+If we compute the limit of the probability for an extremely large dataset we get
+\Cref{eq:bagging-limit}, telling us that we can expect that $36.8\%$ of the data remain unused.
+\begin{equation}
+	\label{eq:bagging-limit}
+	\lim_{m \rightarrow \infty} \left(1 - \frac{1}{m}\right) = \frac{1}{e} \approx 0.368
+\end{equation}
+Since this data would be 'lost' on the estimator, we can implement a different version of the
+train-test split seen in the beginning of the chapter: if we keep track of the data that ends in
+$D_{bs}$, what remains can be put in $V_{bs}$, which is a validation set and can be used to understand how much
+the single learner is able to generalize after training (this is one of the many approaches that can
+be implemented based to avoid wasting data).
+
+\subsubsection{Random Forests}
 
 Random forests work on a subset of features of size $k$ picked randomly from the set of features,
 the size of the subset determines the behavior of the model, the splitting procedure works in the
