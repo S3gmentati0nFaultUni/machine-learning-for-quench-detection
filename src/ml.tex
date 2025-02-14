@@ -385,24 +385,27 @@ computed as the weighted sum of all the Gini values for the dataset after the sp
 The best splitting feature is going to be the one with the smallest Gini index overall.
 
 \subsection{Avoiding overfitting through pre- and post- pruning}
-As was argued in the previous section decision trees have an extremely simple structure and they
-allow us to interpret the obtained results giving us an idea of how the machine is able to classify
-our points.
+As was argued in the previous section decision trees have an extremely simple structure and the
+results are easy to interpret, since all we have to do is read the decision path for the samples of
+interest.
 
 Overfitting is probably the biggest drawback of decision trees, as shown in
 \cite{overfitting-dt-erblin}, since the model tries to partition the space based on the purity of
-the nodes it's important to make sure that the rules utilized to do partitioning do not become too
-specific. There are two techniques explained in the literature that can be used to prevent the model
-from overfitting: Pre-pruning and post-pruning.
+the nodes, it's important to make sure that the splitting rules utilized are not overly specific.
+Two techniques are commonly explored in the literature to prevent overfitting: \emph{pre-pruning}
+and \emph{post-pruning}.
 
 \medskip
 
-Pre-pruning consists in a set of rules that force the algorithm to an early stop whenever a series
-of conditions allow it. In the literature pre-pruning is sometimes associated only to a technique
-that stops the splitting procedure whenever the impurity decrease (or the purity increase) doesn't
-justify the split in the first place \cite{ZhouZhi-Hua2021ML}; I find myself more in line with
-the general definitions given in \cite{bramer2007principles}\cite{fisher1996learning}, which
-state that pre-pruning is a group of techniques meant to keep the size of the tree in check.
+Pre-pruning forces an early stop of the algorithm whenever a series of conditions allow it. The
+definition of pre-pruning in the literature is a bit confusing, \comment{in some cases it's regarded as an
+early stopping technique that only considers the impurity decrease}{Check
+that the book actually says this (can't trust myself with this)} \cite{ZhouZhi-Hua2021ML}, in some
+other cases, pre-pruning is defined as a group of techniques meant to keep the size of the decision
+tree in check \cite{bramer2007principles}\cite{fisher1996learning}. The better definition is the
+second one, since many splits reduce the impurity but introduce unwanted complexity in the model (e.g., because they are splitting a very small amount of samples, because the tree is already very deep, etc...).
+
+\smallskip
 
 The specific pre-pruning conditions that can be checked using the DecisionTreeClassifier class provided by
 scikit-learn are the following:
@@ -411,17 +414,16 @@ scikit-learn are the following:
 	      probably one of the easiest forms of pre-pruning.
 	\item The \emph{impurity decrease} stops nodes from splitting when the decrease in impurity
 	      of the children is not higher than a certain threshold, if the threshold is too high
-	      then the tree will probably underperform, if it's too low then the tree is going to
+	      then the tree will probably underperform, if it's too low then the tree is likely going to
 	      overfit.
-	\item The \emph{number of elements to split} is basically a check that can be done on the
-	      number of points inside a node. Not splitting when the number of points
-	      contained in a node is too little is ax excellent way of avoiding overfitting.
+	\item The \emph{number of elements to split}, is basically a check that can be done on the
+	      number of samples inside a node. An excellent way of avoiding overfitting is to not split a node containing few samples.
 \end{itemize}
 
 \medskip
 
 Post-pruning is the alternative to pre-pruning, the essential difference between the two is that
-post-pruning is done after the tree has been fully constructed, therefore, in the a posteriori phase
+post-pruning is done after the tree has been fully constructed. In the a posteriori phase,
 a series of branches will be chosen to be pruned based on the impurity decrease that they provide.
 There are different post-pruning techniques that can be implemented, scikit-learn is working with
 Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classification}.
