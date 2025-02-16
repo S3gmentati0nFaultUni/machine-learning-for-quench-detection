@@ -200,6 +200,7 @@ computation, avoiding overfitting through pre- and post- pruning.
 	\label{fig:simple-dt}
 \end{figure}
 \subsection{Indices and node split computation}
+\comment{Proof read this section}{}
 In \Cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
 its regard could be: 'Why this structure and not another one?'. Other than it being a simple example
 nothing is really preventing us from describing the 'rain' event based on different threshold values
@@ -234,9 +235,14 @@ or different feature sets altogether.
 \end{figure}
 The mock tree shown in \Cref{fig:simple-dt-alt} is a different tree compared to the one shown in
 \Cref{fig:simple-dt} and yet they solve the same problem by characterizing it differently.
-\Cref{algo:decision-tree} shows how the decision tree is built, line $9$ states that the best
-splitting feature needs to be selected with every iteration, this choice is taken based on a
-\emph{purity} index applied to nodes.
+\Cref{algo:decision-tree} shows how the decision tree is built, the procedure is greedy, since it
+tries to pick the best splitting feature with every iteration (at line $10$ the choice is taken
+based on a \emph{purity} index applied to the tree nodes), therefore the resulting
+trees could be different even if the dataset stays the same.
+
+This variability is due to the stochastic nature of the construction process, as we will see, there
+are many things to keep in mind as well as precautions that can be taken to make sure that the
+training and testing procedure do not change with every run.
 
 \begin{algorithm}
 	\caption{The decision tree base algorithm taken from
@@ -288,9 +294,7 @@ There are many different ways of defining information entropy, a more general de
 to the one found in \cite{ZhouZhi-Hua2021ML}, is found in \cite{gray2011entropy}. Let's consider a
 random variable $f$ built on the alphabet $B = \{b_1, \ldots, b_{|B|}\}$ we can define the
 partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} = f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger
-probability space $\Omega$, every partition is chosen based on the outcome of the
-measurement of the random variable $f$. In the case of a discrete random variable we can define the
-information entropy as shown in \Cref{eq:information-entropy}
+probability space $\Omega$. Every partition is chosen based on the outcome of the measurement of the random variable $f$. In the case of a discrete random variable we can define the information entropy as shown in \Cref{eq:information-entropy}
 \begin{equation}
 	\label{eq:information-entropy}
 	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|B|}{P(Q_i)\log{P(Q_i)}}
@@ -307,15 +311,14 @@ Therefore, we can rewrite \Cref{eq:information-entropy} as:
 \begin{equation}
 	H_p(D) = - \sum_{k = 1}^{|\outs|}p_k \log{p_k}
 \end{equation}
-$p_k$ denotes the proportion of the $k$-th class inside dataset $D$.
+where $p_k$ denotes the proportion of the $k$-th class inside dataset $D$.
+
+\medskip
 
 If we consider the binary classification problem ('true' or 'false' response), whenever a splitting procedure
 is done on a node in the tree, the split is computed on every feature based on the possible
-values of the feature itself (only for discrete features), if we consider our mock-problem, a split could be computed on a
-feature called  'status of the sky' which can have one of two values $\{\text{overcast},
-	\text{clear}\}$ the new node could be built in two different ways and
-the class distribution for each is different, having different levels of purity based
-on how well the data is partitioned between the classes 'rain' and 'no rain'.
+values of the feature itself (only for discrete features). If we consider our mock-problem, a split
+could be computed on a feature called 'amount of clouds' which can have one of two values $\{\text{overcast}, \text{clear}\}$ the new node could be built in two different ways and the class distribution for each is different, having different levels of purity based on how well the data is partitioned between the classes 'rain' and 'no rain'.
 
 \smallskip
 
@@ -337,9 +340,9 @@ The feature used to perform the actual splitting is going to be the one with the
 information gain. It's very important to notice that information gain is an index biased towards
 features that have many different values (and therefore $|D^v|$ is small). In the case of our mock
 problem, if we consider 'status of the sky' and we compare it to another feature containing many
-different splitting values for example 'cloud color' which might assume the following values
+different splitting values, for example 'cloud color', which might assume the following values
 $\{\text{white}, \text{light grey}, \text{grey}, \text{black}, \text{pink}, \text{orange},
-	\text{red}\}$ it's clear that the $|D^v|/|D|$ is going to be lower for each of them, therefore
+	\text{red}\}$, it's clear that the $|D^v|/|D|$ is going to be lower for each of them, therefore
 leading to a lower entropy decrease and a higher information gain.
 
 \medskip
@@ -356,11 +359,13 @@ can be computed as shown in \Cref{eq:intrinsic-value}.
 	\textsc{iv}(a) = - \sum_{v = 1}^V\frac{|D^v|}{|D|} \log{\frac{|D^v|}{|D|}}
 \end{equation}
 Due to how intrinsic value is defined the gain ratio corrects the bias of the information gain towards features
-with a higher number of values but is biased towards features with a lower amount of variables
+with a higher number of values but is biased towards features with a lower amount of values
 \cite{ZhouZhi-Hua2021ML}.
 
-In the actual implementation of the decision tree provided by scikit-learn an optimized version of
-the \textsc{cart} algorithm is used, which  is similar to the \textsc{c4.5} algorithm proposed by Quinlan in
+\medskip
+
+The actual implementation of the decision tree model in the scikit-learn library is an optimized version of
+the \textsc{cart} algorithm, which  is similar to the \textsc{c4.5} algorithm proposed by Quinlan in
 \cite{quinlan2014c4}.
 
 \subsubsection{Gini index}
@@ -397,15 +402,20 @@ and \emph{post-pruning}.
 
 \medskip
 
-Pre-pruning forces an early stop of the algorithm whenever a series of conditions allow it. The
-definition of pre-pruning in the literature is a bit confusing, \comment{in some cases it's regarded as an
-early stopping technique that only considers the impurity decrease}{Check
-that the book actually says this (can't trust myself with this)} \cite{ZhouZhi-Hua2021ML}, in some
-other cases, pre-pruning is defined as a group of techniques meant to keep the size of the decision
-tree in check \cite{bramer2007principles}\cite{fisher1996learning}. The better definition is the
-second one, since many splits reduce the impurity but introduce unwanted complexity in the model (e.g., because they are splitting a very small amount of samples, because the tree is already very deep, etc...).
+Pre-pruning forces an early stop of the algorithm whenever a series of conditions allow it, in other
+words, pre-pruning is a group of techniques meant to keep the size of the decision tree in check
+\cite{ZhouZhi-Hua2021ML} \cite{bramer2007principles} \cite{fisher1996learning}. Even if the split
+produces a decrease in the impurity of the current node it might be detrimental to proceed greedily,
+a couple of examples could clarify this suggestion:
+\begin{itemize}
+	\item It might happen that the node is labelled 'Class B', while containing a handful of
+		samples from 'Class A'. If the set of outcasts is small enough doing a split to
+		classify them correctly only introduces more complexity in the tree which might not
+		be beneficiary to the whole, we might be leading it to overfitting.
 
-\smallskip
+	\item If we have a tree that is already deep, adding even more splits to make the nodes purer
+		only makes it both more complicated and more likely to overfit the training data.
+\end{itemize}
 
 The specific pre-pruning conditions that can be checked using the DecisionTreeClassifier class provided by
 scikit-learn are the following:
@@ -425,30 +435,31 @@ scikit-learn are the following:
 Post-pruning is the alternative to pre-pruning, the essential difference between the two is that
 post-pruning is done after the tree has been fully constructed. In the a posteriori phase,
 a series of branches will be chosen to be pruned based on the impurity decrease that they provide.
-There are different post-pruning techniques that can be implemented, scikit-learn is working with
-Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classification}.
+Scikit-learn is working with Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classification}.
 
 \section{Ensemble learning}
 \label{sec:el}
-In the previous chapter we introduced decision trees, and we have talked at length about their
-strength and weaknesses, providing some instruments to counter their shortcomings. Sometimes,
+In the previous chapter we introduced decision trees, and we have talked about their
+strengths and weaknesses, providing some instruments to counter their shortcomings. Sometimes,
 despite our efforts, the decision tree model is simply not enough for the task at hand, if we don't
-want to give up the explainability of tree models, in favor of higher performance, we can construct an ensemble.
+want to give up the explainability, in favor of higher performance, we can construct an ensemble.
 
 \medskip
 
-An ensemble contains a group of weaker learners, this produces a series of effects, two of which are
+An ensemble contains a group of weaker learners, grouping produces a series of effects, two of which are
 very important (to clarify the concepts we will consider the dynamics of a basketball team during a
 game):
 \begin{itemize}
 	\item Different learners are able to grasp different sides of the problem, which would be
 		either impossible or complicated for single models. If we consider our example, each
 		player covers different positions, which do not fit his teammates (this doesn't
-		entail that there is no player capable of, if needed, covering different positions;
-		which is usually a characteristic of the best players in the team).
-	\item Using a group of models alleviates the shortcomings of the weaker ones. If we consider our example, the weaker players, and lesser role players, stay on the bench while the main rotation is playing; but can still contribute with some quality minutes when the main rotation is facing a difficulty.
+		entail that there is no player capable of, if needed, covering more than one
+		position; which is usually a characteristic of the best players in the team).
+	\item Using a group of models alleviates the shortcomings of the weaker learners. If we consider our example, the weaker players, and lesser role players, stay on the bench while the main rotation is playing; but can still contribute with some quality minutes when the main rotation is facing a difficulty.
 \end{itemize}
-Below, we will prove the second statement following the procedure described in \cite{ZhouZhi-Hua2021ML}.
+
+In \cite{ZhouZhi-Hua2021ML} a proof was given to relate the error rate of an ensemble with its size,
+the proof will be shown here below.
 
 \medskip
 
@@ -465,7 +476,11 @@ labels can be defined as $y \in \{-1, +1\}$. The ensemble will aggregate the pre
 	\label{eq:ensemble-aggregation}
 	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}h_i(\vec{x})\right)
 \end{equation}
-If we assume the learners to be independent of each other, we can model the probability of the ensemble being correct as a Binomial. Since the probability of a base learner of being correct is $1 - \epsilon$, then the ensemble correctly classifies a sample only if more than half of the learners correctly identify the sample. This is expressed by \Cref{eq:succ-probability}.
+Since the probability of a base learner of being correct is $1 - \epsilon$, then the ensemble
+correctly classifies a sample only if more than half of the learners correctly identify the sample.
+As shown in \Cref{eq:succ-probability}, if we assume the learners to be independent of each other,
+then we can model the probability of the ensemble being correct as a Binomial, $Bin(k, 1 -
+\epsilon)$, with $k \in \{\lceil{T / 2}\rceil, T\}$.
 \begin{equation}
 	\label{eq:succ-probability}
 	\begin{aligned}
@@ -503,7 +518,7 @@ ensemble algorithms.
 \subsubsection{Bagging}
 
 Bagging, introduced by Leo Breiman in \cite{Breiman1996}, is a method for generating multiple
-versions of a base predictor that are then aggregated in a single model, the simple algorithm was
+versions of a base predictor that are then aggregated in a single model, the simple algorithm is
 outlined in \Cref{algo:bagging} following \cite{ZhouZhi-Hua2021ML} and \cite{Bauer1999}.
 \begin{algorithm}
 	\caption{The bagging algorithm, taken from \cite{Bauer1999}}\label{algo:bagging}
@@ -524,35 +539,37 @@ outlined in \Cref{algo:bagging} following \cite{ZhouZhi-Hua2021ML} and \cite{Bau
 
 The algorithm can be described as follows: given a dataset $\dset$ of size $n$, we create a new
 dataset of size $n$ ($D_{bs}$ in \Cref{algo:bagging}) by randomly picking samples from $D$ without
-removing them from it. If we repeat the procedure $T$ times we obtain $T$ different datasets of size
-$n$, which can be used to train different base learners. Once the training is over, predictions can be done on inputs and the results can be aggregated using different techniques (e.g., majority voting, averaging, etc...).
+removing them from it\footnote{The technique is known as bootstrap sampling \cite{ZhouZhi-Hua2021ML}}. If we repeat the procedure $T$ times we obtain $T$ different datasets of size $n$, which can be used to train different base learners. Once the training is over, predictions can be done on inputs and the results can be aggregated using different techniques (e.g., majority voting or averaging).
 
 \medskip
 
 Since $D_{bs}$ is being built from $D$ without removal it's interesting to give an
 estimate of the number of samples that are not being used to build the $i$th dataset. Since the
-probability of being picked is $1 / m$, and doesn't change with the iteration, then the probability of not being picked is $1 - 1 / m$.
+probability of being picked is $1 / n$, and doesn't change with the iteration, then the probability of not being picked is $1 - 1 / n$.
 
-If we compute the limit of the probability for an extremely large dataset we get
-\Cref{eq:bagging-limit}, telling us that we can expect that $36.8\%$ of the data in $D$ to remain
-unused every time we build a new dataset with bootstrap.
+\Cref{eq:bagging-limit} is the result of considering the extreme case, $n \rightarrow \infty$, and
+then computing the probability of a sample not being picked for $n$ different draws. The result is
+that we expect the $36.8\%$ of the data in $D$ to remain unused every time a new dataset $D_{bs}$ is
+being built by bootstrapping.
 \begin{equation}
 	\label{eq:bagging-limit}
-	\lim_{m \rightarrow \infty} \left(1 - \frac{1}{m}\right) = \frac{1}{e} \approx 0.368
+	\lim_{n \rightarrow \infty} \left(1 - \frac{1}{n}\right) = \frac{1}{e} \approx 0.368
 \end{equation}
 Since this data would be 'lost', we can implement different mechanisms to take advantage of this
 surplus, an example could be a variation of the train-test split seen in the beginning of the
-chapter: if we keep track of the data that ends in $D_{bs}$, what remains can be put in $V_{bs}$,
+chapter: if we keep track of the data used for $D_{bs}$, what remains can be put in $V_{bs}$,
 which is called validation set, and can be used to understand how much the single learner is able to generalize after training.
 
 \subsubsection{Random Forests}
 
-Random forests are an extension of the Bagging model that was just described, they were introduced
+Random forests are an extension of the Bagging model described above, they were introduced
 by Leo Breiman in \cite{Breiman2001}, while decision trees perform the splitting procedure for every
 node by selecting the feature that yields the best impurity reduction, random forests pick the
 feature that yields the best impurity decrease from a random subset of features of size $k$. The
 value of $k$ controls how random the splitting procedure is going to be, if $k = d$, where $d$ is the size of the feature set, then the behavior of the random forest is the same as the decision tree introduced
 in the last section, if $k = 1$, then the splitting feature is chosen randomly.
+
+\medskip
 
 Despite the relative simplicity of the model, random forests provide a high level of performance,
 accompanied by the classic explainability of decision trees (with the added complexity of
