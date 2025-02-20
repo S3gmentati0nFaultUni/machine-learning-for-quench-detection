@@ -222,14 +222,47 @@ This structure leaves us with much more freedom as to which harmonics to pick to
 number $2$ is strongly correlated with its odd multiples, harmonic number $4$ is strongly correlated
 with its multiples.
 
-Lastly, we can analyze the correlation between the harmonics and the label.
-\begin{figure}
+Lastly, we can analyze the correlation between the harmonics and the label. As we can see in \Cref{fig:phi-lcorr} most of the harmonics have a good correlation with the expected solution, especially harmonic number $2$ and its odd multiples, and harmonics number $1$ and $12$.
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.2]{img/Phi_label_corr.png}
 	\caption{Label correlation for the Phi table} \label{fig:phi-lcorr}
 \end{figure}
-As we can see in \Cref{fig:phi-lcorr} most of the harmonics have a good correlation with the
-expected solution, especially harmonic number $2$ and its odd multiples, and harmonics number $1$
-and $12$.
+This closes the brief exposition about the preprocessing steps for the various labels, now we will
+tackle the model selection procedure indicating which were the best models overall and which model
+we chose to solve $\qrp$.
 
 \section{Results}
+Every model shown in this section has been tested using the pipeline that I talked about in
+\Cref{chp:problem}, due to some changes done around the time of writing, hyperparameter tuning has
+been done with $\ncv$ using both the normal randomized KFold as well as StratifiedKFold. While the
+performance difference is not as important as one might imagine, the final results were different
+enough to push me to move the pipeline to the use of StraifiedKFold. In the following I will only
+provide results for the models obtained using stratified sampling for fold construction and I will
+provide a comparison of the performance metrics only when the difference is deemed appreciable.
+
+\subsection{Decision trees}
+As we already alluded to in previous sections we wanted to find a highly explainable model with good
+performance that could be used to solve $\qrp$.
+
+We tried many different approaches where various tables were involved and different harmonics were
+being used, but the best table always remained An, which performance are shown in
+\Cref{fig:dt-an-2-12-15-perf}. As we can see, even if we use the simple decision tree model, we are
+capable of explaining whether a sample is 'quench' or 'non quench' by using a very limited amount of
+harmonics (only three are necessary).
+\begin{figure}
+	\centering
+	\includegraphics[scale=.2]{img/An_2_12_15_cm_dt.png}
+	\caption{The performance for the An model built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-15-perf}
+\end{figure}
+If we look at \Cref{fig:dt-an-2-12-15-pt}, we can see that the structure of the tree is also
+extremely simple, contained in depth, using mostly harmonic number $2$ to perform the splits and
+having only one node where the impurity is not zero.
+\begin{figure}
+	\centering
+	\includegraphics[scale=.15]{img/An_2_12_15_pt_dt.png}
+	\caption{The structure of the tree built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-15-pt}
+\end{figure}
+
+
+
