@@ -250,7 +250,7 @@ being used, but the best table always remained An, which performance are shown i
 \Cref{fig:dt-an-2-12-15-perf}. As we can see, even if we use the simple decision tree model, we are
 capable of explaining whether a sample is 'quench' or 'non quench' by using a very limited amount of
 harmonics (only three are necessary).
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_2_12_15_cm_dt.png}
 	\caption{The performance for the An model built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-15-perf}
@@ -258,11 +258,64 @@ harmonics (only three are necessary).
 If we look at \Cref{fig:dt-an-2-12-15-pt}, we can see that the structure of the tree is also
 extremely simple, contained in depth, using mostly harmonic number $2$ to perform the splits and
 having only one node where the impurity is not zero.
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_2_12_15_pt_dt.png}
 	\caption{The structure of the tree built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-15-pt}
 \end{figure}
+Many were the models tested in this phase but all of them fell short of the performance of the model
+shown in \Cref{fig:dt-an-2-12-15-pt}, that is enough of a reason why, we will not be covering them
+in depth. All we will do is plot the performance of the best decision tree built on every table to
+compare them against each other.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\linewidth]{img/best_dts.png}
+	\caption{Performance comparison of all the best decision trees} \label{fig:best-dts}
+\end{figure}
 
+As we can see in \Cref{fig:best-dts}, the performance for the best models built on tables Bn, Cnmod
+and Phi, are worse than the ones obtained by using An, and the margin is quite important.
+\subsection{SVM}
+Before moving onward to the other models let's consider the $\svm$, as we said in \Cref{sec:svm}, it
+is a very high performance model, capable of finding the solution with a very high accuracy. All of
+this is done my transposing the samples to a higher dimensional space where a dividing hyperplane
+can be found. Since this mapping is unknown and we are using an approximation for it, the $\svm$
+model has a very low degree of explainability.
 
+The reason why we are introducing the $\svm$ model first is because we got very high performance out
+of decision trees already, therefore we asked ourselves what was the best performance we could be
+pushing for. If we compare the best $\svm$ with the best decision tree, like we did in
+\Cref{fig:svm-vs-dt}, it's clear that there is still quite a bit of room for improvement, especially in the Inverse recall metric, which is the one where most models are at fault.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\linewidth]{img/svm_vs_dt.png}
+	\caption{Performance comparison of $\svm$ and decision tree} \label{fig:svm-vs-dt}
+\end{figure}
+The model that are shown in this plot are:
+\begin{itemize}
+	\item The decision tree we just introduced (\Cref{fig:dt-an-2-12-15-pt}),
+	\item The $\svm$ is built on top of a mix of tables (An, Cnmod and Phi), using the full
+	      harmonic content, a polynomial kernel of degree $3$, with a regularization parameter
+	      of $0.1$ and a kernel coefficient $\gamma = 0.1$ and a $c_0 = 0.1$. Both of these
+	      hyperparameters were not introduced in \Cref{sec:svm} because they are
+	      implementation specific, as a matter of fact, the polynomial kernel has the
+	      following structure $\kappa(x, y) = (\gamma\trans{\vec{x}}y + c_0)^d$.
+\end{itemize}
+%An_Cnmod_Phi_C_0.1_co_0.1_de_3_ga_0.1_ke_poly_ss_hrmcs_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_0.9960.svc
+%	p_grid = {
+%                'C': [0.1, 1, 10, 100, 1000],          # Regularization parameter
+%                'gamma': ['scale', 'auto', 0.001, 0.01, 0.1, 1, 10],  # Kernel coefficient (for RBF, sigmoid, and poly)
+%                'degree': [2, 3, 4, 5],                # Degree of the polynomial kernel (only used for poly)
+%                'coef0': [0, 0.1, 0.5, 1],             # Independent term in the kernel function (only used for poly and sigmoid)
+%                'kernel': ['linear', 'rbf', 'poly', 'sigmoid']  # Kernels to try
+%	}
 
+In the following we will be showing two different techniques, still based on trees, which yielded
+very high performance and we will later close the chapter with an analysis of the model that we
+chose to solve the problem performed the best overall.
+
+\subsection{Random Forests}
+
+\subsection{Tree Aggregators}
+
+\subsubsection{Performance on the triplets}
