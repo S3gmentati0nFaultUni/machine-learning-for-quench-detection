@@ -245,62 +245,65 @@ model is then trained on the whole reduced dataset and serialized using pickle.
 Experiments were conducted on three different computers running different architectures and
 different operating systems, but the results did not change due to the standard-oriented approach,
 \Cref{tbl:computers} for a summary of the computers we used.
-\begin{center}
-	\begin{longtable}{|c|c|c|c|}
-		\caption{System information}\label{tbl:computers}
-		\\\textbf{}					& \textbf{Pigna}
-		                                                & \textbf{Mattone}
-		                                                & \textbf{Q-lone}
-		\\\hline\hline
-		\endfirsthead\hline\endlastfoot
+\begin{table}[t]
+	\caption{System configuration used for our experiments. Core count values are detailed as number
+		of CPU cores and threads, while frequency is expressed in the base and boost specifications.
+		Finally, the CPU cache size is shown for the L1, L2 and L3 levels, where
+		available.}\label{tbl:computers}
 
-		\textbf{CPU manufacturer}                       & Intel
-		                                                & AMD
-		                                                & Intel
-		\\\hline
-		\textbf{CPU model}                              & i$5$ $5287\textsc{u}$
-		                                                & Ryzen $3700\textsc{x}$
-		                                                & i$7$ $4770$
-		\\\hline
-		\textbf{CPU core count}                         & $2\textsc{c}$ $2\textsc{t}$
-		                                                & $8\textsc{c}$ $16\textsc{t}$
-		                                                & $4\textsc{c}$ $8\textsc{t}$
-		\\\hline
-		\textbf{Litography (nm)}                        & $14$
-		                                                & $7$
-		                                                & $22$
-		\\\hline
-		\textbf{Launch Date}                            & Q$1$ 2015
-		                                                & Q$2$ 2019
-		                                                & Q$2$ 2013
-		\\\hline
-		\textbf{Base frequency (GHz)}                   & $2.90$
-		                                                & $4.125$
-		                                                & $3.40$
-		\\\hline
-		\textbf{Boost frequency (GHz)}                  & $3.30$
-		                                                & $4.40$
-		                                                & $3.90$
-		\\\hline
-		\textbf{Cache} ($\textsc{mb}$)                  & $3$
-		                                                & L1: $0.512$, L2: $4$, L3:$32$
-		                                                & $8$
-		\\\hline
-		\textbf{TDP\footnote{Thermal Design Power} (W)} & $28$
-		                                                & $84$
-		                                                & $65$
-		\\\hline
-		\textbf{Memory size} ($\textsc{gb}$)            & $8$
-		                                                & $16$
-		                                                & $16$
-		\\\hline
-		\textbf{Operating System}                       & Pop!\_OS $22.04$ LTS
-		                                                & Pop!\_OS $22.04$ LTS
-		                                                & Fedora $39$
-		\\\hline
-	\end{longtable}
-\end{center}
+	\bigskip
 
+	\centering
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{lccc}
+		\toprule
+		                     & \textbf{Pigna}        & \textbf{Mattone}       & \textbf{Topone}    \\
+		\midrule
+		\textbf{Model}       & Macbook Pro           & Custom build           & Dell XPS 8700      \\
+		\textbf{CPU}         & i$5$ $5287\textsc{u}$ & Ryzen $3700\textsc{x}$ & i$7$ $4770$        \\
+		\textbf{Core count}  & $2\cc / 2\tc$         & $8\cc / 16\tc$         & $4\cc / 8\tc$      \\
+		\textbf{Launch Date} & Q$1$ 2015             & Q$2$ 2019              & Q$2$ 2013          \\
+		\textbf{Frequency}   & $2.90 / 3.30$ \ghz    & $4.125 / 4.40$ \ghz    & $3.40 / 3.90$ \ghz \\
+		\textbf{Cache}       & $3$ \mb               & $0.512 / 4 / 32$ \mb   & $8$ \mb            \\
+		\textbf{TDP}         & $28$ \w               & $84$ \w                & $65$ \w            \\
+		\textbf{RAM}         & $8$ \gb               & $16$ \gb               & $16$ \gb           \\
+		\textbf{OS}          & Pop!\_OS $22.04$ LTS  & Pop!\_OS $22.04$ LTS   & Fedora $39$        \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Model selection was handled by doing a partial exploration of the parameter space, for each model we
+used a combination of a parameter grid (shown in \Cref{tbl:params}) chosen by us and a grid search
+algorithm (GridSearchCV in scikit-learn).
+
+\begin{table}[t]
+	\caption{Hyperparameters which we have tuned during the model training phase.} \label{tbl:params}
+
+	\bigskip
+
+	\centering
+	\setlength{\tabcolsep}{6pt}
+	\begin{tabular}{llc}
+		\toprule
+		\textbf{Model}       & \textbf{Hyperparameter}                                           & \textbf{Values}                        \\
+		\midrule
+		\multirow{5}{*}{DT}  & impurity criterion                                                & gini, entropy, log loss                \\
+		                     & max depth                                                         & $2, 3, 4, 5$                           \\
+		                     & min impurity decrease                                             & $0.001, 0.01, 0.05$                    \\
+		                     & max features                                                      & None, $0.5, 0.75$                      \\
+		                     & min samples leaf                                                  & $5, 10, 20$                            \\
+		\midrule
+		\multirow{1}{*}{RF}  & n. of trees                                                       & $2, 3, 5, 10$                          \\
+		                     & \multicolumn{2}{l}{$+$ the same hyperparameters and values of DT}                                          \\
+		\midrule
+		\multirow{5}{*}{SVC} & $C$                                                               & $0.1, 1, 10, 100, 1000$                \\
+		                     & $\gamma$                                                          & scale, auto, $0.001, 0.01, 0.1, 1, 10$ \\
+		                     & degree                                                            & $2, 3, 4, 5$                           \\
+		                     & $c_0$                                                             & $0, 0.1, 0.5, 1$                       \\
+		                     & kernel                                                            & linear, poly sigmoid, rbf              \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 
 
