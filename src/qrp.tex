@@ -39,7 +39,7 @@ Where $X$ is a sample in the dataset that is being scaled.
 
 The results are reported in the following sections, one for each table.
 
-\subsubsection{An table}
+\subsubsection{\an table}
 \Cref{fig:an-corr} shows the correlation of the various harmonics with each other. Independently
 of the sign of the cross-correlation measurement, the matrix has $5$ different diagonals (other than
 the main diagonal) that contain repeated information, e.g., harmonic number $1$ provides the same
@@ -47,7 +47,7 @@ information as harmonic number $3, 5, 7, \ldots$.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/An_corr_matrix.png}
-	\caption{The cross-correlation of the An harmonics} \label{fig:an-corr}
+	\caption{The cross-correlation of the \an harmonics} \label{fig:an-corr}
 \end{figure}
 Other than us noticing that the situation is definitely complex and doing feature extraction on this
 matrix might be trickier than we would have otherwise assumed, we also noticed that Harmonic number
@@ -70,7 +70,7 @@ should be performing at a high level.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/An_label_corr.png}
-	\caption{Label correlation for the An table} \label{fig:an-lcorr}
+	\caption{Label correlation for the \an table} \label{fig:an-lcorr}
 \end{figure}
 
 Once again, considering \Cref{fig:an-lcorr} we will be picking the harmonics with the highest label
@@ -97,7 +97,7 @@ $\textsc{pca}$ (Principal Component Analysis).
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_distribution.png}
-	\caption{Data distribution for the An table after applying $\textsc{pca}$ dimensionality
+	\caption{Data distribution for the \an table after applying $\textsc{pca}$ dimensionality
 		reduction} \label{fig:an-dist}
 \end{figure}
 
@@ -105,8 +105,8 @@ It can be seen in \Cref{fig:an-dist} that the samples, after dimensionality redu
 of zones, each zone has a very high degree of purity. The very good distribution of the samples is
 very likely the reason why the models built on this table are performing so well.
 
-\subsubsection{Bn table}
-We can use a similar procedure on the Bn table, which in most of the tests proved to be the worst
+\subsubsection{\bn table}
+We can use a similar procedure on the \bn table, which in most of the tests proved to be the worst
 table to use to build models with, this is likely due, if we look at \Cref{fig:bn-dist}, to the very
 poor distribution of the data, as we can see it's really hard to find a way to separate the central
 portion of the data, and this difficulty will be reflected in the performance of most models that
@@ -114,16 +114,16 @@ will be introduced in this chapter.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_distribution.png}
-	\caption{Data distribution for the Bn table after applying $\textsc{pca}$ dimensionality
+	\caption{Data distribution for the \bn table after applying $\textsc{pca}$ dimensionality
 		reduction} \label{fig:bn-dist}
 \end{figure}
 
-As we did for An we check the cross-correlation of the Bn table, and the results are actually very
+As we did for \an we check the cross-correlation of the \bn table, and the results are actually very
 similar.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_corr_matrix.png}
-	\caption{The cross-correlation of the Bn harmonics} \label{fig:bn-corr}
+	\caption{The cross-correlation of the \bn harmonics} \label{fig:bn-corr}
 \end{figure}
 Possibly the biggest difference between \Cref{fig:an-corr} and \Cref{fig:bn-corr}, apart from the
 obvious different in the value of the correlation coefficient, we can see that harmonic $2$ is not
@@ -132,29 +132,29 @@ correlation with all odd harmonics.
 
 If we check the correlation of the harmonics with the labels (\Cref{fig:bn-lcorr}), we can see that, apparently, almost all
 harmonic have a good enough correlation with the solution, but despite this, the performance of all
-models built on Bn suffered.
+models built on \bn suffered.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_label_corr.png}
-	\caption{Label correlation for the Bn table} \label{fig:bn-lcorr}
+	\caption{Label correlation for the \bn table} \label{fig:bn-lcorr}
 \end{figure}
 
-\subsubsection{Cnmod table}
-The Cnmod table combines the information present in An and Bn, as we saw in the previous section,
-while the An table seems to be very good and has a very promising topology, the Bn table has a
+\subsubsection{\cnmod table}
+The \cnmod table combines the information present in \an and \bn, as we saw in the previous section,
+while the \an table seems to be very good and has a very promising topology, the \bn table has a
 central 'cluster' of data with a high degree of impurity, where 'non-quench' and 'quench' samples
 mix and seem to be hardly separable.
 
-Cnmod was expected to be one of the best tables to solve the problem, but as we will see in future
-sections, it consistently falls short of the An table, and that is most likely due to the
-introduction of the information carried by Bn.
+\cnmod was expected to be one of the best tables to solve the problem, but as we will see in future
+sections, it consistently falls short of the \an table, and that is most likely due to the
+introduction of the information carried by \bn.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_corr_matrix.png}
-	\caption{The cross-correlation of the Cnmod harmonics} \label{fig:cnmod-corr}
+	\caption{The cross-correlation of the \cnmod harmonics} \label{fig:cnmod-corr}
 \end{figure}
 
-As we can see in \Cref{fig:cnmod-corr} the correlation matrix for Cnmod is very complicated,
+As we can see in \Cref{fig:cnmod-corr} the correlation matrix for \cnmod is very complicated,
 harmonic number $2$ can explain basically any other harmonic until number $9$ and harmonics between
 $10$ and $15$ have a medium correlation with each other. We can add to this the fact that harmonic
 number $4$ is strongly correlated with its multiples and the result is that picking an harmonic
@@ -165,7 +165,7 @@ that the first harmonics explain really well the expected results.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_label_corr.png}
-	\caption{Label correlation for the Cnmod table} \label{fig:cnmod-lcorr}
+	\caption{Label correlation for the \cnmod table} \label{fig:cnmod-lcorr}
 \end{figure}
 
 Looking at both \Cref{fig:cnmod-corr} and \Cref{fig:cnmod-lcorr}, we can conclude that two different
@@ -181,11 +181,11 @@ As we will see in a future section the choice that yielded the better performanc
 dataset based on harmonic $3$.
 
 Before considering the last table let us stop once again to check the distribution of the
-dimensionality reduction for Cnmod.
+dimensionality reduction for \cnmod.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_distribution.png}
-	\caption{Data distribution for the Cnmod table after applying $\textsc{pca}$ dimensionality
+	\caption{Data distribution for the \cnmod table after applying $\textsc{pca}$ dimensionality
 		reduction} \label{fig:cnmod-dist}
 \end{figure}
 As we can see in \Cref{fig:cnmod-dist} the samples are characterized by a good enough distribution,
@@ -193,16 +193,16 @@ we could easily identify clusters with a high degree of purity, apart from the o
 region of the image, which contains many points tagged as quench events and many points tagged as
 non quenches.
 
-\subsubsection{Phi table}
-As we will see in further sections the Phi table did not perform exceptionally, but it consistently
-outperformed the one based on Bn. I believe that, as we saw with Bn, the root of the bad performance
+\subsubsection{\phin table}
+As we will see in further sections the \phin table did not perform exceptionally, but it consistently
+outperformed the one based on \bn. I believe that, as we saw with \bn, the root of the bad performance
 is standing in the fact that both tables have a high degree of homogeneity in the distribution of
 the samples, this can be seen quite clearly in \Cref{fig:phi-dist}.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_distribution.png}
-	\caption{Data distribution for the Phi table after applying $\textsc{pca}$ dimensionality
+	\caption{Data distribution for the \phin table after applying $\textsc{pca}$ dimensionality
 		reduction} \label{fig:phi-dist}
 \end{figure}
 
@@ -210,15 +210,15 @@ the samples, this can be seen quite clearly in \Cref{fig:phi-dist}.
 
 As far as the correlation matrix is concerned we can see in \Cref{fig:phi-corr} that, contrarily to
 the correlation matrix of other tables, the amount of harmonics that are strongly correlated with
-each other is kept to a minimum. No real structure can be seen in this table as was the case of An
-and Bn.
+each other is kept to a minimum. No real structure can be seen in this table as was the case of \an
+and \bn.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_corr_matrix.png}
-	\caption{The cross-correlation of the Phi harmonics} \label{fig:phi-corr}
+	\caption{The cross-correlation of the \phin harmonics} \label{fig:phi-corr}
 \end{figure}
 This structure leaves us with much more freedom as to which harmonics to pick to build datasets
-(compared with An, Bn and Cnmod), the only things that really stand to the eye are that: harmonic
+(compared with \an, \bn and \cnmod), the only things that really stand to the eye are that: harmonic
 number $2$ is strongly correlated with its odd multiples, harmonic number $4$ is strongly correlated
 with its multiples.
 
@@ -226,7 +226,7 @@ Lastly, we can analyze the correlation between the harmonics and the label. As w
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_label_corr.png}
-	\caption{Label correlation for the Phi table} \label{fig:phi-lcorr}
+	\caption{Label correlation for the \phin table} \label{fig:phi-lcorr}
 \end{figure}
 This closes the brief exposition about the preprocessing steps for the various labels, now we will
 tackle the model selection procedure indicating which were the best models overall and which model
@@ -246,14 +246,14 @@ As we already alluded to in previous sections we wanted to find a highly explain
 performance that could be used to solve $\qrp$.
 
 We tried many different approaches where various tables were involved and different harmonics were
-being used, but the best table always remained An, which performance are shown in
+being used, but the best table always remained \an, which performance are shown in
 \Cref{fig:dt-an-2-12-15-perf}. As we can see, even if we use the simple decision tree model, we are
 capable of explaining whether a sample is 'quench' or 'non quench' by using a very limited amount of
 harmonics (only three are necessary).
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_2_12_15_cm_dt.png}
-	\caption{The performance for the An model built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-15-perf}
+	\caption{The performance for the \an model built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-15-perf}
 \end{figure}
 If we look at \Cref{fig:dt-an-2-12-15-pt}, we can see that the structure of the tree is also
 extremely simple, contained in depth, using mostly harmonic number $2$ to perform the splits and
@@ -273,8 +273,8 @@ compare them against each other.
 	\caption{Performance comparison of all the best decision trees} \label{fig:best-dts}
 \end{figure}
 
-As we can see in \Cref{fig:best-dts}, the performance for the best models built on tables Bn, Cnmod
-and Phi, are worse than the ones obtained by using An, and the margin is quite important.
+As we can see in \Cref{fig:best-dts}, the performance for the best models built on tables \bn, \cnmod
+and \phin, are worse than the ones obtained by using \an, and the margin is quite important.
 \subsection{SVM}
 Before moving onward to the other models let's consider the $\svm$, as we said in \Cref{sec:svm}, it
 is a very high performance model, capable of finding the solution with a very high accuracy. All of
@@ -294,21 +294,13 @@ pushing for. If we compare the best $\svm$ with the best decision tree, like we 
 The model that are shown in this plot are:
 \begin{itemize}
 	\item The decision tree we just introduced (\Cref{fig:dt-an-2-12-15-pt}),
-	\item The $\svm$ is built on top of a mix of tables (An, Cnmod and Phi), using the full
+	\item The $\svm$ is built on top of a mix of tables (\an, \cnmod and \phin), using the full
 	      harmonic content, a polynomial kernel of degree $3$, with a regularization parameter
 	      of $0.1$ and a kernel coefficient $\gamma = 0.1$ and a $c_0 = 0.1$. Both of these
 	      hyperparameters were not introduced in \Cref{sec:svm} because they are
 	      implementation specific, as a matter of fact, the polynomial kernel has the
 	      following structure $\kappa(x, y) = (\gamma\trans{\vec{x}}y + c_0)^d$.
 \end{itemize}
-%An_Cnmod_Phi_C_0.1_co_0.1_de_3_ga_0.1_ke_poly_ss_hrmcs_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_0.9960.svc
-%	p_grid = {
-%                'C': [0.1, 1, 10, 100, 1000],          # Regularization parameter
-%                'gamma': ['scale', 'auto', 0.001, 0.01, 0.1, 1, 10],  # Kernel coefficient (for RBF, sigmoid, and poly)
-%                'degree': [2, 3, 4, 5],                # Degree of the polynomial kernel (only used for poly)
-%                'coef0': [0, 0.1, 0.5, 1],             # Independent term in the kernel function (only used for poly and sigmoid)
-%                'kernel': ['linear', 'rbf', 'poly', 'sigmoid']  # Kernels to try
-%	}
 
 In the following we will be showing two different techniques, still based on trees, which yielded
 very high performance and we will later close the chapter with an analysis of the model that we

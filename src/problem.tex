@@ -46,19 +46,19 @@ number). The dataset used for the project contained a set of four different meas
 previous manipulation, done by researcher Mariotto, on the original measurements. The meaning of
 each table is explained briefly here below:
 \begin{itemize}
-	\item \emph{An}: the imaginary part of the magnetic field harmonics, since the magnets
+	\item \an: the imaginary part of the magnetic field harmonics, since the magnets
 	      during the test run were mounted in \emph{skew} configuration\comment{\footnote{Magnets are said to be mounted in skew configuration when the
 		      positioning of the magnets is at an angle relative to each other, this improves
 		      performance and efficiency}}{Quote someone to make sure that the statement holds for
 	      accelerator physics. It's important o be able to understand this question: Why should we mount
 	      magnets skewed?} this table was the one that supposedly provided the more information;
-	\item \emph{Bn}: the real part of the magnetic field harmonics, for the same reason above
+	\item \bn: the real part of the magnetic field harmonics, for the same reason above
 	      not as much performance was expected from this table;
-	\item \emph{Cnmod}: the absolute value of the complex coefficient $C_n$, it's the
-	      combination of An and Bn tables, and it's also the table that suffers more the
+	\item \cnmod: the absolute value of the complex coefficient $C_n$, it's the
+	      combination of \an and \bn tables, and it's also the table that suffers more the
 	      effect of the centering (for measurement purposes), we expected that this table
 	      would perform very well in the \qrp task;
-	\item \emph{Phi}: the phase of the magnetic field harmonics, since in the original
+	\item \phin: the phase of the magnetic field harmonics, since in the original
 	      analytical method the conclusions regarding the quenched coil within the magnet were taken
 	      based on this value the naïve hypothesis was that the \qlp solution would strongly depend on
 	      this.
@@ -73,7 +73,7 @@ Every dataset used in the project is processed using a common pipeline that buil
 dataframes that are serialized for later reuse:
 \begin{itemize}
 	\item The \emph{merged} dataframe contains all the field harmonics for a certain table
-	      (e.g. An) or mix of tables (e.g., An, Bn, Cnmod), before serialization the dataframe is
+	      (e.g. \an) or mix of tables (e.g., \an, \bn, \cnmod), before serialization the dataframe is
 	      normalized using an instance of the StandardScaler class, contained in scikit-learn, trained
 	      on the dataframe just created (minus the label column(s)).
 	\item The \emph{safe} dataframe contains a small part of the overall data available to us
