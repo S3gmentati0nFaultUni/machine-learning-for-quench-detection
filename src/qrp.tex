@@ -1,60 +1,53 @@
 \chapter{Quench Recognition Problem (QRP)}
 \label{chp:qrp}
-This chapter is dedicated to how we handled the first of the two problems that we introduced in the
-perevious chapter, since $\qlp$ is an extension of $\qrp$ we began with the analysis of the easier
-problem, all of the conclusions that we reach in this chapter, as far as the interaction between the
-various harmonics is concerned, can be extended to the $\qlp$ problem as well.
-
-In this chapter we will:
+This chapter is dedicated to the solution of \qrp, which we introduced in \Cref{chp:problem}, in this chapter we will:
 \begin{itemize}
-	\item Give a rapid overview of the problem,
-	\item Talk about the models used and the results obtained for each model,
-	\item Select the 'best' model among the possibilities and then we will back our decision.
+	\item Give a rapid overview of the problem, analyzing the results obtained from
+	      preprocessing,
+	\item Talk about the models used, and the results obtained for each model,
+	\item Select the 'best' possible model.
 \end{itemize}
 
 \section{Problem description}
-As was introduced in the previous chapter we were given by Samuele Mariotto a dataset containing
-four tables of $279$ samples each, divided between 'quench' and 'non-quench' events, the distribution is not exactly
-balanced: $192$ quench events and $87$ non-quench events. The imbalance is not
-extreme, therefore we kept it in mind but without worrying about it too much.
+As was introduced in the previous chapter out dataset consisted of four tables of $279$ samples
+each, divided between 'quench' and 'non-quench' events, the distribution is not exactly balanced:
+$192$ quench events and $87$ non-quench events; since the imbalance is not extreme we didn't take
+explicit action against it.
 
 \section{Data preprocessing}
-Before working on the actual models we analyzed the data to determine how correlated were the
-harmonics for each table, and we also analyzed the correlation that each harmonic has with the
-labels, we also analyzed the amount of information that each harmonic carried
-by checking their box plot, the larger the amount of variables covered by the harmonic, the more
-information the harmonic carried. Lastly we computed the correlation between each harmonic and the
-label (quench or non quench) associated to the table.
-
-The vector containing the information about the correlation with the labels has been plotted after a
+Before working on the actual models we analyzed:
+\begin{inparaenum}[(i)]
+	\item the cross-correlations between the harmonics,
+	\item the cross-correlation between the harmonics and the labels,
+	\item the box plot of the attributes, and
+	\item the distribution of data after dimensionality reduction via principal component analysis (PCA).
+\end{inparaenum}.
+In the following, the vector containing the information about the correlation with the labels has been plotted after a
 normalization step, which was done with the MinMaxScaler class of scikit-learn. While this procedure
 doesn't change the intensity of the correlation between the harmonic and the label it makes the
-graphs more readable and easy to interpret, the normalized samples are scaled using
+graphs more readable and easier to interpret, the normalized samples are scaled using
 \Cref{eq:normalization} \cite{Nishok2024}.
 \begin{equation}
 	\label{eq:normalization}
 	X_\text{scaled} = \frac{X - X_\text{min}}{X_\text{max} - X_\text{min}}
 \end{equation}
-Where $X$ is a sample in the dataset that is being scaled.
+Where $X$ is a sample in the vector that is being scaled.
 
 The results are reported in the following sections, one for each table.
 
-\subsubsection{\an table}
+\subsubsection{\an\ table}
 \Cref{fig:an-corr} shows the correlation of the various harmonics with each other. Independently
-of the sign of the cross-correlation measurement, the matrix has $5$ different diagonals (other than
-the main diagonal) that contain repeated information, e.g., harmonic number $1$ provides the same
-information as harmonic number $3, 5, 7, \ldots$.
+of the sign of the cross-correlation measurement, there is a clear pattern contained in the matrix,
+indicating that many harmonics contain repeated information, e.g., harmonic number $1$ provides the same information as harmonic number $3, 5, 7, \ldots$.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/An_corr_matrix.png}
-	\caption{The cross-correlation of the \an harmonics} \label{fig:an-corr}
+	\caption{The cross-correlation of the \an\ harmonics} \label{fig:an-corr}
 \end{figure}
-Other than us noticing that the situation is definitely complex and doing feature extraction on this
-matrix might be trickier than we would have otherwise assumed, we also noticed that Harmonic number
-$2$ is strongly correlated with its odd multiples: $6, 10, 14$; which was expected behavior.
 
 By looking at \Cref{fig:an-corr} we can gather the following information:
 \begin{itemize}
+	\item Its strong geometry implies that doing feature extraction is going to be complex, due to the necessity of finding a mix of harmonics that has a high correlation with the label, while having a low correlation among themselves.
 	\item All the odd harmonics are strongly correlated with each other (with the sole exception
 	      of harmonic $15$),
 	\item Harmonic number $2$ is strongly correlated with its odd multiples,
@@ -63,102 +56,93 @@ By looking at \Cref{fig:an-corr} we can gather the following information:
 	      harmonics.
 \end{itemize}
 
-Keeping the information above in mind we can check \Cref{fig:an-lcorr} to understand which of the
-harmonics best explain the expected results, and come up with different harmonic combinations that
-should be performing at a high level.
+\Cref{fig:an-lcorr} aims to show how informative the various harmonics with regard to the single
+label ('quench' or 'non-quench').
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/An_label_corr.png}
-	\caption{Label correlation for the \an table} \label{fig:an-lcorr}
+	\caption{Label correlation for the \an\ table} \label{fig:an-lcorr}
 \end{figure}
 
-Once again, considering \Cref{fig:an-lcorr} we will be picking the harmonics with the highest label
-correlation, which is identified by a higher color intensity. The result
-is that harmonics number: $2, 6, 10, 11, 12, 13, 14, 15$; can explain the results very well, this
-result is interesting on two sides:
+Once again, considering \Cref{fig:an-lcorr}, we picked the harmonics with the highest label
+correlation, which are identified by a higher color intensity; as we can see the label is explained
+very well by harmonics number: $2, 6, 10, 11, 12, 13, 14, 15$.
+These conclusions are doubly interesting, since:
 \begin{enumerate}
 	\item The $2^{nd}$ harmonic, as well as its odd multiples, can explain the results well, which
 	      is what we expect from the theory.
 	\item High order harmonics are able to explain the results better than other harmonics,
-	      which is not what we would expect, since in the original analysis the value for the
+	      which is not what we would have expect, since in the original analysis the value for the
 	      labels was computed using primarily lower order harmonics.
 \end{enumerate}
-Based on all the information obtained up to this point we can conjecture that some of the best
-datasets will probably contain the second harmonic, or one of its high order odd multiples, will
-likely contain harmonic number $15$, as well as some other high order harmonic that doesn't collide
-with anything that has been taken previously (i.e.: harmonics number $11$ or $13$). As we will see
-in the following one of the best datasets that we built on this table was based on harmonics $2, 12,
-	15$.
 
-Lastly, we can check the distribution of the samples in bidimensional space, since the data have
-$15$ dimensions to be able to plot them we use a dimensionality reduction technique, namely
-$\textsc{pca}$ (Principal Component Analysis).
+Based on all the information obtained up to this point we can conjecture that some of the best
+datasets will probably contain the second harmonic, or one of its high order odd multiples, as well
+as harmonic number $15$, and some other high order harmonic (i.e.: harmonics number $11$ or $13$). As we will see
+in the following one of the best datasets that we built on this table was based on harmonics $2, 12$.
+
+Lastly, we can visualize the distribution of the samples in bidimensional space, which was achieved
+by using a dimensionality reduction technique, namely $\textsc{pca}$ (Principal Component Analysis).
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_distribution.png}
-	\caption{Data distribution for the \an table after applying $\textsc{pca}$ dimensionality
+	\caption{Data distribution for the \an\ table after applying $\textsc{pca}$ dimensionality
 		reduction} \label{fig:an-dist}
 \end{figure}
 
 It can be seen in \Cref{fig:an-dist} that the samples, after dimensionality reduction, are distributed very nicely in a series
-of zones, each zone has a very high degree of purity. The very good distribution of the samples is
-very likely the reason why the models built on this table are performing so well.
+of zones, each zone has a very high degree of purity; this lead us to suppose that it might be the
+reason why models built on \an\ and \cnmod\ perform better than the alternatives.
 
-\subsubsection{\bn table}
-We can use a similar procedure on the \bn table, which in most of the tests proved to be the worst
-table to use to build models with, this is likely due, if we look at \Cref{fig:bn-dist}, to the very
-poor distribution of the data, as we can see it's really hard to find a way to separate the central
-portion of the data, and this difficulty will be reflected in the performance of most models that
-will be introduced in this chapter.
+\subsubsection{\bn\ table}
+We can use a similar procedure on the \bn\ table, which in most tests proved to be the
+least-performing table. This is probably due to the poor distribution of the data, as we can see in
+\Cref{fig:bn-dist}, it's really hard to find a way to separate the central portion of the samples.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_distribution.png}
-	\caption{Data distribution for the \bn table after applying $\textsc{pca}$ dimensionality
+	\caption{Data distribution for the \bn\ table after applying $\textsc{pca}$ dimensionality
 		reduction} \label{fig:bn-dist}
 \end{figure}
 
-As we did for \an we check the cross-correlation of the \bn table, and the results are actually very
+As we did for \an\ we checked the cross-correlation of the \bn\ table, and the results were actually very
 similar.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_corr_matrix.png}
-	\caption{The cross-correlation of the \bn harmonics} \label{fig:bn-corr}
+	\caption{The cross-correlation of the \bn\ harmonics} \label{fig:bn-corr}
 \end{figure}
 Possibly the biggest difference between \Cref{fig:an-corr} and \Cref{fig:bn-corr}, apart from the
-obvious different in the value of the correlation coefficient, we can see that harmonic $2$ is not
-strongly correlated with any other harmonic anymore, and harmonic number $15$ has a discrete
-correlation with all odd harmonics.
+obvious difference in the correlation values, is that harmonic $2$ is not strongly correlated with
+any other harmonic, while harmonic number $15$ grows a discrete correlation with all odd harmonics.
 
-If we check the correlation of the harmonics with the labels (\Cref{fig:bn-lcorr}), we can see that, apparently, almost all
-harmonic have a good enough correlation with the solution, but despite this, the performance of all
-models built on \bn suffered.
+If we check the correlation of the harmonics with the labels in (\Cref{fig:bn-lcorr}), we can see
+that, apparently, most harmonics have a good enough correlation with the solution, but despite this, the performance of all
+models built on \bn\ suffered.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_label_corr.png}
-	\caption{Label correlation for the \bn table} \label{fig:bn-lcorr}
+	\caption{Label correlation for the \bn\ table} \label{fig:bn-lcorr}
 \end{figure}
 
-\subsubsection{\cnmod table}
-The \cnmod table combines the information present in \an and \bn, as we saw in the previous section,
-while the \an table seems to be very good and has a very promising topology, the \bn table has a
-central 'cluster' of data with a high degree of impurity, where 'non-quench' and 'quench' samples
-mix and seem to be hardly separable.
-
-\cnmod was expected to be one of the best tables to solve the problem, but as we will see in future
-sections, it consistently falls short of the \an table, and that is most likely due to the
+\subsubsection{\cnmod\ table}
+The \cnmod\ table combines the information present in \an\ and \bn, as we saw in \Cref{sec:dsets},
+\cnmod\ was expected to be one of the best tables to solve \qrp, but, as we will see in future
+sections, it consistently falls short of the \an\ table, and that is probably due to the
 introduction of the information carried by \bn.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_corr_matrix.png}
-	\caption{The cross-correlation of the \cnmod harmonics} \label{fig:cnmod-corr}
+	\caption{The cross-correlation of the \cnmod\ harmonics} \label{fig:cnmod-corr}
 \end{figure}
 
-As we can see in \Cref{fig:cnmod-corr} the correlation matrix for \cnmod is very complicated,
-harmonic number $2$ can explain basically any other harmonic until number $9$ and harmonics between
-$10$ and $15$ have a medium correlation with each other. We can add to this the fact that harmonic
-number $4$ is strongly correlated with its multiples and the result is that picking an harmonic
-composition that is not, at least discretely, correlated in some way is extremely tricky.
+As we can see in \Cref{fig:cnmod-corr} the correlation matrix for \cnmod\ is very complicated:
+\begin{itemize}
+	\item Harmonic number $2$ is strongly correlated with any other harmonic until number $9$,
+	\item Harmonics between $10$ and $15$ are strongly correlated among themselves,
+	\item Harmonic number $4$ is strongly correlated with its multiples.
+\end{itemize}
 
 If we check the correlation between the harmonics and the labels \Cref{fig:cnmod-lcorr} we can see
 that the first harmonics explain really well the expected results.
@@ -169,7 +153,7 @@ that the first harmonics explain really well the expected results.
 \end{figure}
 
 Looking at both \Cref{fig:cnmod-corr} and \Cref{fig:cnmod-lcorr}, we can conclude that two different
-routs could be pursued:
+approaches could be followed:
 \begin{itemize}
 	\item If harmonic number $2$ carries enough information it can be used in alongside one or
 	      more high-order harmonics,
@@ -177,6 +161,9 @@ routs could be pursued:
 	      harmonics (potentially even the first one) alongside one low-order harmonic (e.g.,
 	      $14$).
 \end{itemize}
+Analyzing the boxplot suggested that following the first path was not a promising idea since the
+variability of the second harmonic is not too high to the
+
 As we will see in a future section the choice that yielded the better performance is to use a
 dataset based on harmonic $3$.
 
