@@ -360,6 +360,26 @@ Satisfied with the results obtained on the model, we decided to move away from \
 model which has a simpler structure.
 
 \subsection{Tree Aggregators}
+The best random forest is obtained by training the model on \an\ and \cnmod, the maximum depth of
+its trees is $4$ and the maximum number of internal nodes is $5$, but the majority of the estimators
+contain only $4$ nodes. The most important harmonics in the structure are $2$ and $5$, for \cnmod,
+$6$ and $10$ for \phin.
+
+While this \rf\ has a relatively simple structure, as we anticipated at the end of last section, we
+can still do better.
+
+Since many of the \dts\ generated in previous phases of testing have all been serialized, and we
+know how well they perform from the analysis of the performance obtained in the external \cv\
+procedure, we can create an ensemble of the best tree for every table, and then we can aggregate the
+performance by doing majority voting.
+
+To test the performance of such models, which we called Tree Aggregators (\tas), to differenciate them from
+\rfs, we first aggregated the best decision tree for every table considered, then we retrained the
+models on the reduced dataset using a $5$-fold \cv, and finally we aggregate all the predictions via
+majority voting. To avoid defining a procedure to break ties, in the following, we will be
+presenting the performance obtained by training \tas\ on triplets (e.g., \an, \bn, \cnmod).
+
+
 
 
 %\subsection{SVM}
@@ -393,7 +413,4 @@ model which has a simpler structure.
 %very high performance and we will later close the chapter with an analysis of the model that we
 %chose to solve the problem performed the best overall.
 
-
-\subsection{Tree Aggregators}
-
-\subsubsection{Performance on the triplets}
+\subsubsection{Final performance analysis}
