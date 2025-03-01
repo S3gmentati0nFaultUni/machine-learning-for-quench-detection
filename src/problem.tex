@@ -38,11 +38,12 @@ In the following two sections we will explore the structure of the dataset used 
 then we will indicate the instrumentation and processes used to insure the project's
 reproducibility.
 
-\section{The datasets and their meaning}
+\section{The dataset structure}
 \label{sec:dsets}
-In virtue of the fact that magnetic field harmonics are complex numbers a series of measurements
-have been extrapolated, the suffix in the attributes name is related to the number of the considered
-harmonic. The meaning of each table is explained briefly here below:
+In virtue of the fact that magnetic field harmonics are complex numbers, a series of measures have
+been extrapolated, the suffix $n$ in the attributes name is related to the number of the considered
+harmonic ($1$ to $15$). Each of the measurements indicated here below will be referred in the
+following as a \emph{view} of the dataset:
 \begin{itemize}
 	\item \an: the imaginary part of the magnetic field harmonics;
 	\item \bn: the real part of the magnetic field harmonics;
@@ -50,36 +51,32 @@ harmonic. The meaning of each table is explained briefly here below:
 	      combination of \an and \bn;
 	\item \phin: the phase of the magnetic field harmonics.
 \end{itemize}
+Since, in the following, it will be very common for us to not use a view in its entirety we will
+define a \emph{sub-view} of the dataset as a subset of a view's harmonics (e.g., \an, harmonics $2$
+and $12$).
 
 \section{Model selection and model testing procedures}
-Reproducibility is an extremely important property of any experiment, to cover the basics all the
-seeds for random number generators were set to the same value. The next step to enforce
-reproducibility is using shared pipelines.
+Reproducibility is a key property of any experiment, to cover the basics, we set the seed for all
+random number generators to the same value, and we used shared pipelines for all our experiments.
 
-Every dataset used in the project is processed using a common pipeline that builds three different
-dataframes that are serialized for later reuse:
+Sub-views are built using a common pipeline that generates three different datasets, serialized
+for later reuse:
 \begin{itemize}
-	\item The \emph{merged} dataframe contains all the field harmonics for a certain table
-	      (e.g. \an) or mix of tables (e.g., \an, \bn, \cnmod), before serialization the dataframe is
-	      standardized using an instance of the StandardScaler class, contained in scikit-learn, trained
-	      on the dataframe just created (minus the label column(s)).
-	\item The \emph{safe} dataframe contains a small part of the overall data available to us
-	      ($29$ samples), these samples were kept away until the experiments were considered complete.
-	      This dataset allowed us to perform a blind test on the best models to see whether they
-	      were able to generalize what they previously learned.
-	\item The \emph{reduced} dataframe contains the rest of the samples in the original table,
-	      it is the main dataframe used to perform tests and experiments.
+	\item The \emph{merged} merged dataset, \dm, which condenses all the measurements for a view, or a
+	      group of views (e.g., \an, \bn, \cnmod), in a single table. Before serialization, the
+	      data is standardized using an instance of the StandardScaler class, contained in scikit-learn, trained on the dataframe just created (minus the label column(s)).
+	\item The \emph{blind-test} dataset, \db, contains a small part of the overall data available to us
+	      ($29$ samples), these samples were kept away until the experiments were considered
+	      complete. Using the blind-test set we performed a final test on the models to see
+	      how well the performance we obtained generalize on data that were never seen before.
+	\item The \emph{reduced} dataset, \dr, contains the rest of the samples, $250$ in total,
+	      and is the main set used to perform tests and experiments.
 \end{itemize}
 
-When it came to model selection and model testing we chose to perform a Nested Cross Validation
-procedure ($\ncv$). This technique comes with two incredible advantages that suit this problem very
-well:
+To perform model selection and testing we used Nested Cross Validation (\ncv). This technique comes with two incredible advantages that suit this problem very well:
 \begin{enumerate}
-	\item $\ncv$ is suitable for situations in which the data is not abundant~\cite{Larracy2021} due to the heavy reuse of data during the model selection
-	      process, giving also a less biased performance estimation (due to the averaging of
-	      the results on more folds),
-	\item $\ncv$ is more resilient against overfitting thanks to the 'physical' separation
-	      between the hyperparameter selection and testing procedures.
+	\item \ncv\ is suitable for situations in which the data is not abundant~\cite{Larracy2021} due to the heavy reuse of data during the model selection process, giving also a less biased performance estimation (due to the averaging of the results on more folds),
+	\item \ncv\ is more resilient against overfitting thanks to the 'physical' separation between the hyperparameter selection and testing procedures.
 \end{enumerate}
 In the following section we will give a brief introduction of the Cross validation procedure.
 
@@ -272,7 +269,19 @@ explored a custom parameter grid (shown in \Cref{tbl:params}) via a grid search 
 	\end{tabular}
 \end{table}
 
-
+All of the models have been tested on a suite of different scorers meant to give us a more complete
+understanding of how well the model is performing, the metrics are explained here below and, as
+usual, by positive (negative) sample we mean a sample having label $1$ ($0$), and by true (false)
+positive we mean a correctly classified positive (negative) sample:
+\begin{itemize}
+	\item \emph{Accuracy} (Acc): fraction of correct predictions,
+	\item \emph{Precision} (Prc): number of true positives over number of positive predictions,
+	\item \emph{Recall} (Rec): number of true positives over number of positive items,
+	\item \emph{F1 score} (F1): harmonic mean between Precision and Recall,
+	\item \emph{Inverse recall} (Irec): number of true negatives over number of negative items,
+	\item \emph{ROC AUC} (RAUC): area under the receiver operating characteristic curve.
+\end{itemize}
+The main metric of our suite is going to be accuracy.
 
 
 
