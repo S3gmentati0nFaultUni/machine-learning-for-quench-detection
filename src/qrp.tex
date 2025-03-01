@@ -361,9 +361,8 @@ model which has a simpler structure.
 
 \subsection{Tree Aggregators}
 The best random forest is obtained by training the model on \an\ and \cnmod, the maximum depth of
-its trees is $4$ and the maximum number of internal nodes is $5$, but the majority of the estimators
-contain only $4$ nodes. The most important harmonics in the structure are $2$ and $5$, for \cnmod,
-$6$ and $10$ for \phin.
+its trees is $4$ and, while the maximum number of internal nodes is $5$, the majority of the
+estimators contain only $4$ internal nodes. The most important harmonics in the structure are $2$ and $5$, for \cnmod, $6$ and $10$ for \phin.
 
 While this \rf\ has a relatively simple structure, as we anticipated at the end of last section, we
 can still do better.
@@ -374,11 +373,47 @@ procedure, we can create an ensemble of the best tree for every table, and then 
 performance by doing majority voting.
 
 To test the performance of such models, which we called Tree Aggregators (\tas), to differenciate them from
-\rfs, we first aggregated the best decision tree for every table considered, then we retrained the
+\rfs, we first aggregated the best decision tree for every table, then we retrained the
 models on the reduced dataset using a $5$-fold \cv, and finally we aggregate all the predictions via
 majority voting. To avoid defining a procedure to break ties, in the following, we will be
 presenting the performance obtained by training \tas\ on triplets (e.g., \an, \bn, \cnmod).
 
+We remark that the retraining procedure was necessary since \dts\ are stored after a full retrain on
+the reduced dataset (the $250$ samples at our disposal). This choice forces us to repeat a
+training procedure whenever we want to test the performance of models in different configurations,
+since the only non-used data available to us are the ones stored in the safe, which was not used
+until the last possible minute to avoid biased model choices.
+
+We constructed \tas\ by aggregating three sub-views of the original dataset, and we benchmarked it
+against \rfs\ trained on the best performing sub-view for each triplet and \svcs trained on full views (therefore
+containing the harmonics). As we can see in \Cref{fig:triplets-performance}, \tas\ performance are
+consistently better than the \rf\ counterpart, with the exception of higher ROC-AUC score; the
+model performs most of the time very close to the \svc, and it surpasses the performance a good
+number of times.
+
+\begin{figure}
+	\begin{subfigure}{0.5\linewidth}
+		\includegraphics[width=\linewidth]{img/An_Bn_Cnmod_ta.png}
+		\subcaption{\an, \bn, \cnmod}
+	\end{subfigure}
+	\begin{subfigure}{0.5\linewidth}
+		\includegraphics[width=\linewidth]{img/An_Bn_Phi_ta.png}
+		\subcaption{\an, \bn, \phin}
+	\end{subfigure}
+	\begin{subfigure}{0.5\linewidth}
+		\includegraphics[width=\linewidth]{img/An_Cnmod_Phi_ta.png}
+		\subcaption{\an, \cnmod, \phin}
+	\end{subfigure}
+	\begin{subfigure}{0.5\linewidth}
+		\includegraphics[width=\linewidth]{img/Bn_Cnmod_Phi_ta.png}
+		\subcaption{\bn, \cnmod, \phin}
+	\end{subfigure}
+	\caption{Performance of \tas\ benchmarked against \rfs\ and \svcs, each model was trained on
+		the same triplet to have an even testing ground.} \label{fig:triplets-performance}
+\end{figure}
+
+We tested the performance of the \ta\ model using a different subview for \cnmod, which performed
+better as a tree, but it yielded worse performance when put in the \ta\ ensemble.
 
 
 
