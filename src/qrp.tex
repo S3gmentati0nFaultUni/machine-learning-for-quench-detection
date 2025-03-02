@@ -348,13 +348,14 @@ non-quench events, due to a lower inverse-recall score.
 		\toprule
 		\textbf{}    & \textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{Irec} & \textbf{F1} & \textbf{RAUC} \\
 		\midrule
-		Mean         & 0.989        & 0.989        & 0.994        & 0.974         & 0.991
+		Mean         & 0.988        & 0.989        & 0.994        & 0.974         & 0.991
 		             & 1.0                                                                                      \\
 		\textsc{std} & 0.010        & 0.013        & 0.011        & 0.032         & 0.007
 		             & 0.0                                                                                      \\
 		\bottomrule
 	\end{tabular}
 \end{table}
+%{'accuracy-mean': np.float64(0.9879999999999999), 'accuracy-std': np.float64(0.009797958971132722), 'precision-mean': np.float64(0.9887301587301588), 'precision-std': np.float64(0.01380496184454534), 'recall-mean': np.float64(0.9942857142857143), 'recall-std': np.float64(0.011428571428571432), 'inv-recall-mean': np.float64(0.9741666666666667), 'inv-recall-std': np.float64(0.03166666666666666), 'f1-mean': np.float64(0.991385997142274), 'f1-std': np.float64(0.0070348834762717265), 'roc_auc-mean': np.float64(1.0), 'roc_auc-std': np.float64(0.0)}
 
 Satisfied with the results obtained on the model, we decided to move away from \rfs to explore a new
 model which has a simpler structure.
@@ -391,7 +392,8 @@ consistently better than the \rf\ counterpart, with the exception of higher ROC-
 model performs most of the time very close to the \svc, and it surpasses the performance a good
 number of times.
 
-\begin{figure}
+\begin{figure}[!h]
+	\centering
 	\begin{subfigure}{0.5\linewidth}
 		\includegraphics[width=\linewidth]{img/An_Bn_Cnmod_ta.png}
 		\subcaption{\an, \bn, \cnmod}
@@ -413,7 +415,25 @@ number of times.
 \end{figure}
 
 We tested the performance of the \ta\ model using a different subview for \cnmod, which performed
-better as a tree, but it yielded worse performance when put in the \ta\ ensemble.
+better as a tree, but it yielded worse performance when put in the \ta\ ensemble. For further
+testing, we picked the best \ta\ (the one built on \an, \bn\ and \cnmod) and we compared its
+performance against the best \svc\ and the best \rf, which were described in the respective
+sections. The result is shown in \Cref{fig:ta-rf-svc-comparison}, the performance of the \rf\ are
+always at most on par with the performance obtained by the \ta and the \svc. The only case in which
+the \rf\ is ever so slightly better than the \ta, is the ROC-AUC score.
+
+Since both \ta\ and \rf\ predictions are aggregated via majority voting we could address this odd
+behavior by considering that the number of trees contained in the \rf\ is larger than the number of
+trees contained in the \ta\ therefore decisions could be more biased: in the first case we need
+three estimators to obtain majority, while in the latter we only need two.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{img/best_rf_ta_svc_compared.png}
+	\caption{A performance comparison between the best \rf, the best \svc, and the best \ta,
+		each of them trained on the sub-view of the original datasets the yields the best possible
+		performance} \label{fig:ta-rf-svc-comparison}
+\end{figure}
+
 
 
 
