@@ -228,6 +228,7 @@ At the end of the chapter we will talk about the best performing model and we wi
 results for \qrp.
 
 \subsection{Decision trees}
+\label{sec:qrp-dt}
 As we already alluded to in previous sections we wanted to find a highly explainable model with good
 performance that could be used to solve \qrp, that is exactly why the development process started
 with \dts.
@@ -288,12 +289,13 @@ as effectively (the Irec score is lower).
 \end{figure}
 
 \subsection{Random Forests}
+\label{sec:qrp-rf}
 As we said in \Cref{chp:ml} random forests (\rfs) use an ensemble of trees trained by bootstrap
 sampling and perform splits on a random subset of features. As long as the trees are not too
 complicated and the ensemble is not too big, \rfs\ are still quite easy to interpret, while
-performing usually at least as good, if not better than the trees within the ensemble. Since \rfs\
-group trees, they can easily extrapolate information from complicated datasets based on different
-tables (e.g., \an, \bn, \cnmod).
+performing usually at least as good, if not better than the worst tree in the ensemble. Since they
+are grouping \rfs\ can extrapolate information from complicated datasets containing different
+sub-views (e.g., a dataset containing a subv-view for each of \an, \bn and \cnmod).
 
 In most of our tests we considered \rfs\ trained on datasets built from one or more tables, each
 table taken with the full harmonic content, we also did some tests on forests built on dataset
@@ -301,45 +303,42 @@ containing a subset of the available harmonics, just we did with trees. While th
 was more suitable for raw performance, the first one gave us insights, through the feature
 importance metric, of which were the more important harmonics within the dataset.
 
-By analyzing the feature importance for every dataset separately and then all of them together we
-can conclude the following:
+Feature importance is a measure that we can use to understand which features are more prominent in
+the \rf\ structure, this can give us an insight regarding what we should keep and what could be
+probably taken away to achieve better performance. We analyzed the feature importance of \rfs\ built
+on single views and then on an \rf\ constructed on the whole dataset, this is what we could conclude
+from it:
 \begin{itemize}
 	\item The forest built on \an, performs most of the splits ($\approx 80\%$) using harmonic
 	      number $2$.
 	\item The forest built on \bn, performs most of the splits using a mix of different
-	      harmonics, interestingly $2$ is not among the first $6$ for importance. Harmonics
+	      harmonics, $2$ is not among the first $6$ for importance. Harmonics
 	      $6, 9, 3, 14, 7$ and $5$ are the ones used the most to perform splits inside the
 	      random forest.
 	\item The forest built on \cnmod, uses harmonic number $2$ to perform over $50\%$ of the
 	      splits, the rest are handled mainly by harmonics $5, 9$ and $13$.
 	\item The forest built on \phin, uses many different harmonics to perform the splits (mainly
 	      $10, 12, 6$ and $10$).
+	\item If we train a forest on the whole dataset, we can see that $\approx90\%$ of the splits were computed by using harmonics $2$ and $3$ from \cnmod, and harmonics $12, 2$ and $14$ from \an.
 \end{itemize}
-Finally, if we use the algorithm on a dataset constructed on all the tables, we can see that circa
-$90\%$ of the splits were computed by using harmonics $2$ and $3$ from \cnmod, and harmonics $12, 2$
-and $14$ from \an.
 
 In \Cref{fig:best-rfs} we plotted the metrics for the $4$ best performing random forests,
-independently of how they were trained, the best model achieves accuracy of $\approx 98.8\%$, while
-the other models remain above $98\%$.
+independently of the dataset they were trained on, the best model achieved accuracy of $\approx 98.8\%$, while the other models remain above $98\%$.
+\todo{Cambiare il plot: toglierre il titolo, cambiare AUC con RAUC nelle metriche}
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/best_rfs.png}
 	\caption{The best random forests} \label{fig:best-rfs}
 \end{figure}
-The performance are almost optimal, and with some more work we could probably achieve better
-results, since the models considered above are trained on datasets obtained by putting together the
-harmonics that perform the best for every table. This means that we are not aware if there is
-strong correlation among harmonics taken from different tables.
-
-Before concluding the section we can dedicate a table, as we did for \dts\, to the best \rf\ we
-found. As we can see in \Cref{tbl:rf-cnmod-phi-perf}, the results are not too far from what we obtained with
-the \dt\ in particular the random forest is considered a 'better classifier'(Since the RAUC score is
-higher), having slightly better accuracy and recall while being less effective at recognizing
-non-quench events, due to a lower inverse-recall score.
+The performance for the best \rf\ \Cref{tbl:rf-cnmod-phi-perf} are definitely solid, and with some more work we could probably achieve better
+results, since the models considered above are trained on datasets obtained by grouping
+different sub-views\footnote{Which is very different from grouping trees trained on different
+	sub-views.}, regardless of the correlation. We decided not to explore this solution more
+since, as we will see briefly, \rfs\ can be more complicated to interpret than a model
+we devised and will be introduced in a later section.
 \begin{table}[t]
 	\caption{Average and standard deviation of the performance for the best \rf\ over the outer \cv\
-		folds.}\label{tbl:rf-cnmod-phi-perf}
+		folds.}\label{tbl:}
 
 	\bigskip
 	\setlength{\tabcolsep}{6pt}
@@ -357,10 +356,46 @@ non-quench events, due to a lower inverse-recall score.
 \end{table}
 %{'accuracy-mean': np.float64(0.9879999999999999), 'accuracy-std': np.float64(0.009797958971132722), 'precision-mean': np.float64(0.9887301587301588), 'precision-std': np.float64(0.01380496184454534), 'recall-mean': np.float64(0.9942857142857143), 'recall-std': np.float64(0.011428571428571432), 'inv-recall-mean': np.float64(0.9741666666666667), 'inv-recall-std': np.float64(0.03166666666666666), 'f1-mean': np.float64(0.991385997142274), 'f1-std': np.float64(0.0070348834762717265), 'roc_auc-mean': np.float64(1.0), 'roc_auc-std': np.float64(0.0)}
 
-Satisfied with the results obtained on the model, we decided to move away from \rfs to explore a new
-model which has a simpler structure.
+To conclude this section we analyze the structure of the best \rf\ previously found and we
+check the performance obtained on the blind-test set. The best \rf\ contains $5$ trees, each tree
+has a maximum depth of $4$ and the number of internal nodes and leaves is always quite limited (on
+average the trees inside the forest contain $4$ internal nodes). The most important harmonics are
+$2$ and $5$, taken from \cnmod, and $6$ and $10$, taken from \phin. If we test the model on the
+blind-test set \db, we see that the model only makes one classification error among the $29$
+samples, specifically a false positive.
+\begin{table}[!ht]
+	\caption{Performances of the best \rf\ on the blind test set $\mathscr
+			D_\mathrm{test}$.}\label{tab:qrp-rf-test}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{cccccc}
+		\toprule
+		\textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{F1} & \textbf{Irec} & \textbf{RAUC} \\
+		\midrule
+		0.965        & 0.952        & 1            & 0.976       & 0.889         & 0.944         \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Before exploring the performance of the \rf\ alternative we will have a small digression dedicated
+to the benchmarking model, \svcs.
+
+\subsection{\svc}
+A binary Support Vector Classifier (SVC), is a different declination of the \svm\ model, introduced
+in \Cref{chp:ml}, and considers each sample as a vector in the Euclidean space, and finds a decision surface separating the vectors corresponding to two classes. This is achieved by maximizing the so-called \emph{margin}, intended as the minimal distance between the decision surface and the data images through a nonlinear mapping. The related optimization process exploits the so-called \emph{kernel trick} to automatically select this mapping within some prefixed families.
+
+This model is meant to have very high performance at the expense of its explainability property,
+that is why we chose it as our benchmarking model.
+
+In the following we will be showing two different techniques, still based on trees, which yielded
+very high performance and we will later close the chapter with an analysis of the model that we
+chose to solve the problem performed the best overall.
+
 
 \subsection{Tree Aggregators}
+\label{sec:qrp-ta}
 The best random forest is obtained by training the model on \an\ and \cnmod, the maximum depth of
 its trees is $4$ and, while the maximum number of internal nodes is $5$, the majority of the
 estimators contain only $4$ internal nodes. The most important harmonics in the structure are $2$ and $5$, for \cnmod, $6$ and $10$ for \phin.
@@ -387,32 +422,57 @@ until the last possible minute to avoid biased model choices.
 
 We constructed \tas\ by aggregating three sub-views of the original dataset, and we benchmarked it
 against \rfs\ trained on the best performing sub-view for each triplet and \svcs trained on full views (therefore
-containing the harmonics). As we can see in \Cref{fig:triplets-performance}, \tas\ performance are
-consistently better than the \rf\ counterpart, with the exception of higher ROC-AUC score; the
-model performs most of the time very close to the \svc, and it surpasses the performance a good
-number of times.
-
+containing the harmonics). As we can see in \Cref{fig:triplets-performance}, \tas\ usually perform
+closer to \svcs\ than \rfs, with the exception of the RAUC score, which predilects \rfs\,
+performance for the best \ta\ among the $4$ benchmarked in \Cref{fig:triplets-performance} are
+indicated in \Cref{tbl:an-bn-cnmod-ta-perf}.
 \begin{figure}[!h]
 	\centering
-	\begin{subfigure}{0.5\linewidth}
+	\begin{subfigure}{0.49\linewidth}
 		\includegraphics[width=\linewidth]{img/An_Bn_Cnmod_ta.png}
 		\subcaption{\an, \bn, \cnmod}
 	\end{subfigure}
-	\begin{subfigure}{0.5\linewidth}
+	\begin{subfigure}{0.49\linewidth}
 		\includegraphics[width=\linewidth]{img/An_Bn_Phi_ta.png}
 		\subcaption{\an, \bn, \phin}
 	\end{subfigure}
-	\begin{subfigure}{0.5\linewidth}
+	\begin{subfigure}{0.49\linewidth}
 		\includegraphics[width=\linewidth]{img/An_Cnmod_Phi_ta.png}
 		\subcaption{\an, \cnmod, \phin}
 	\end{subfigure}
-	\begin{subfigure}{0.5\linewidth}
+	\begin{subfigure}{0.49\linewidth}
 		\includegraphics[width=\linewidth]{img/Bn_Cnmod_Phi_ta.png}
 		\subcaption{\bn, \cnmod, \phin}
 	\end{subfigure}
 	\caption{Performance of \tas\ benchmarked against \rfs\ and \svcs, each model was trained on
 		the same triplet to have an even testing ground.} \label{fig:triplets-performance}
 \end{figure}
+\begin{table}[!h]
+	\caption{Average and standard deviation of the \ta\ trained on sub-views of \an, \bn and
+		\cnmod.}\label{tbl:an-bn-cnmod-ta-perf}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{ccccccc}
+		\toprule
+		\textbf{}    & \textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{Irec} & \textbf{F1} & \textbf{RAUC} \\
+		\midrule
+		Mean         & 0.996        & 1.0          & 0.994        & 1.0           & 0.997
+		             & 0.997                                                                                    \\
+		\textsc{std} & 0.008        & 0.0          & 0.011        & 0.0           & 0.006
+		             & 0.006                                                                                    \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+%Final scores for the model:
+%accuracy -- avg: 0.9960   std: 0.0080
+%precision -- avg: 1.0000   std: 0.0000
+%recall -- avg: 0.9943   std: 0.0114
+%inv-recall -- avg: 1.0000   std: 0.0000
+%f1 -- avg: 0.9971   std: 0.0058
+%roc_auc -- avg: 0.9971   std: 0.0057
+
 
 We tested the performance of the \ta\ model using a different subview for \cnmod, which performed
 better as a tree, but it yielded worse performance when put in the \ta\ ensemble. For further
@@ -426,7 +486,7 @@ Since both \ta\ and \rf\ predictions are aggregated via majority voting we could
 behavior by considering that the number of trees contained in the \rf\ is larger than the number of
 trees contained in the \ta\ therefore decisions could be more biased: in the first case we need
 three estimators to obtain majority, while in the latter we only need two.
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=\linewidth]{img/best_rf_ta_svc_compared.png}
 	\caption{A performance comparison between the best \rf, the best \svc, and the best \ta,
@@ -434,38 +494,59 @@ three estimators to obtain majority, while in the latter we only need two.
 		performance} \label{fig:ta-rf-svc-comparison}
 \end{figure}
 
+To close this section we will be analyzing the \ta\ constructed on \an, \bn\ and \cnmod providing a
+description of the trees contained in the model and we will compute the performance metrics on the
+blind-test set (\db). This model contains
+$3$ trees: The one built on a sub-view of \an\ is shown in \Cref{fig:dt-an-2-12-pt}, the
+other two, one built on \bn, and one built on \cnmod, are shown in \Cref{fig:part-of-bta}. Compared
+to the trees we described at the end of the end of \Cref{sec:qrp-rf} we have trees which are a bit
+more complex: having depth between $4$ and $5$, which we still consdier very reasonable, having a
+larger volume of both internal nodes and leaves.
+
+\begin{figure}[!ht]
+	\centering
+	\begin{subfigure}{\linewidth}
+		\includegraphics[width=\linewidth]{img/Bn_3_6_8_15_pt_dt.png}
+		\subcaption{Tree trained on a subview of \bn}
+	\end{subfigure}
+	\begin{subfigure}{\linewidth}
+		\includegraphics[width=\linewidth]{img/Cnmod_3_4_5_14_pt_dt.png}
+		\subcaption{Tree trained on a subview of \cnmod}
+	\end{subfigure}
+	\caption{Two of the trees contained in the best \ta, the one trained on a subview of \an is
+		shown in \Cref{fig:dt-an-2-12-pt}} \label{fig:part-of-bta}
+\end{figure}
+
+Finally, we evaluated the best TA on the blind test set $\mathscr D_\mathrm{test}$, obtaining only
+an incorrect classification over $29$ examples (precisely, a false positive), corresponding to the
+metric values detailed in Table~\ref{tab:qrp-ta-test}, essentially confirming our initial estimate.
+
+\begin{table}[!ht]
+	\caption{Performances of the best TA on the blind test set $\mathscr
+			D_\mathrm{test}$.}\label{tab:qrp-ta-test}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{cccccc}
+		\toprule
+		\textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{F1} & \textbf{Irec} & \textbf{RAUC} \\
+		\midrule
+		0.965        & 0.952        & 1            & 0.976       & 0.889         & 0.944         \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+\subsection{Final considerations on \qrp}
+In this chapter we have introduced the problem of \qrp\ we showed many different models and we
+chose the best estimator for each class (\dt, \svc, \rf, \ta). In each subsection we have
+highlighted the strengths and the characteristics of the classifiers found and we provided the
+results of a final blind-test; in light of all the tests that have been done...
 
 
 
-%\subsection{SVM}
-%Before moving onward to the other models let's consider the $\svm$, as we said in \Cref{sec:svm}, it
-%is a very high performance model, capable of finding the solution with a very high accuracy. All of
-%this is done my transposing the samples to a higher dimensional space where a dividing hyperplane
-%can be found. Since this mapping is unknown and we are using an approximation for it, the $\svm$
-%model has a very low degree of explainability.
-%
-%The reason why we are introducing the $\svm$ model first is because we got very high performance out
-%of decision trees already, therefore we asked ourselves what was the best performance we could be
-%pushing for. If we compare the best $\svm$ with the best decision tree, like we did in
-%\Cref{fig:svm-vs-dt}, it's clear that there is still quite a bit of room for improvement, especially in the Inverse recall metric, which is the one where most models are at fault.
-%\begin{figure}[h!]
-%	\centering
-%	\includegraphics[width=\linewidth]{img/svm_vs_dt.png}
-%	\caption{Performance comparison of $\svm$ and decision tree} \label{fig:svm-vs-dt}
-%\end{figure}
-%The model that are shown in this plot are:
-%\begin{itemize}
-%	\item The decision tree we just introduced (\Cref{fig:dt-an-2-12-15-pt}),
-%	\item The $\svm$ is built on top of a mix of tables (\an, \cnmod and \phin), using the full
-%	      harmonic content, a polynomial kernel of degree $3$, with a regularization parameter
-%	      of $0.1$ and a kernel coefficient $\gamma = 0.1$ and a $c_0 = 0.1$. Both of these
-%	      hyperparameters were not introduced in \Cref{sec:svm} because they are
-%	      implementation specific, as a matter of fact, the polynomial kernel has the
-%	      following structure $\kappa(x, y) = (\gamma\trans{\vec{x}}y + c_0)^d$.
-%\end{itemize}
-%
-%In the following we will be showing two different techniques, still based on trees, which yielded
-%very high performance and we will later close the chapter with an analysis of the model that we
-%chose to solve the problem performed the best overall.
 
-\subsubsection{Final performance analysis}
+
+
+
