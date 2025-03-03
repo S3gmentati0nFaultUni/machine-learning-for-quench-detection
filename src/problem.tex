@@ -1,7 +1,26 @@
 \chapter{The problem}
 \label{chp:problem}
-Given $15$ harmonics of magnetic field measured the high-order corrector superconducting magnets, during a test run, our
-objective is to train a machine learning model capable of:
+Following~\cite{mariotto2022}, the HO corrector magnets have been designed to produce five different multipolar field orders (quadrupole, sextupole, octapole, decapole, and dodecapole). Tested at cryogenic temperature, the magnets are powered to evaluate their performances and thermal stability up to the nominal operating condition. During magnet powering, spontaneous quench transitions in the superconducting coil volume can occur due to mechanical instability of the winding or stress induced by the electromagnetic Lorentz forces acting on the conductors. Each magnet is protected using a classical resistive voltage detection system and discharged on an external dumping resistance to extract most of the stored magnetic energy from the magnet to prevent any material damage. Limited to analyzing only two separate voltage signals connected in parallel to the coils, the quench detection system can only evaluate if a quench development occurred in half of the magnet coils without the possibility to localize precisely which superconducting winding started the transition to the normal conducting state. To retrieve this information and evaluate if a possible degradation of the coil has occurred, a magnetic field measurement-based model has been proposed analyzing the residual magnetic field quality produced by the non-quenched superconducting coils in the magnet after the quench event. The original work proposed a study specific to quadrupoles, since they gave the majority of the positives (quench events), which have been used as the subject of this analysis, therefore ignoring all other configurations focusing only on the five quadrupoles of the series production from MQSXF1 to MQSXF6.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\linewidth]{img/FieldProcedure.pdf}
+	\caption{Sketch of the magnetic field measurements after a quench event for the quadrupole magnet and dataset obtained for each quench event measurement.}
+	\label{fig:FieldMeasurement}
+\end{figure}
+As a result of the magnets test campaign, $279$ events, after the magnet discharge (quench event) or equivalent at zero operating current (non-quench event), were analyzed sampling the magnetic field in the magnet bore volume using a magnetic field rotating shaft.
+
+For each event, 60 samples of measured harmonic coefficients have been measured and averaged to obtain a single set of $15$ different magnetic field harmonics coefficients which contain all the information of the produced magnetic field quality (see Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex numbers, the information have been organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
+\begin{itemize}
+	\item the imaginary part $A_n$ of the $n^\text{th}$ field harmonic coefficient;
+	\item the real part $B_n$ of the $n^\text{th}$ field harmonic coefficient;
+	\item the absolute value $|C_n|$ of the $n^\text{th}$ field harmonic coefficient;
+	\item the phase $\phi_n$ of the $n^\text{th}$ field harmonic coefficient.
+\end{itemize}
+In the following chapters we will not be using attributes in their entirety, in most cases the
+datasets will be aggregating the best harmonics for a certain attribute (e.g., harmonics $2$ and
+$12$ for attribute \an). We will be referring to these as sub-views of an attribute.
+
+The objective of the thesis was to find machine learning models capable of:
 \begin{enumerate}
 	\item Recognizing whether the magnet underwent a quench event during operation, we will refer
 	      to it as Quench Recognition Problem (\qrp) from now on, and will be treated in
@@ -10,50 +29,8 @@ objective is to train a machine learning model capable of:
 	      it as Quench Localization Problem (\qlp) from now on, and it will be treated in
 	      \Cref{chp:qlp}.
 \end{enumerate}
-A field harmonic is a complex function capable of describing the contribution of a certain multipolar
-field (e.g. the coefficient associated with the dipole is $C_0$, while $C_1$ is the quadrupolar
-coefficient) to the entirety of the magnetic field, which is a vectorial and continuous quantity.
-
-\medskip
-
-This problem, as was already said in previous chapters, is a natural extension of the work done
-in~\cite{mariotto2022}~\cite{mariotto2022-generic}, who analyzed the behavior of
-a gamma of magnets differing in the number of poles. The original dataset contained the quench
-events recorded for every type of magnet, since the number of events for the sole
-quadrupoles made up almost the entirety of the dataset we chose to work
-exclusively on them.
-
-\medskip
-
-Due to the nature of the problem, we were looking for models that could solve both our problems
-while keeping a very high level of explainability. Being able to explain which magnetic field
-harmonics are more important to identify reliably a quench event can be of great help in the context of magnet design,
-quench explanation and instrument calibration (e.g., \todo{Check with Samuele if this makes sense}\textcolor{blue}{If a new quench antenna needs to be designed the
-	researchers know that some magnetic field harmonics can be ignored because they do not influence the
-	result}).
-
-\medskip
-
-In the following two sections we will explore the structure of the dataset used for the project and
-then we will indicate the instrumentation and processes used to insure the project's
-reproducibility.
-
-\section{The dataset structure}
-\label{sec:dsets}
-In virtue of the fact that magnetic field harmonics are complex numbers, a series of measures have
-been extrapolated, the suffix $n$ in the attributes name is related to the number of the considered
-harmonic ($1$ to $15$). Each of the measurements indicated here below will be referred in the
-following as a \emph{view} of the dataset:
-\begin{itemize}
-	\item \an: the imaginary part of the magnetic field harmonics;
-	\item \bn: the real part of the magnetic field harmonics;
-	\item \cnmod: the absolute value of the complex coefficient $C_n$, it's the
-	      combination of \an and \bn;
-	\item \phin: the phase of the magnetic field harmonics.
-\end{itemize}
-Since, in the following, it will be very common for us to not use a view in its entirety we will
-define a \emph{sub-view} of the dataset as a subset of a view's harmonics (e.g., \an, harmonics $2$
-and $12$).
+The models chosen to solve \qrp\ and \qlp\ had to be both reliable and highly explainable to favour
+further study of quench phenomenon on High-Order corrector magnets.
 
 \section{Model selection and model testing procedures}
 Reproducibility is a key property of any experiment, to cover the basics, we set the seed for all
@@ -62,73 +39,62 @@ random number generators to the same value, and we used shared pipelines for all
 Sub-views are built using a common pipeline that generates three different datasets, serialized
 for later reuse:
 \begin{itemize}
-	\item The \emph{merged} merged dataset, \dm, which condenses all the measurements for a view, or a
-	      group of views (e.g., \an, \bn, \cnmod), in a single table. Before serialization, the
-	      data is standardized using an instance of the StandardScaler class, contained in scikit-learn, trained on the dataframe just created (minus the label column(s)).
+	\item The \emph{merged} dataset, \dm, which constructs a single table out of all the
+	      measurements done on the attribute(s) for the different magnets. Before serialization, the
+	      data is standardized using an instance of the StandardScaler class, contained in
+	      scikit-learn, trained on the dataset just created (minus the label column(s)).
 	\item The \emph{blind-test} dataset, \db, contains a small part of the overall data available to us
-	      ($29$ samples), these samples were kept away until the experiments were considered
+	      ($29$ samples), these samples were kept locked until the experiments were considered
 	      complete. Using the blind-test set we performed a final test on the models to see
-	      how well the performance we obtained generalize on data that were never seen before.
+	      how well the performance generalize on unseen data.
 	\item The \emph{reduced} dataset, \dr, contains the rest of the samples, $250$ in total,
-	      and is the main set used to perform tests and experiments.
+	      and is the main set used to perform experiments.
 \end{itemize}
 
-To perform model selection and testing we used Nested Cross Validation (\ncv). This technique comes with two incredible advantages that suit this problem very well:
-\begin{enumerate}
-	\item \ncv\ is suitable for situations in which the data is not abundant~\cite{Larracy2021} due to the heavy reuse of data during the model selection process, giving also a less biased performance estimation (due to the averaging of the results on more folds),
-	\item \ncv\ is more resilient against overfitting thanks to the 'physical' separation between the hyperparameter selection and testing procedures.
-\end{enumerate}
-In the following section we will give a brief introduction of the Cross validation procedure.
+Model selection and testing were carried out using Nested Cross Validation (\ncv). \ncv\ is suitable
+for situations in which the data is not abundant~\cite{Larracy2021} due to its heavy reuse, enabling
+model selection and testing, while also giving less biased performance estimates by averaging the
+results on $k$ different folds, in the following section we will do a rapid excursus on how the
+cross-validation procedure works.
 
 \subsubsection{Cross Validation}
 In \Cref{chp:ml} we talked about the simple train-test splitting procedure, now we will introduce an
 alternative technique for splitting that gives us a powerful tool to prevent overfitting and get
 less biased performance measures while also doing hyperparameter selection.
 
+In general, given a dataset $D$, $k$-fold \cv~\cite{ZhouZhi-Hua2021ML} is a technique for splitting
+a dataset in $k$ different folds $\fold{i}, i \in \{1, \ldots, k\}$, the folds are non-overlapping
+and about the same size, therefore $\fold{i} \cap \fold{j} = \emptyset \hspace{5pt} \forall i, j \in
+	\{1, \ldots, k\}, i \neq j$, and the union of all the folds is the original dataset ($\bigcup_{i \in \{1, \ldots, k\}} \fold{i} = D$).
+
 \medskip
 
-In general, given a dataset $D$, $k$-fold $\cv$ \cite{ZhouZhi-Hua2021ML} is a technique for splitting a dataset in $k$
-different folds $\fold{i}$, the folds are non-overlapping and about the same size, therefore
-$\fold{i} \cap \fold{j} = \emptyset \hspace{5pt} \forall i, j \in k$, and the union of all the folds
-is the original dataset ($\bigcup_{i \in \{1, \ldots, k\}} \fold{i} = D$).
-
-In the framework of train-test splitting, if we used the procedure introduced in \Cref{chp:ml}, we
+In the framework of train-test splitting, if we used the procedure outlined in \Cref{chp:ml}, we
 would split the original dataset into the training set $T$ and the generalization set $G$, train
-$\model$ on $T$ and then test the performance on $G$.
+$\model$ on $T$ and then test the performance on $G$. While this is a perfectly acceptable procedure
+to gather performance metrics for a model it doesn't give us any certainty on how reliable the
+obtained metrics actually are.
 
-A series of questions normally arise whenever we think about this procedure, we will list them below
-and provide an answer.
 
-\medskip
+By measuring performance on different folds (each one is a training and testing procedure separate
+from others), we get a more complete vision of the model performance, allowing us to recognize pathological
+situations, like cases in which the standard deviation of the fold performance is very wide. To
+understand how the folds are structured, let's consider an example in which $5$-fold \cv\ is
+computed on a dataset containing $250$ samples: $5$ different models are generated, each time it
+trained on $200$ samples and then tested on the remaining $50$ samples (the testing fold changes
+with every iteration).
 
-'What if the $T$-$G$ split chosen was the lucky one and the performance we obtain out of the last
-reading are overly optimistic?'
-
-\smallskip
-
-This is where $\cv$ comes in, to reduce the probability that the performance of the model
-are a statistical anomaly. If we have a dataset of $250$ samples, by doing a
-$5$ fold $\cv$, $5$ different folds of $50$ samples are generated, each fold will be used once to
-test the generalization performance of the model trained on the remaining $200$ samples.
-
-\medskip
-
-'What value of $k$ should be chosen?'
-
-\smallskip
-
-The number of folds to be used for $\cv$ becomes another hyperparameter of the problem, since it
-depends on many factors like the amount of available data, a very big value of $k$ will increase the
-number of folds the model is trained and tested on, increasing the robustness of the performance
-estimation at the expense of computational complexity (e.g., Leave One Out \cv\ is an example of such
-approaches, in~\cite{shao2016} a more efficient approach to the technique is discussed); too small a value of $k$ makes the $\cv$ less
-robust but more efficient (classic values of $k$ for most practical uses are $5, 10, 20$).
+The number of folds to be used for \cv\ becomes another hyperparameter of the problem, since it
+depends on many factors like the amount of available data or the required reliability of performance
+reads. A large value of $k$ will increase the number of folds the model is trained and tested on,
+increasing the robustness of the performance estimation at the expense of computational complexity
+(e.g., Leave One Out \cv\ is an example of such approaches, in~\cite{shao2016} a more efficient
+approach to the technique is discussed); too small a value of $k$ makes the \cv\ less robust but more efficient (classic values of $k$ for most practical uses are $5, 10, 20$).
 
 \medskip
 
-To introduce Nested $\cv$ ($\ncv$) we will consider the case of having to choose the best model,
-training it and then testing its performance. In the base case the dataset $D$ can be tripartitioned
-as follows:
+Let us now move to a more complicated environment in which we need, given a base model, to do model
+selection, do model training and finally do model testing. We can na\"ively tripartition dataset $D$:
 \begin{itemize}
 	\item \emph{Training set} $T$,
 	\item \emph{Validation set} $V$, this set of samples will be used to test the performance of the
@@ -137,34 +103,16 @@ as follows:
 	      tested on $G$ to see if the model is capable of generalizing effectively.
 \end{itemize}
 
-If we apply this simple procedure to select the model, train it and then test it; how can we
-guarantee that the model chosen is the best one, or at least is good enough?
-
-\smallskip
-
-Quite simply, we can't give any guarantees, we might have gotten the worst possible mix of
-hyperparameters and still get good performance during the validation and generalization tests due to
-statistical anomalies.
-\begin{figure}
-	\centering
-	\includegraphics[scale=.3]{./img/nested-cv.png}
-	\label{fig:nested-cv}
-	\caption{Visualization of the nested cross validation procedure taken from \cite{pain2020}}
-\end{figure}
-\todo{If I want to add a picture for simple cross validation then something ad hoc should be
-	created so that the style is kind of the same}
-
-Compared to the method that we just talked about \ncv, outlined in \Cref{fig:nested-cv}, consists of
-two simple \cv\ procedures nested, The outer one is used for testing the generalization performance
-of the model, the internal one is used to do model selection and is constructed on the training set
-used in the outer loop. Repeating the model selection process gives us better hyperparameter
-selection and lowers the chances of us picking a model that performs good only on paper, it also
-gives us robust performance estimates since it averages the metrics over different folds.
-
-\medskip
-
-In the project, we chose to apply a $5 \times 5$ \ncv\ procedure, which means that, out of
-the $250$ samples that form the original dataset $D$:
+Once again we cannot guarantee that:
+\begin{inparaenum}[(i)]
+	\item the chosen model is the best one,
+	\item the performance metrics obtained from the single generalization fold are actually reliable.
+\end{inparaenum}
+To address the issue we can substitute each procedure with $k$-fold \cv, one nested inside of each
+other, the \emph{inner} is used to do model selection, the \emph{outer} is used to test performance
+for the model just generated. To get a better understanding of the Nested cross-validation procedure
+(\ncv) just introduced let us consider a $5 \times 5$ \ncv\ procedure applied to a dataset of $250$
+samples(an outline of the \ncv\ procedure is shown in \Cref{fig:nested-cv}).
 \begin{itemize}
 	\item The data is first split into $5$ folds of $50$ samples. One fold of $50$ samples will
 	      be kept on the side for the generalization test, the remaining $200$ samples will be used to do both training and model selection;
@@ -174,20 +122,21 @@ the $250$ samples that form the original dataset $D$:
 	\item The model found at the previous step is retrained on the whole $200$ training samples and then
 	      the performance are tested on the fold that was kept aside in the first step.
 \end{itemize}
-If we consider once again \Cref{fig:nested-cv} it's clear that the outer \cv\ procedure will yield
-$5$ different models, which one should be considered the best model overall? All of the models
-obtained after a run of \ncv\ are statistically equivalent, therefore we can pick whichever model we
-prefer, usually in practice we keep the model that has the highest accuracy score.
+\begin{figure}[!t]
+	\centering
+	\includegraphics[scale=.3]{./img/nested-cv.png}
+	\caption{Visualization of the nested cross validation procedure taken from~\cite{lavasa2021}}
+	\label{fig:nested-cv}
+\end{figure}
 
-The scikit-learn library contains many \cv\ implementations that can give different or stronger
-guarantees compared to the \cv\ procedure shown in this section, the splitting procedure is also
-handled differently based on the type of KFold object used.
+Once the \ncv\ procedure terminates we will get $k$ different models, since the fine-tuned models
+are statistically equivalent, we can choose which one to keep using the heuristic that fits our
+objectives the best.
 
-The closing section for this chapter will contain a summarization of the experiment's
-characteristics.
-\subsection{Experimental setup}
-The project was developed using the latest version of the Python programming language
-(3.10.12 at the moment of writing), All experiments have been executed using Python 3.10.12 (the latest version at the time of writing), using the following libraries: scikit-learn (release 1.5.2) for data preprocessing and model training and evaluation, numpy (release 2.2.3) for efficient data storage, and Pandas (release 2.2.3) for data management. These libraries have been handled through the pip package manager (release 25.0.1) and used within a virtual environment.
+The closing section for this chapter will contain a summarization of the experimental setup.
+
+\section{Experimental setup}
+The project was developed using the latest version of the Python programming language (3.10.12 at the moment of writing), All experiments have been executed using Python 3.10.12 (the latest version at the time of writing), using the following libraries: scikit-learn (release 1.5.2) for data preprocessing and model training and evaluation, numpy (release 2.2.3) for efficient data storage, and Pandas (release 2.2.3) for data management. These libraries have been handled through the pip package manager (release 25.0.1) and used within a virtual environment.
 
 \medskip
 
@@ -197,7 +146,7 @@ The seeds from the various random number generators have been set to the common 
 \medskip
 
 The original contained $279$ samples, for \qrp, each sample consisted of $15$ harmonics and a Label
-stating whether the sample represents a quench ($1$) event or not ($0$), for \qlp, each sample had $4$ different
+stating whether the sample represents a quench event ($1$) or not ($0$), for \qlp, each sample had $4$ different
 labels associated to it representing whether one of the coils ($0$ for East, then: North, West and
 South) quenched ($1$) or not ($0$).
 
@@ -235,10 +184,10 @@ different operating systems, but the results did not change due to the standard-
 		\bottomrule
 	\end{tabular}
 \end{table}
-Experiments were dispatched on different systems based on the expected computational load
+Experiments were dispatched on different systems based on the expected computational load.
 
-Model selection was handled by doing a partial exploration of the parameter space, for each model we
-explored a custom parameter grid (shown in \Cref{tbl:params}) via a grid search algorithm (GridSearchCV in scikit-learn).
+Model selection was handled by doing a partial exploration of the parameter space via a grid search algorithm (GridSearchCV in scikit-learn), for each model we
+defined a custom parameter grid (shown in \Cref{tbl:params}).
 
 \begin{table}[t]
 	\caption{Hyperparameters which we have tuned during the model training phase.} \label{tbl:params}
@@ -269,7 +218,7 @@ explored a custom parameter grid (shown in \Cref{tbl:params}) via a grid search 
 	\end{tabular}
 \end{table}
 
-All of the models have been tested on a suite of different scorers meant to give us a more complete
+All of the models have been tested on a suite of scorers meant to give us a more complete
 understanding of how well the model is performing, the metrics are explained here below and, as
 usual, by positive (negative) sample we mean a sample having label $1$ ($0$), and by true (false)
 positive we mean a correctly classified positive (negative) sample:
