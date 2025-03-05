@@ -163,7 +163,7 @@ classes.
 		\subcaption{}
 	\end{subfigure}
 	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \an\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
+		the \bn\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
 	\label{fig:bn-coilq-dist}
 \end{figure}
 
@@ -213,6 +213,17 @@ If we look back at the correlation matrix computed for \cnmod\ during the prepro
 	\label{fig:cnmod-lcorr-qlp}
 \end{figure}
 
+As we did for \an\ and \bn, we visualized the distribution of the data after a round of \pca\
+dimensionality reduction. In the bidimensional case \cnmod\ has a good distribution (even if it
+presents an evident outlier that could be removed). If we consider the case of non-quench versus
+single or multiple coil quench (subfigure (a)) it's apparent that clusters could be identified with
+a good level of purity; we are far from the level of class separation found with \an, but it's an
+improvement over the results obtained on \bn.
+
+As far as single coil quench is concerned (subfigures (b) - (e)), we can see, in most cases, a high
+level of homogeneity of quench and non-quench samples, probably suggesting a difficulty in
+identifying a separating hyperplane using this attribute.
+
 \begin{figure}[!h]
 	% Font size = 70
 	\centering
@@ -237,12 +248,18 @@ If we look back at the correlation matrix computed for \cnmod\ during the prepro
 		\subcaption{}
 	\end{subfigure}
 	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \an\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
+		the \cnmod\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
 	\label{fig:cnmod-coilq-dist}
 \end{figure}
 
-
 \subsubsection{\phin}
+To close this subsection about the preprocessing step we can consider the \phin\ dataset, which
+seems to be highly informative across the board, and due to the lack of strong correlation between
+the harmonics (as testified in the preprocessing step done for \qrp), we could probably use it for
+all coils and still get good performance. Probably the best sub-view for \phin is going to contain
+all of the harmonics with the exception of: only one harmonic from \{\phin[2], \phin[6], \phin[10],
+\phin[14]\}, and only one harmonic from \{\phin[4], \phin[8], \phin[12]\}.
+
 \begin{figure}[!h]
 	% Font size = 70
 	\centering
@@ -262,9 +279,16 @@ If we look back at the correlation matrix computed for \cnmod\ during the prepro
 		\includegraphics[width=\linewidth]{img/qlp_corr/Phi_coil3.png}
 		\subcaption{Correlation with coil $3$}
 	\end{subfigure}
-	\caption{Correlation between the harmonics of the \cnmod\ attribute and the labels for \qlp.}
+	\caption{Correlation between the harmonics of the \phin\ attribute and the labels for \qlp.}
 	\label{fig:phi-lcorr-qlp}
 \end{figure}
+
+As we have done so far, we visualize the distribution of the data after moving from $15$ to $2$
+dimensions using \pca (see \Cref{fig:phi-coilq-dist}), the result is that, apart from the cluster to
+the left in sub-figure (a), which mostly contains non-quench events, the cluster on the right has a
+high degree of homogeneity. The same conclusions apply to the analysis of quench localization for
+the various coils, apart from specific cases, quenches have a bad distribution and are homogeneously
+mixed to non-quench events in high impurity clusters.
 
 \begin{figure}[!h]
 	% Font size = 70
@@ -290,9 +314,99 @@ If we look back at the correlation matrix computed for \cnmod\ during the prepro
 		\subcaption{}
 	\end{subfigure}
 	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \an\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
+		the \phin\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
 	\label{fig:phi-coilq-dist}
 \end{figure}
+
 \section{First approaches using Clustering}
-\section{Extension of the QRP models}
+
 \section{Results}
+We thought that a good idea to solve \qlp\ was to extend the original models used to solve \qrp. The
+very first experiments we worked on included trying to solve the new problem using the
+multiclass-classification version of the original models, we didn't have high expectations for this
+since the new models have to predict $4$ different bits, instead of just one, making the problem
+effectively much more difficult than \qrp.
+
+As an example, we started with trees, and even if they always had maximum depth between $5$ and $10$
+(therefore having a structure close to the limit of what we would consider explainable) the accuracy
+was close to $60 - 70\%$. The performance were obtained by doing micro averaging, which means that
+the resulting metrics are mindful of the class imbalance.
+
+Since the performance obtained using a direct extension of trees didn't really suit our expectations
+we chose to change approach: Decision trees (and the other models) have performed at a very high
+level in \qrp, therefore all that we have to do to solve \qlp\ is solve \qrp\ four times (one for
+each coil). We need to find new estimators, different from the ones used to solve \qrp, because they
+have been trained on a single label that had a completely different analytical representation, if we
+tried to use the same models to the single coils they would be trying to abstract the same pattern
+from a different classification problem, which leads to very poor performance.
+
+In the following we will retrace the steps we walked in \Cref{chp:qrp} and we will describe the best
+models found to solve the problem.
+
+\subsection{Decision trees}
+As we said previously, decision trees utilized in the multiclass-classification environment provided
+performance that left a lot to be desired, to counteract this we chose to reinterpret \qlp\ as a
+problem in which we need to understand whether each coil has quenched, separately (therefore
+solving \qrp\ $4$ different times independently).
+
+In this section we will describe the best performer for every coil.
+
+\subsubsection{Coil $0$}
+If we consider coil $0$, the best possible decision tree obtained is:
+
+\begin{table}[!ht]
+	\caption{Average and standard deviation of the performance for the best \dt\ over the outer \cv\
+		fold.}\label{tbl:qlp-coil0-bdt}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{ccccccc}
+		\toprule
+		\textbf{}    & \textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{Irec} & \textbf{F1} & \textbf{RAUC} \\
+		\midrule
+		Mean         & 0.972        & 0.935        & 0.951        & 0.978         & 0.943
+		             & 0.973                                                                                    \\
+		\textsc{std} & 0.016        & 0.032        & 0.040        & 0.011         & 0.033
+		             & 0.018                                                                                    \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{itemize}
+	\item Built on a sub-view of \an\ containing only \an[2] and \an[3];
+	\item The tree performance, shown in \Cref{tbl:qlp-coil0-bdt}, are quite close to the
+	      original performance obtained in \qrp\ when testing \dts;
+	\item the \dt, shown in \Cref{fig:qlp-coil0-bdt}, is simple, as was the case with most
+	      of the models built on sub-views of the \an\ attribute in \qrp. The \dt\ has maximum
+	      depth of $3$ and $3$ internal nodes with $5$ total leaves.
+\end{itemize}
+
+If we plot the performance of the best tree for every sub-view, (see \Cref{fig:bdts-coil0}) we can see that, while the performance
+for the models built on \an\ and \phin\ are comparable, the performance for \bn\ and \cnmod\ is not
+remotely comparable, which was expected in the phase of preprocessing. Interestingly, even if the
+harmonics chosen to work on the problem should be highly informative and have a low correlation
+among each other, the model trained on the sub-view of \cnmod\ can't reach a good level of
+performance.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\linewidth]{img/An_2_3_qlp_c0.png}
+	\caption{Structure of the tree built on a sub-view of \an, predicting whether coil $0$ is
+		quenching or not.} \label{fig:qlp-coil0-bdt}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\linewidth]{img/coil0_dt_performance.png}
+	\caption{Comparing the performance of the best tree built on every attribute to predict
+		whether coil $0$ is quenching or not.} \label{fig:bdts-coil0}
+\end{figure}
+
+
+
+
+
+
+
+
