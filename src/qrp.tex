@@ -9,56 +9,68 @@ This chapter is dedicated to the solution of \qrp, which we introduced in \Cref{
 \end{itemize}
 
 \section{Problem description}
-As was introduced in the previous chapter out dataset consisted of four tables of $279$ samples
-each, divided between 'quench' and 'non-quench' events, the distribution is not exactly balanced:
-$192$ quench events and $87$ non-quench events; since the imbalance is not extreme we didn't take
-explicit action against it.
+As was introduced in the previous chapter our dataset consists of four tables of $279$ samples
+each, divided between 'quench' ($1$) and 'non-quench' ($0$) events, the distribution is not exactly balanced: $192$ quench events and $87$ non-quench events; since the imbalance is not extreme we didn't take explicit action against it.
 
 \section{Data preprocessing}
 \label{sec:qrp-preprocessing}
 Before working on the actual models we analyzed:
-\begin{inparaenum}[(i)]
-	\item the cross-correlations between the harmonics,
-	\item the cross-correlation between the harmonics and the labels,
-	\item the box plot of the attributes, and
-	\item the distribution of data after dimensionality reduction via principal component analysis (PCA).
-\end{inparaenum}.
-In the following, the vector containing the information about the correlation with the labels has been plotted after a
-normalization step, which was done with the MinMaxScaler class of scikit-learn. While this procedure
-doesn't change the intensity of the correlation between the harmonic and the label it makes the
-graphs more readable and easier to interpret, the normalized samples are scaled using
-\Cref{eq:normalization} \cite{Nishok2024}.
+\begin{itemize}
+	\item the cross-correlations between the harmonics, which aims to identify repeated
+	      information within the dataset;
+	\item the cross-correlation between the harmonics and the labels, which indicates how
+	      well the harmonics of the dataset are capable of explaining the expected results;
+	\item the box plot of the attributes, which is visualizes the variability of the harmonics,
+	      giving us a powerful tool to understand which ones are more relevant to the
+	      computation, and
+	\item the distribution of data after dimensionality reduction via principal component
+	      analysis (\pca), which is meant to give a good idea of how the data are distributed
+	      and hints to which are the better attributes to solve the problem.
+\end{itemize}
+In the following, the vector containing the information about the correlation with the labels has
+been plotted after a normalization step, which was done by training an instance of the MinMaxScaler
+class from scikit-learn. While this procedure doesn't change the intensity of the correlation
+between the harmonic and the label it makes the plots more readable and easier to interpret, the normalized samples are scaled using \Cref{eq:normalization} \cite{Nishok2024}.
 \begin{equation}
 	\label{eq:normalization}
 	X_\text{scaled} = \frac{X - X_\text{min}}{X_\text{max} - X_\text{min}}
 \end{equation}
 Where $X$ is a sample in the vector that is being scaled.
 
-The results are reported in the following sections, one for each table.
+We will be covering the results of preprocessing in four different sections, each dedicated to one
+attribute.
 
-\subsubsection{\an\ table}
-\Cref{fig:an-corr} shows the correlation of the various harmonics with each other. Independently
-of the sign of the cross-correlation measurement, there is a clear pattern contained in the matrix,
-indicating that many harmonics contain repeated information, e.g., harmonic number $1$ provides the same information as harmonic number $3, 5, 7, \ldots$.
+\subsubsection{\an}
+\Cref{fig:an-corr} among the harmonics. Independently of the sign, the matrix evidently contains a
+pattern, hinting to the fact that many harmonics contain repeated information, e.g., \an[1] provides
+the same information as \an[3], \an[5], \an[7], \ldots By analyzing the figure we can reach the
+following conclusions:
+\begin{itemize}
+	\item Its strong geometry implies that doing feature extraction is going to be complex (as
+	      we will see in the following sections it's basically a shared characteristic for
+	      almost all the attributes), due to the necessity of finding a mix of harmonics that has a high correlation with the label, while having a low correlation among themselves.
+	\item All the odd harmonics are strongly correlated with each other (with the sole exception
+	      of \an[15]),
+	\item \an[2] is strongly correlated with its odd multiples (i.e., \an[6], \an[10], \an[14]),
+	\item \an[4] is strongly correlated with all its multiples (i.e., \an[8], \an[12]),
+	\item \an[15] is the only one not correlated to any of the other harmonics.
+\end{itemize}
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/An_corr_matrix.png}
 	\caption{The cross-correlation of the \an\ harmonics} \label{fig:an-corr}
 \end{figure}
 
-By looking at \Cref{fig:an-corr} we can gather the following information:
-\begin{itemize}
-	\item Its strong geometry implies that doing feature extraction is going to be complex, due to the necessity of finding a mix of harmonics that has a high correlation with the label, while having a low correlation among themselves.
-	\item All the odd harmonics are strongly correlated with each other (with the sole exception
-	      of harmonic $15$),
-	\item Harmonic number $2$ is strongly correlated with its odd multiples,
-	\item Harmonic number $4$ is strongly correlated with all its multiples,
-	\item Harmonic number $15$ is the only one that is not correlated to any of the other
-	      harmonics.
-\end{itemize}
-
-\Cref{fig:an-lcorr} aims to show how informative the various harmonics with regard to the single
-label ('quench' or 'non-quench').
+If we consider \Cref{fig:an-lcorr}, and we pick the harmonics with the highest label correlation,
+identified by a higher color intensity, we end up with the following set of features: \{\an[2],
+\an[6], \an[10], \an[11], \an[12], \an[13], \an[14], \an[15]\}. This is interesting because:
+\begin{enumerate}
+	\item \an[2], as well as its odd multiples, can explain the results well, which is what we expect from the theory.
+	\item High order harmonics are able to explain the results better than other harmonics,
+	      which is not what we would have expected, since in the original analysis the value for the
+	      labels was computed using primarily low-order harmonics\footnote{By low order
+		      harmonics we intend the harmonics going from $1$ to $6$ circa}.
+\end{enumerate}
 
 \begin{figure}
 	\centering
@@ -66,17 +78,6 @@ label ('quench' or 'non-quench').
 	\caption{Label correlation for the \an\ table} \label{fig:an-lcorr}
 \end{figure}
 
-Once again, considering \Cref{fig:an-lcorr}, we picked the harmonics with the highest label
-correlation, which are identified by a higher color intensity; as we can see the label is explained
-very well by harmonics number: $2, 6, 10, 11, 12, 13, 14, 15$.
-These conclusions are doubly interesting, since:
-\begin{enumerate}
-	\item The $2^{nd}$ harmonic, as well as its odd multiples, can explain the results well, which
-	      is what we expect from the theory.
-	\item High order harmonics are able to explain the results better than other harmonics,
-	      which is not what we would have expect, since in the original analysis the value for the
-	      labels was computed using primarily lower order harmonics.
-\end{enumerate}
 
 Based on all the information obtained up to this point we can conjecture that some of the best
 datasets will probably contain the second harmonic, or one of its high order odd multiples, as well
