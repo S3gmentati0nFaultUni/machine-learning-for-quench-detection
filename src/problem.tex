@@ -11,11 +11,17 @@ As a result of the magnets test campaign, $279$ events, after the magnet dischar
 
 For each event, 60 samples of measured harmonic coefficients have been measured and averaged to obtain a single set of $15$ different magnetic field harmonics coefficients which contain all the information of the produced magnetic field quality (see Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex numbers, the information have been organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
 \begin{itemize}
-	\item the imaginary part $A_n$ of the $n^\text{th}$ field harmonic coefficient;
-	\item the real part $B_n$ of the $n^\text{th}$ field harmonic coefficient;
-	\item the absolute value $|C_n|$ of the $n^\text{th}$ field harmonic coefficient;
-	\item the phase $\phi_n$ of the $n^\text{th}$ field harmonic coefficient.
+	\item the imaginary part \an, of the $n^\text{th}$ field harmonic coefficient;
+	\item the real part \bn, of the $n^\text{th}$ field harmonic coefficient;
+	\item the absolute value \cnmod, of the $n^\text{th}$ field harmonic coefficient;
+	\item the phase \phin, of the $n^\text{th}$ field harmonic coefficient.
 \end{itemize}
+In the experiment generating data, the magnets were mounted skewed: as a consequence, the $A_n$ feature was supposed to be highly informative since they are directly correlated with the rotational position of the quenched coil in the magnet assembly. The absolute values $|C_n|$ would be a valuable feature for \qrp{} and not for \qlp{} since two different configurations with the same number of quenched coils but different angular positions would give the same harmonic content and different phases. Each measurement was coupled with a \emph{label} encoded as follows:
+\begin{itemize}
+	\item a simple binary flag for \qrp, where $1$ means that a quench has happened, while $0$ characterizes the normal working conditions of the superconductor;
+	\item four binary flags for \qlp, each describing a  coil and stating whether or not a quench happened within it, using the same encoding as in previous point.
+\end{itemize}
+
 In the following chapters we will not be using attributes in their entirety, in most cases the
 datasets will be aggregating the best harmonics for a certain attribute (e.g., harmonics $2$ and
 $12$ for attribute \an). We will be referring to these as sub-views of an attribute.

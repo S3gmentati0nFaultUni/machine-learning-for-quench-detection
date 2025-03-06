@@ -42,8 +42,8 @@ attribute.
 
 \subsubsection{\an}
 \Cref{fig:an-corr} among the harmonics. Independently of the sign, the matrix evidently contains a
-pattern, hinting to the fact that many harmonics contain repeated information, e.g., \an[1] provides
-the same information as \an[3], \an[5], \an[7], \ldots By analyzing the figure we can reach the
+pattern, hinting to the fact that many harmonics contain repeated information, (e.g., \an[1] provides
+the same information as \an[3], \an[5], \an[7]), \ldots By analyzing the figure we can reach the
 following conclusions:
 \begin{itemize}
 	\item Its strong geometry implies that doing feature extraction is going to be complex (as
@@ -55,10 +55,10 @@ following conclusions:
 	\item \an[4] is strongly correlated with all its multiples (i.e., \an[8], \an[12]),
 	\item \an[15] is the only one not correlated to any of the other harmonics.
 \end{itemize}
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_corr_matrix.png}
-	\caption{The cross-correlation of the \an\ harmonics} \label{fig:an-corr}
+	\caption{The cross-correlation among the \an\ harmonics.} \label{fig:an-corr}
 \end{figure}
 
 If we consider \Cref{fig:an-lcorr}, and we pick the harmonics with the highest label correlation,
@@ -72,128 +72,129 @@ identified by a higher color intensity, we end up with the following set of feat
 		      harmonics we intend the harmonics going from $1$ to $6$ circa}.
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_label_corr.png}
-	\caption{Label correlation for the \an\ table} \label{fig:an-lcorr}
+	\caption{Correlation between the harmonics and the labels for \an.} \label{fig:an-lcorr}
 \end{figure}
 
+The structure of the correlation matrix and the correlation between labels and harmonics leads us to
+believe that a good-performing sub-view for \an\ should contain \an[2], or one of its high-order
+odd multiples, as well as \an[15]\ and some other high-order harmonics like \an[11]\ or \an[13].
 
-Based on all the information obtained up to this point we can conjecture that some of the best
-datasets will probably contain the second harmonic, or one of its high order odd multiples, as well
-as harmonic number $15$, and some other high order harmonic (i.e.: harmonics number $11$ or $13$). As we will see
-in the following one of the best datasets that we built on this table was based on harmonics $2, 12$.
-
-Lastly, we can visualize the distribution of the samples in bidimensional space, which was achieved
-by using a dimensionality reduction technique, namely $\textsc{pca}$ (Principal Component Analysis).
-\begin{figure}[h!]
+Lastly, we can visualize the distribution of samples in bidimensional space, achieved by using \pca\
+dimensionality reduction.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_distribution.png}
-	\caption{Data distribution for the \an\ table after applying $\textsc{pca}$ dimensionality
-		reduction} \label{fig:an-dist}
+	\caption{Data distribution for the \an\ table after applying \pca\ dimensionality
+		reduction, moving from $15$-dimensional space to $2$-dimensional space-dimensional
+		space. In the plot we highlight quench and non-quench events.} \label{fig:an-dist}
 \end{figure}
 
-It can be seen in \Cref{fig:an-dist} that the samples, after dimensionality reduction, are distributed very nicely in a series
-of zones, each zone has a very high degree of purity; this lead us to suppose that it might be the
-reason why models built on \an\ and \cnmod\ perform better than the alternatives.
+As we will see in the following sections, the distribution shown in \Cref{fig:an-dist}, with its
+clear-cut clusters characterized by a high level of purity, is the best distribution among the
+alternatives. Having such a good distribution lead us to think that it might be the reason why
+models built on \an\ and \cnmod\ (at least for \qrp) perform better than the ones built on \bn\ and
+\phin.
 
-\subsubsection{\bn\ table}
-We can use a similar procedure on the \bn\ table, which in most tests proved to be the
-least-performing table. This is probably due to the poor distribution of the data, as we can see in
-\Cref{fig:bn-dist}, it's really hard to find a way to separate the central portion of the samples.
-\begin{figure}[h!]
+\subsubsection{\bn}
+We can use a similar procedure on the \bn\ attribute, which in most tests proved to be the
+least-performing attribute. This is probably due to the poor distribution of the data, as we can see in
+\Cref{fig:bn-dist}, the central cluster has a very high level of homogeneity.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_distribution.png}
-	\caption{Data distribution for the \bn\ table after applying $\textsc{pca}$ dimensionality
-		reduction} \label{fig:bn-dist}
+	\caption{Data distribution for the \bn\ table after applying \pca\ dimensionality
+		reduction, moving from $15$-dimensional space to $2$-dimensional space-dimensional
+		space. In the plot we highlight quench and non-quench events.} \label{fig:bn-dist}
 \end{figure}
 
-As we did for \an\ we checked the cross-correlation of the \bn\ table, and the results were actually very
-similar.
-\begin{figure}[h!]
+As we did for \an\ we checked the correlation among harmonics for the \bn\ attribute, the results
+were very similar, the more striking difference between \Cref{fig:an-corr} and \Cref{fig:bn-corr},
+apart from the actual correlation values, is that \bn[2] is not strongly correlated with any other
+harmonic (contrarily to \an[2]), while \bn[15] grows a discrete correlation with all odd harmonics.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_corr_matrix.png}
-	\caption{The cross-correlation of the \bn\ harmonics} \label{fig:bn-corr}
+	\caption{The cross-correlation among the \bn\ harmonics.} \label{fig:bn-corr}
 \end{figure}
-Possibly the biggest difference between \Cref{fig:an-corr} and \Cref{fig:bn-corr}, apart from the
-obvious difference in the correlation values, is that harmonic $2$ is not strongly correlated with
-any other harmonic, while harmonic number $15$ grows a discrete correlation with all odd harmonics.
 
-If we check the correlation of the harmonics with the labels in (\Cref{fig:bn-lcorr}), we can see
+If we check the correlation between the harmonics and the labels in (\Cref{fig:bn-lcorr}), we can see
 that, apparently, most harmonics have a good enough correlation with the solution, but despite this, the performance of all
 models built on \bn\ suffered.
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Bn_label_corr.png}
-	\caption{Label correlation for the \bn\ table} \label{fig:bn-lcorr}
+	\caption{Correlation between the harmonics and the labels for \bn.} \label{fig:bn-lcorr}
 \end{figure}
 
-\subsubsection{\cnmod\ table}
-The \cnmod\ table combines the information present in \an\ and \bn, as we saw in \Cref{sec:dsets},
-\cnmod\ was expected to be one of the best tables to solve \qrp, but, as we will see in future
-sections, it consistently falls short of the \an\ table, probably due to the introduction of the information carried by \bn.
-\begin{figure}[h!]
+\subsubsection{\cnmod}
+The \cnmod\ attribute combines the information present in \an\ and \bn, \cnmod\ was expected to be one
+of the best tables to solve \qrp, as we highlighted in \Cref{chp:problem}, and, as we will see in
+future sections, while models trained on \cnmod\ cannot reach the same level of performance reached
+by \an, they are consistently the second-best model available.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_corr_matrix.png}
-	\caption{The cross-correlation of the \cnmod\ harmonics} \label{fig:cnmod-corr}
+	\caption{The cross-correlation among the \cnmod\ harmonics.} \label{fig:cnmod-corr}
 \end{figure}
 
-As we can see in \Cref{fig:cnmod-corr} the correlation matrix for \cnmod\ is very complicated:
+\Cref{fig:cnmod-corr} shows the correlation matrix for \cnmod, its structure is very complicated,
+since:
 \begin{itemize}
-	\item Harmonic number $2$ is strongly correlated with any other harmonic until number $9$,
-	\item Harmonics between $10$ and $15$ are strongly correlated among themselves,
-	\item Harmonic number $4$ is strongly correlated with its multiples.
+	\item \cnmod[2] is strongly correlated with all harmonics until \cnmod[9],
+	\item Harmonics between \cnmod[10] and \cnmod[15] are strongly correlated among themselves,
+	\item \cnmod[4] is strongly correlated with its multiples.
 \end{itemize}
-\begin{figure}[h!]
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_label_corr.png}
-	\caption{Label correlation for the \cnmod table} \label{fig:cnmod-lcorr}
+	\caption{Correlation between the harmonics and the labels for \cnmod.} \label{fig:cnmod-lcorr}
 \end{figure}
 
 Looking at both \Cref{fig:cnmod-corr} and \Cref{fig:cnmod-lcorr}, we can conclude that two different
-approaches could be followed:
+approaches can be followed:
 \begin{itemize}
-	\item Using harmonic number $2$ alongside one or more high-order harmonics,
-	\item Using harmonic number $3$ and some other low-order harmonics (potentially even the
-	      first one) alongside one high-order harmonic (e.g., $14$).
+	\item Using \cnmod[2] alongside one or more high-order harmonics,
+	\item Using \cnmod[3] and some other low-order harmonics (potentially even the
+	      first one) alongside one high-order harmonic (e.g., \cnmod[14]).
 \end{itemize}
-Analyzing the boxplot suggested that using harmonic number $2$ was not promising, due to the extreme
+Analyzing the boxplot suggested that using harmonic number \cnmod[2] was not promising, due to the extreme
 concentration of the data.
 
-Before considering the last table let us stop once more to consider the distribution of \cnmod\
-after a round of \pca.
-\begin{figure}[h!]
+\Cref{fig:cnmod-dist} visualizes the distribution of the samples in \cnmod\ after a round of \pca,
+the samples are characterized by a good enough distribution, we could easily identify clusters with
+a high degree of purity, apart from the one in the leftmost region of the image, which contains
+samples belonging to both classes mixed together homoegeneously. In the rightmost part of the image
+we can identify a sample which can be considered an outlier and was removed whenever we experimented
+clustering approaches. Overall \cnmod\ doesn't have a distribution quite as good as \an\ did, but comparing it to \Cref{fig:bn-dist} or \Cref{fig:phi-dist}, has a much better topology.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Cnmod_distribution.png}
 	\caption{Data distribution for the \cnmod\ table after applying \pca\ dimensionality
-		reduction} \label{fig:cnmod-dist}
+		reduction, moving from $15$-dimensional space to $2$-dimensional space-dimensional
+		space. In the plot we highlight quench and non-quench events.} \label{fig:cnmod-dist}
 \end{figure}
-As we can see in \Cref{fig:cnmod-dist} the samples are characterized by a good enough distribution,
-we could easily identify clusters with a high degree of purity, apart from the one in the leftmost
-region of the image, which contains many points tagged as quench events and many points tagged as
-non quenches. We can also identify a small outlier, which was removed when we considered the
-clustering approach; overall \cnmod\ doesn't have a distribution quite as good as \an\ did, but
-comparing it to \Cref{fig:bn-dist} or \Cref{fig:phi-dist}, has a much better topology.
 
-\subsubsection{\phin\ table}
+\subsubsection{\phin}
 As we will see in further sections the \phin-based models consistently outperformed the ones based
-on \bn. As we saw with \bn, also in the case of \phin, the data distribution after a round of \pca\,
-shown in \Cref{fig:phi-dist}, is characterized by a series of high-impurity clusters where samples of the two
-classes are mixed together.
+on \bn. As we saw with \bn, also in the case of \phin, the data distribution after a round of \pca,
+shown in \Cref{fig:phi-dist}, is characterized by a series of high-impurity clusters, where samples of the two classes are mixed together.
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_distribution.png}
-	\caption{Data distribution for the \phin\ table after applying $\textsc{pca}$ dimensionality
-		reduction} \label{fig:phi-dist}
+	\caption{Data distribution for the \phin\ table after applying \pca\ dimensionality
+		reduction, moving from $15$-dimensional space to $2$-dimensional space-dimensional
+		space. In the plot we highlight quench and non-quench events.} \label{fig:phi-dist}
 \end{figure}
 
-\medskip
-
-As far as the correlation matrix is concerned we can see in \Cref{fig:phi-corr} that, contrarily to
-the correlation matrix of other tables, the amount of harmonics that are strongly correlated with
-each other is very low. No real structure can be seen in this table, as was the case of \an\ and \bn.
-\begin{figure}[h!]
+In \Cref{fig:phi-corr} we plotted the correlation matrix for \phin, contrarily to the correlation
+matrix of other attributes, the amount of harmonics that are strongly correlated with each other is very
+low (only \phin[2] and its odd multiples and \phin[4] and its multiples). Compared to the
+aforementioned attributes the matrix contains no real structure.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_corr_matrix.png}
 	\caption{The cross-correlation of the \phin\ harmonics} \label{fig:phi-corr}
@@ -206,7 +207,7 @@ feature extraction process, the only things that really stand to the eye are tha
 \end{inparaenum}
 
 Lastly, we can analyze the correlation between the harmonics and the label. As we can see in \Cref{fig:phi-lcorr} most of the harmonics have a good correlation with the expected solution, especially harmonic number $2$ and its odd multiples, and harmonics number $1$ and $12$.
-\begin{figure}[h!]
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_label_corr.png}
 	\caption{Label correlation for the \phin\ table} \label{fig:phi-lcorr}
