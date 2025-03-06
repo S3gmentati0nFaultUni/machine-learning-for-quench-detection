@@ -192,26 +192,24 @@ shown in \Cref{fig:phi-dist}, is characterized by a series of high-impurity clus
 
 In \Cref{fig:phi-corr} we plotted the correlation matrix for \phin, contrarily to the correlation
 matrix of other attributes, the amount of harmonics that are strongly correlated with each other is very
-low (only \phin[2] and its odd multiples and \phin[4] and its multiples). Compared to the
-aforementioned attributes the matrix contains no real structure.
+low, only \phin[2] and its odd multiples and \phin[4] and its multiples are strongly correlated. Compared to the
+aforementioned attributes the matrix contains no real structure, which leaves us freedom to choose which harmonics to use to train our models.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_corr_matrix.png}
-	\caption{The cross-correlation of the \phin\ harmonics} \label{fig:phi-corr}
+	\caption{The cross-correlation among the \phin\ harmonics.} \label{fig:phi-corr}
 \end{figure}
-Whenever we choose to use \phin\ to build datasets we are left with much more freedom during the
-feature extraction process, the only things that really stand to the eye are that:
-\begin{inparaenum}[(i)]
-	\item Harmonic number $2$ is strongly correlated with its odd multiples,
-	\item harmonic number $4$ is strongly correlated with its multiples.
-\end{inparaenum}
 
-Lastly, we can analyze the correlation between the harmonics and the label. As we can see in \Cref{fig:phi-lcorr} most of the harmonics have a good correlation with the expected solution, especially harmonic number $2$ and its odd multiples, and harmonics number $1$ and $12$.
+Lastly, we can analyze the correlation between the harmonics and the label. As we can see in
+\Cref{fig:phi-lcorr} most of the harmonics have a good correlation with the expected solution,
+especially \phin[2]\ and its odd multiples, \phin[1]\ and \phin[12].
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/Phi_label_corr.png}
-	\caption{Label correlation for the \phin\ table} \label{fig:phi-lcorr}
+	\caption{Correlation between the harmonics and the labels for \phin.} \label{fig:phi-lcorr}
 \end{figure}
+
+\medskip
 
 This closes the brief exposition about the preprocessing steps for the various labels, now we will
 tackle the model selection procedure indicating which were the best models overall and which model
@@ -220,16 +218,8 @@ we chose to solve \qrp.
 \section{Results}
 \label{sec:results-qrp}
 Every model shown in this section has been tested using the pipeline that we introduced in
-\Cref{chp:problem}. In this chapter we will proceed as we did in \Cref{chp:ml} for the theoretical
-introduction of the models, therefore:
-\begin{itemize}
-	\item The first subsection delineates the performance of decision trees,
-	\item The second subsection delineates the performance of random forests,
-	\item The third subsection delineates the performance of our benchmarking model, the \svm,
-	\item The last subsection will introduce the tree aggregator model
-\end{itemize}
-At the end of the chapter we will talk about the best performing model and we will give the final
-results for \qrp.
+\Cref{chp:problem}. In this section we will discuss the results obtained for the various models
+introduced in \Cref{chp:ml}.
 
 \subsection{Decision trees}
 \label{sec:qrp-dt}
@@ -238,22 +228,16 @@ performance that could be used to solve \qrp, that is exactly why the developmen
 with \dts.
 
 With our experiments we tried different approaches and different datasets, after a careful analysis
-and many experiments we found that the best \dts were all based on \an, the confusion matrix for
-the best model, trained on harmonics $2$ and $12$, is shown in \Cref{fig:dt-an-2-12-cm}, as we can
-see, the total number of errors made by the model is of only $4$ total, $3$ false negatives and $1$
-false positive.
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=\linewidth]{img/An_2_12_cm_dt.png}
-	\caption{The performance for the \an model built on harmonics $2, 12, 15$}
-	\label{fig:dt-an-2-12-cm}
-\end{figure}
-The average performance of the model over the outer \cv\ folds is reported in \Cref{tbl:an-2-12-perf},
+and many experiments we found that the best \dts\ were based on \an, the best classifier, trained
+\an[2] and \an[12], makes only $4$ errors total, $3$ false negatives (quench events that were
+predicted non-quenches) and $1$ false positive (non-quench predicted as quench event).
+
+The performance of the model, averaged over the outer \cv\ folds, is reported in \Cref{tbl:an-2-12-perf},
 as we can see, the numbers are already very solid, showing high average fold performance and low
 standard deviation.
-\begin{table}[t]
+\begin{table}[!ht]
 	\caption{Average and standard deviation of the performance for the best \dt\ over the outer \cv\
-		fold.}\label{tbl:an-2-12-perf}
+		folds.}\label{tbl:an-2-12-perf}
 
 	\bigskip
 	\setlength{\tabcolsep}{6pt}
@@ -269,28 +253,49 @@ standard deviation.
 		\bottomrule
 	\end{tabular}
 \end{table}
-These results are telling us that the model is able to perform on a high level in all of the testing
-metrics that we have chosen, moreover it's telling us that the delta, for every metric, between the
-best and the worst fold is very quite small, meaning that the model performed quite similar in all
-testing folds.
+The table is telling us that the performance are very good on average, since the standard deviation
+is also small, therefore the metrics computed on the best and the worst folds are not widely
+different, which hints at a model that will perform good independently of the data used on it.
 
-If we look at \Cref{fig:dt-an-2-12-pt}, we can see that the structure of the tree is also
-extremely simple, contained in depth, using mostly harmonic number $2$ to perform the splits and
+\Cref{fig:dt-an-2-12-pt} shows the structure of the decision tree, built on \an[2] and \an[12], this
+structure is extremely simple, contained in depth, using mostly \an[2] to perform the splits, and
 having only one node where the impurity is not zero.
-\begin{figure}[h!]
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_2_12_pt_dt.png}
-	\caption{The structure of the tree built on harmonics $2, 12, 15$} \label{fig:dt-an-2-12-pt}
+	\caption{The structure of the tree built on \an[2] and \an[12]} \label{fig:dt-an-2-12-pt}
 \end{figure}
-All other \dts\ tested fell short of the model based on \an\ that was just described, in
-\Cref{fig:best-dts} we can see a comparison of the best \dts\ built on every table, despite \cnmod\
-having accuracy closer to the one obtained by the best model, it cannot recognize non-quench events
-as effectively (the Irec score is lower).
-\begin{figure}[t]
+Many \dts\ were trained on different sub-views of the various attributes, but all of them fell short
+of the classifier just described, in \Cref{fig:best-dts} we plotted the best \dt\ for every
+attribute against each other, despite \cnmod\ having similar accuracy to the classifier just
+described, it cannot recognize non-quench events as effectively (the Irec score is lower).
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/best_dts.png}
-	\caption{Performance comparison of all the best decision trees} \label{fig:best-dts}
+	\caption{Performance comparison of the best decision tree for each attribute. The
+		performance plotted here are average and standard deviation of the metrics calculated on the
+		outer \cv\ of the \ncv\ hyperparameter optimization and model testing procedure described in
+		\Cref{chp:problem}.} \label{fig:best-dts}
 \end{figure}
+
+Finally, if we use our blind-test set \db, we can see that the best model, trained on a sub-view of
+\an\ containing only \an[2], and \an[12] misclassifies only two samples, one false positive and one
+false negative. The final performance metrics are listed in \Cref{tbl:blind-test-bdt}
+\begin{table}[!ht]
+	\caption{Score computed on the blind-test done on the best decision tree, the metrics have
+		been computed on the $29$ samples contained in the dataset.}\label{tbl:blind-test-bdt}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{cccccc}
+		\toprule
+		\textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{F1} & \textbf{Irec} & \textbf{RAUC} \\
+		\midrule
+		0.931        & 0.950        & 0.950        & 0.950       & 0.889         & 0.919         \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \subsection{Random Forests}
 \label{sec:qrp-rf}
@@ -298,51 +303,54 @@ As we said in \Cref{chp:ml} random forests (\rfs) use an ensemble of trees train
 sampling and perform splits on a random subset of features. As long as the trees are not too
 complicated and the ensemble is not too big, \rfs\ are still quite easy to interpret, while
 performing usually at least as good, if not better than the worst tree in the ensemble. Since they
-are grouping \rfs\ can extrapolate information from complicated datasets containing different
-sub-views (e.g., a dataset containing a subv-view for each of \an, \bn and \cnmod).
+are grouping \dts\ can extrapolate information from complicated datasets containing different
+sub-views (e.g., a dataset containing a sub-view for each of \an, \bn and \cnmod).
 
-In most of our tests we considered \rfs\ trained on datasets built from one or more tables, each
-table taken with the full harmonic content, we also did some tests on forests built on dataset
-containing a subset of the available harmonics, just we did with trees. While the second approach
-was more suitable for raw performance, the first one gave us insights, through the feature
-importance metric, of which were the more important harmonics within the dataset.
+In most of our tests we considered \rfs\ trained on datasets built from one or more attributes, each
+taken in its entirety, we also did some tests on forests built on datasets containing sub-views for
+one or more attributes. While the second approach was more suitable for raw performance, the first
+one gave us insights, through the feature importance metric, of which were the more important
+harmonics within the dataset.
 
 Feature importance is a measure that we can use to understand which features are more prominent in
-the \rf\ structure, this can give us an insight regarding what we should keep and what could be
-probably taken away to achieve better performance. We analyzed the feature importance of \rfs\ built
-on single views and then on an \rf\ constructed on the whole dataset, this is what we could conclude
-from it:
+the \rf\ structure, this can give us insights on how to design better the sub-views used for model
+training. We analyzed the feature importance of \rfs\ built on single attributes (e.g., an \rf\
+trained only on \an) and then of a \rf\ constructed on the whole dataset, we concluded that:
 \begin{itemize}
-	\item The forest built on \an, performs most of the splits ($\approx 80\%$) using harmonic
-	      number $2$.
+	\item The forest built on \an, performs most of the splits ($\approx 80\%$) using \an[2].
 	\item The forest built on \bn, performs most of the splits using a mix of different
-	      harmonics, $2$ is not among the first $6$ for importance. Harmonics
-	      $6, 9, 3, 14, 7$ and $5$ are the ones used the most to perform splits inside the
-	      random forest.
-	\item The forest built on \cnmod, uses harmonic number $2$ to perform over $50\%$ of the
-	      splits, the rest are handled mainly by harmonics $5, 9$ and $13$.
+	      harmonics, \bn[2] is not among the first $6$ for importance (we could also evince
+	      this from the fact that \bn[2] is not correlated with any other harmonic). \bn[6],
+	      \bn[9], \bn[3], \bn[14], \bn[7] and \bn[5] are the ones used the most to perform splits inside the random forest.
+	\item The forest built on \cnmod, uses \cnmod[2] to perform over $50\%$ of the splits, the
+	      rest are handled mainly \cnmod[5], \cnmod[9] and \cnmod[13].
 	\item The forest built on \phin, uses many different harmonics to perform the splits (mainly
-	      $10, 12, 6$ and $10$).
-	\item If we train a forest on the whole dataset, we can see that $\approx90\%$ of the splits were computed by using harmonics $2$ and $3$ from \cnmod, and harmonics $12, 2$ and $14$ from \an.
+	      \phin[10], \phin[12] and \phin[6]).
+	\item If we train a forest on the whole dataset, we can see that $\approx90\%$ of the splits
+	      were computed by using \cnmod[2] and \cnmod[3], and \an[12], \an[2] and \an[14].
+	      This is very interesting because it corroborates the fact that \cnmod is the more
+	      important attribute for \qrp.
 \end{itemize}
 
 In \Cref{fig:best-rfs} we plotted the metrics for the $4$ best performing random forests,
 independently of the dataset they were trained on, the best model achieved accuracy of $\approx 98.8\%$, while the other models remain above $98\%$.
-\todo{Cambiare il plot: toglierre il titolo, cambiare AUC con RAUC nelle metriche}
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/best_rfs.png}
-	\caption{The best random forests} \label{fig:best-rfs}
+	\caption{Performance for the $4$ highest performing forests, independently from which
+		dataset they were trained on, the plotted measurements are the average for each metric and
+		the standard deviation, each computed on the outer \cv\ of the \ncv\ procedure described in
+		\Cref{chp:problem}.} \label{fig:best-rfs}
 \end{figure}
 The performance for the best \rf\ \Cref{tbl:rf-cnmod-phi-perf} are definitely solid, and with some more work we could probably achieve better
 results, since the models considered above are trained on datasets obtained by grouping
 different sub-views\footnote{Which is very different from grouping trees trained on different
-	sub-views.}, regardless of the correlation. We decided not to explore this solution more
-since, as we will see briefly, \rfs\ can be more complicated to interpret than a model
-we devised and will be introduced in a later section.
-\begin{table}[t]
-	\caption{Average and standard deviation of the performance for the best \rf\ over the outer \cv\
-		folds.}\label{tbl:}
+	sub-views.}, regardless of the correlation among harmonics of different attributes. We
+decided not to explore this solution more since, as we will see briefly, \rfs\ can be more
+complicated to interpret than a model we devised, which will be introduced in a later section.
+\begin{table}[!ht]
+	\caption{Average and standard deviation of the performance for each metric for the best \rf\ over the outer \cv\
+		folds.}\label{tbl:rf-cnmod-phi-perf}
 
 	\bigskip
 	\setlength{\tabcolsep}{6pt}
