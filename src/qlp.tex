@@ -347,61 +347,84 @@ models found to solve the problem.
 As we said previously, decision trees utilized in the multiclass-classification environment provided
 performance that left a lot to be desired, to counteract this we chose to reinterpret \qlp\ as a
 problem in which we need to understand whether each coil has quenched, separately (therefore
-solving \qrp\ $4$ different times independently).
+solving \qrp\ $4$ different times). To keep the discussion of the performance concise we will be
+discussing the structure of the best models and concentrate on the performance of the aggregate.
 
-In this section we will describe the best performer for every coil.
+To evaluate the performance of the aggregate model, containing one classifier per coil, we defined a
+metric named 'Hamming score' ($\hs$ in the following), which simply computes how different are the
+prediction and the expected outcome.
 
-\subsubsection{Coil $0$}
-If we consider coil $0$, the best possible decision tree obtained is:
+\Cref{fig:bdts-qlp} contains the performance metrics obtained in the outer \cv\ for the best single
+tree trained on each coil. The metrics are quite close to each other, with the only clear outlier
+being the model trained on coil $3$.
+
+Instead of including a plot of the various trees we condensed the most important information
+in \Cref{tbl:tree-description}, all the trees described have a depth of maximum $5$ and the number
+of internal nodes and leaves is always very acceptable, while the trees built on \an\ remain on the
+smaller side, the trees built for coil $1$ and $3$ are larger (with the one built on \cnmod\ being
+the largest at $15$ total nodes), despite their structure being more complex, these trees struggle
+compared to the ones trained on sub-views of \an.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\linewidth]{img/best_dts_qlp.png}
+	\caption{Comparing the performance of the best model built on every coil, independently of
+		the dataset used.} \label{fig:bdts-qlp}
+\end{figure}
 
 \begin{table}[!ht]
-	\caption{Average and standard deviation of the performance for the best \dt\ over the outer \cv\
-		fold.}\label{tbl:qlp-coil0-bdt}
+	\caption{Description of the best \dt\ for every coil.}\label{tbl:tree-description}
 
 	\bigskip
 	\setlength{\tabcolsep}{6pt}
 	\centering
-	\begin{tabular}{ccccccc}
+	\begin{tabular}{lcccc}
 		\toprule
-		\textbf{}    & \textbf{Acc} & \textbf{Prc} & \textbf{Rec} & \textbf{Irec} & \textbf{F1} & \textbf{RAUC} \\
+		\textbf{}                           & \textbf{Coil 0}  & \textbf{Coil 1}          & \textbf{Coil 2}          & \textbf{Coil 3}
+		\\
 		\midrule
-		Mean         & 0.972        & 0.935        & 0.951        & 0.978         & 0.943
-		             & 0.973                                                                                    \\
-		\textsc{std} & 0.016        & 0.032        & 0.040        & 0.011         & 0.033
-		             & 0.018                                                                                    \\
+		\textsc{attribute}                  & \an              & \bn                      & \an                      & \cnmod                          \\
+		\multirow{2}{*}{\textsc{harmonics}} & \an[2], \an[3]   & \bn[3], \bn[4], \bn[10], & \an[1], \an[2], \an[12], & \cnmod[1], \cnmod[6], \cnmod[7] \\
+		                                    &
+		                                    & \bn[11], \bn[13] & \an[15]                  &                                                            \\
+		\textsc{depth}                      & 3                & 5
+		                                    & 3                & 5                                                                                     \\
+		\textsc{N internal nodes}           & 4                & 5
+		                                    & 3                & 8                                                                                     \\
+		\textsc{N leaves}                   & 5                & 6
+		                                    & 4                & 7                                                                                     \\
+		\textsc{N nodes}                    & 9                & 11
+		                                    & 7                & 15                                                                                    \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-\begin{itemize}
-	\item Built on a sub-view of \an\ containing only \an[2] and \an[3];
-	\item The tree performance, shown in \Cref{tbl:qlp-coil0-bdt}, are quite close to the
-	      original performance obtained in \qrp\ when testing \dts;
-	\item the \dt, shown in \Cref{fig:qlp-coil0-bdt}, is simple, as was the case with most
-	      of the models built on sub-views of the \an\ attribute in \qrp. The \dt\ has maximum
-	      depth of $3$ and $3$ internal nodes with $5$ total leaves.
-\end{itemize}
+In \Cref{fig:dt-qlp-hs}, we plotted the performance of the aggregate model, which are obtained as we
+did when testing \tas\ for \qrp: A run of $5$-fold \cv\ and we computed the number of errors done by
+the ensemble on the $4$ bit array. On average the classifiers makes $2$ errors or less, since the
+minimum accuracy is $0.5$, averaging the performance of all the folds we get a final Hamming score
+which is $0.95$ and with a standard deviation of $0.024$. Testing the performance of the aggregate
+on the final blind-test, if we average the Hamming score on the $29$ samples, we get higher
+performance on average $0.966$ and a higher standard deviation $0.086$ (this difference is probably
+due to the lower amount of data we are averaging on), the trained aggregate makes $4$ single errors
+on the $116$ total labels that it needs to predict.
 
-If we plot the performance of the best tree for every sub-view, (see \Cref{fig:bdts-coil0}) we can see that, while the performance
-for the models built on \an\ and \phin\ are comparable, the performance for \bn\ and \cnmod\ is not
-remotely comparable, which was expected in the phase of preprocessing. Interestingly, even if the
-harmonics chosen to work on the problem should be highly informative and have a low correlation
-among each other, the model trained on the sub-view of \cnmod\ can't reach a good level of
-performance.
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=\linewidth]{img/An_2_3_qlp_c0.png}
-	\caption{Structure of the tree built on a sub-view of \an, predicting whether coil $0$ is
-		quenching or not.} \label{fig:qlp-coil0-bdt}
-\end{figure}
+Our supposition at the moment is that finding a better model for coil $3$ would make the performance of
+the ensemble better because, while we have been saying that the model is an aggregate of trees, no
+aggregation is happening (like in the case of \tas) apart from inserting the predicted bits in a
+prediction array, therefore the sub-models are not helping each other and 'covering for each other'.
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=\linewidth]{img/coil0_dt_performance.png}
-	\caption{Comparing the performance of the best tree built on every attribute to predict
-		whether coil $0$ is quenching or not.} \label{fig:bdts-coil0}
+	\includegraphics[width=\linewidth]{img/best_dts_hs.png}
+	\caption{The Hamming score computed on every fold (for the $50$ samples therein contained), the lower reaching is the line the lower is going to be the accuracy.} \label{fig:dt-qlp-hs}
 \end{figure}
+
+\subsection{Random forests}
+Similarly to what we did for \qrp, we also tested the performance of \rfs\ on the single coils, as we
+said when we discussed the model in the resolution of \qrp, we didn't spend too much time perfecting
+the model, since having a \rf\ per coil would make the aggregate much harder to explore than other
+alternatives.
 
 
 
