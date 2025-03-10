@@ -1,26 +1,33 @@
 \chapter{introduction}
 This thesis originated as a cooperation between the departments of Computer Science and Physics of
-Milan University in an attempt of confirming, or giving us a good reason to doubt, the analytical
-method originally found by Samuele Mariotto in his research on the localization of quench events in
-the High Order Corrector superconducting magnets that will be mounted on the \textsc{lhc} experiment for the
-HiLumi upgrade \cite{mariotto2022} \cite{mariotto2022-generic}.
-
-\smallskip
+Milan University in an attempt of confirming, the analytical method originally found by
+\textsc{infn} and the University of Milan superconducting research group for the localization of
+quench events in the High Order Corrector superconducting magnets \cite{mariotto2022}
+\cite{mariotto2022-generic} that will be mounted in the \textsc{lhc} collider machine for thr High
+Luminosity upgrade \cite{rossi2024} (Hi-Lumi for short).
 
 The aim of the original work was, beginning from the harmonic decomposition of the magnetic
-field measured on the superconductor during operation, to find an analytical explanation for \qlp.
+field produced by the superconducting magnet after a \emph{quench} event, which is a transition of the
+material from the superconducting state to the normal conducting state, to find an analytical
+explanation for the reconstructed harmonic content and correlate the information with the
+localization of the quench superconducting coil in the magnet assembly. This problem will be
+referred to, in this thesis, as the Quench Localization Problem (\qlp\ for short).
+
 The aim of this thesis is to identify a model that can reliably reply to the question 'If quench
 happened during the test run, which coil within the magnet did quench?' knowing the harmonic
-decomposition of the magnetic field measured on the superconductor during operation. All the
-analyses have been conducted posthumously.
+decomposition of the magnetic field measured at the center of the magnet, where the beam will move
+in production, this magnetic field is the result of the contribution of the magnetization of the
+superconducting coils and the iron yoke that locks the coils in place. The analyses have been
+conducted after the quench event manifested itself, to avoid damaging the material the magnet was
+tested in a protected environment connected to a Quench Protection System to avoid material damage
+(the experiment will be introduced and explained in \Cref{chp:problem}).
 
 \smallskip
 
 In the following I will be explaining some of the studies and results obtained in the field of
 quench event recognition and quench event localization by using machine learning models to abstract
-patterns from the measurements of magnetic field harmonics captured by Mariotto during his own
-experiments. The resulting models could be of use in the field of magnet testing and behavior
-explanation for future research work in the field of magnet manufacturing.
+patterns from the measurements of magnetic field harmonics captured by the co-advisor for this
+thesis, researcher Samuele, during his own experiments. The resulting models could be of use in the field of magnet testing and behavior explanation for future research work in the field of magnet manufacturing.
 
 \smallskip
 
