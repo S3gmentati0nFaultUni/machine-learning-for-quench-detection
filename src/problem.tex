@@ -21,6 +21,25 @@ In the experiment generating data, the magnets were mounted skewed: as a consequ
 	\item a simple binary flag for \qrp, where $1$ means that a quench has happened, while $0$ characterizes the normal working conditions of the superconductor;
 	\item four binary flags for \qlp, each describing a  coil and stating whether or not a quench happened within it, using the same encoding as in previous point.
 \end{itemize}
+We remark here that the labels for \qrp\ were reasonably balanced: namely, the number of non-quench events was of $87$ while the number of quench events was of $192$; concerning \qlp, on the other hand, every coil has a different distribution: as detailed in Table~\ref{tab:balance}, the proportion of quench over non-quench events roughly ranges from $30\%$ to $50\%$. It is important to notice that the sum of all quench events for \qlp\ is not $192$, since one quench event for \qrp\ could have been caused by up to three different coils (e.g., coils 0, 1 and 3) quenching at the same time.
+
+\begin{table}[h]
+	\caption{Label distribution for the various coils in \qlp.}\label{tab:balance}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{ccc}
+		\toprule
+		\textbf{Coil} & \textbf{Quench} & \textbf{Non-quench} \\
+		\midrule
+		0             & 68              & 211                 \\
+		1             & 96              & 183                 \\
+		2             & 79              & 200                 \\
+		3             & 73              & 206                 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 In the following chapters we will not be using attributes in their entirety, in most cases the
 datasets will be aggregating the best harmonics for a certain attribute (e.g., harmonics $2$ and
