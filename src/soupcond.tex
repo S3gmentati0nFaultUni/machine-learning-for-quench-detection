@@ -19,7 +19,7 @@ material can be seen as a function of:
 \begin{itemize}
 	\item The mass of the electron $m$,
 	\item The charge density $n$ of the material lattice,
-	\item The charge of the electron $e$
+	\item The charge of the electron $e$,
 	\item The \emph{relaxation time} of the electron, which is the time interval occurring between two
 	      successive electronic collisions $\tau$.
 \end{itemize}
@@ -27,9 +27,10 @@ This other formulation allows us to interpret the resistivity based on the amoun
 interactions registered within the sample. The higher the number of interactions, the lower the
 relaxation time, the higher the resistivity of the material.
 
-\medskip
-
-Given a sample of a material, let's suppose that its resistivity was measured at a reference
+Based on their value of resistivity, materials can be divided between metals and insulators. Metals
+have a very low value of resistivity (usually less than $10^{-5}\Omega\cdot m$), while insulators impede the
+flow of electric current. The resistivity for any sample of material can be described also as a
+function of the temperature, if we suppose that its resistivity was measured at a reference
 temperature $T_0$ and one is interested in the resistivity at a certain temperature $T$, it's
 possible to link the resistivity at temperature $T$, $\rho_T$, to the reference resistivity,
 $\rho_0$ and the temperature change $T - T_0$ multiplied by a regularization term.
@@ -39,29 +40,13 @@ $\rho_0$ and the temperature change $T - T_0$ multiplied by a regularization ter
 \end{equation}
 $\alpha$ is known as the temperature coefficient of resistance, which is commonly defined as the
 change in electrical resistance per degree of temperature change. Usually, pure metals have a
-positive value of $\alpha$, copper, for instance, has $\alpha \approx 0.004\C^{-1})$, alloys can be created to have coefficients close to $0\C^{-1}$.
-
-\medskip
-
-Based on their value of resistivity, materials can be divided between metals and insulators. Metals
-have a very low value of resistivity (usually less than $10^{-5}\Omega\cdot m$), while insulators impede the
-flow of electric current. \Cref{eq:resistivity-func-of-temp} and the second part of
-\cref{eq:resistivity-cable} express resistivity in similar ways, while the one relates it to the
-actual temperature of the sample, the other relates it to relaxation time and charge density of the
-material, which is the amount of entropy in the material lattice. This relation between resistivity
-and temperature leads us to the question: 'How does resistivity vary with temperature?'
-
-\smallskip
-
-In~\cite{slimani2022superconducting} solid band theory is used in conjunction with
-\cref{eq:resistivity-func-of-temp} to explain the behavior of both metals and insulators in terms of
-freedom of movement of the electrons flowing through the crystalline reticle. Increasing the
-operation temperature of a sample yields two opposite results based on the material: if the sample
-is a metal then increasing the operating temperature will cause an increase in electrical
-resistivity. If the sample is an insulator then the electrical resistivity will decrease and, in
-some cases, if the temperature change is big enough then the insulator loses its dielectric
-properties due to the phenomenon of thermal dielectric breakdown, a description for this behavior
-was given in~\cite{kuvyrkin2022}.
+positive value of $\alpha$: copper, for instance, has $\alpha \approx 0.004\C^{-1})$; alloys can be
+created to have coefficients close to $0\C^{-1}$. As a general rule of thumb, whenever the
+temperature increases the resistivity of a metal increases, this is not necessarily
+true for insulators. Thermal breakdown for insulators is a similar phenomenon to electrical
+breakdown (the voltage reaches a critical level and the dielectric behaves like a normal conductor,
+whenever we see a lightning we are experiencing electrical insulator breakdown, where the insulator
+is air), if the temperature is too high the insulator breaks down and behaves like a normal conductor. A thorough description of the phenomenon is given in~\cite{kuvyrkin2022}
 
 Superconductors are metals that follow classical thermodynamic properties when the temperature is
 kept around ambient temperature. Their properties change drastically once the temperature gets
@@ -69,8 +54,6 @@ extremely close to $0$\K~\footnote{There are many different materials nowadays, 
 	Superconductors, which have a critical temperature well above $0$\K, in this thesis though we will
 	only be considering classic superconductors like $NbTi$.
 }.
-
-\smallskip
 
 In 1911 \cite{invention-superconductivity} Kammerligh Onnes discovered that if a sample of mercury was cooled
 until it reached the temperature of $4.2$\K, electrical resistance shown by the sample disappeared
@@ -94,24 +77,27 @@ superconducting state as long as three conditions were met:
 
 When a material reaches the superconducting state it exhibits perfect diamagnetism, which means that
 the material is able to perfectly expel the magnetic field lines from its volume (a simple experimental proof of this effect
-is given by magnetic levitation effect). This capacity was first observed by
+is given by the magnetic levitation effect). This capacity was first observed by
 Meissner and Ochsenfeld in 1933~\cite{meissner1933}. In 1935 the London's equations tried to explain
 exotic behavior of different superconductor alloys which, in some situations, do not exhibit a perfectly diamagnetic behavior and allow the
 penetration of external magnetic field lines down to a certain depth, known as the London's
 penetration depth~\cite{london1935}. This property of superconductors was actually already theorized by Dutch
 physicist Geertruida de Haas-Lorentz, who published some preliminary research in~\cite{fokker1925physica}.
 
-The diamagnetic properties of superconductors depend heavily on the material microscopit properties. Two different Types of superconductors have been
+The diamagnetic properties of superconductors depend heavily on the material microscopic properties. Two different Types of superconductors have been
 identified and studied~\footnote{In general superconductor behavior can be explained through
 	Ginzburg-Landau theory~\cite{Cyrot1973} but very recent research has proven that not every
-	superconductor can be described using the \textsc{gl} equation as shown in~\cite{diamantini2023typeiiisuperconductivity}, due to how recent the research is it seems that nobody other than Diamantini published in the field of Type III superconductivity.
+	superconductor can be described using the \textsc{gl} equation as shown
+	in~\cite{diamantini2023typeiiisuperconductivity}, this lead to the preliminary definition of
+	a new type of superconductor, but, due to how recent the research is, it seems that, at the
+	time of writing, nobody other than Diamantini published in the field of Type III superconductivity.
 }, in the following I will provide a brief description of each.
 
 \section{Type I superconductors}
 \label{sec:type1}
-As it can be seen in \cref{img:type1-transition}, magnetization, which measures the amount of induced or
-permanent magnetic dipole moment of a magnet per unit volume~\cite{polarization-magnetization}, is
-plot against the magnetic field $B$ applied on the sample. Once the magnetic field reaches $\bc$ the
+\Cref{img:type1-transition}, plots magnetization, measuring the amount of induced or
+permanent magnetic dipole moment of a magnet per unit volume~\cite{polarization-magnetization},
+against external magnetic field $B$, applied on the sample. Once the magnetic field reaches $\bc$ the
 magnetization of Type I superconductors drops to $0$.
 \begin{figure}
 	\centering
@@ -131,8 +117,8 @@ reactors or particle physics experiments.
 \label{sec:type2}
 Type II superconductors, in most cases, are metal alloys. The characteristical impurity gives Type II superconductors an edge
 over Type I, for high-field applications, due to the graceful degradation of magnetization with the increase in applied magnetic
-field. A plot similar to \cref{img:type1-transition} can be seen in \cref{img:type2-transition}.
-\begin{figure}
+field. A plot similar to \Cref{img:type1-transition} can be seen in \Cref{img:type2-transition}.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.75\textwidth]{./img/type2.png}
 	\caption{Magnetization of a type II superconducting coil plotted against the external
@@ -140,17 +126,13 @@ field. A plot similar to \cref{img:type1-transition} can be seen in \cref{img:ty
 	\label{img:type2-transition}
 \end{figure}
 
-\medskip
-
 Type II superconductors, while the applied magnetic field is less than $B_{C1}$, have the same
 diamagnetic properties of Type I superconductors. Once the applied magnetic field surpasses the
 $B_{C1}$ threshold, instead of having a very sharp transition from the superconducting state to
 the normal-conducting state, these materials remain in an intermediate state referred to as the \emph{vortex} or \emph{hybrid state}.
 
-\medskip
-
 In the vortex state the external magnetic field is partially penetrating in the volume of the superconductor, but the
-flux lines are constrained in particular pinned columns within the lattice of the
+flux lines are constrained in particular columns, pinned within the lattice of the
 superconductor, called \emph{Abrikosov vortices} or \emph{fluxons}~\cite{abrikosov-vortices}.
 A vortex is a closed-loop supercurrent surrounding the magnetic field lines that
 penetrate the material. Supercurrents, also known as persistent currents, are extremely stable and as long as the material remains in the
@@ -167,10 +149,14 @@ fluxons are pinned in place, the material remains locally superconductive. Vorti
 
 \Cref{fig:abrikosov-lattice} is a simplified schema of the fluxon lattice, as we can see each
 supercurrent (the rings in figure), surrounds a \emph{quantized} amount of magnetic flux
-$\vec{\varphi}_0$. If a density of current $\vec{J}$ is flowing through a superconductor it will generate a Lorentz force $\vec{F}_L = \vec{J} \times \vec{\varphi}_0$, capable of inducing vortex movement if the $\vec{J}$ is high enough. If the vortices begin to move under this influence, and the generated electric field $\vec{E}$ is parallel to the direction of the current, then the motion produce a dissipation of power due to Joule effect.
+$\vec{\varphi}_0$. If a density of current $\vec{J}$ is flowing through a superconductor it will
+generate a Lorentz force $\vec{F}_L = \vec{J} \times \vec{\varphi}_0$, capable of inducing vortex
+movement, if the $\vec{J}$ is high enough. If the vortices begin to move under this influence, and
+the generated electric field $\vec{E}$ is parallel to the direction of the current, then the motion
+produces a dissipation of power due to Joule effect.
 
 This was a simplified description of the effects of vortex movement in a superconductor lattice, not
-taking into account many factors like flux pinning and quantum effects for a more thorough
+taking into account many factors like flux pinning and quantum effects, for a more thorough
 dissertation refer to~\cite{huebener2019}.
 
 \section{Quench}
@@ -182,4 +168,4 @@ current density might cause local joule heating power distribution that can lead
 material damage. That is why, normally, in the field of accelerator physics, superconducting magnets
 are accompanied by \textsc{qps} (Quench Protection Systems), which interrupt power delivery whenever
 one of the superconducting coils show an irreversible transition as a local rising of resistive
-voltagem in the electrical powering circuit.
+voltage in the electrical powering circuit.
