@@ -1,44 +1,42 @@
 \chapter{introduction}
 This thesis originated as a cooperation between the departments of Computer Science and Physics of
-Milan University in an attempt of confirming, the analytical method originally found by
-\textsc{infn} and the University of Milan superconducting research group for the localization of
-quench events in the High Order Corrector superconducting magnets \cite{mariotto2022}
-\cite{mariotto2022-generic} that will be mounted in the \textsc{lhc} collider machine for thr High
-Luminosity upgrade \cite{rossi2024} (Hi-Lumi for short).
+Milan University in an attempt of confirming the analytical method, originally found by
+\textsc{infn} and the University of Milan superconducting research group, for the localization of
+quench events in High Order Corrector superconducting magnets \cite{mariotto2022}
+\cite{mariotto2022-generic} that will be mounted in the \textsc{lhc} collider machine for the High
+Luminosity upgrade \cite{rossi2024} (\textsc{hl-lhc}).
 
 The aim of the original work was, beginning from the harmonic decomposition of the magnetic
 field produced by the superconducting magnet after a \emph{quench} event, which is a transition of the
 material from the superconducting state to the normal conducting state, to find an analytical
 explanation for the reconstructed harmonic content and correlate the information with the
-localization of the quench superconducting coil in the magnet assembly. This problem will be
+localization of the quenched superconducting coil(s) in the magnet assembly. This problem will be
 referred to, in this thesis, as the Quench Localization Problem (\qlp\ for short).
 
 The aim of this thesis is to identify a model that can reliably reply to the question 'If quench
 happened during the test run, which coil within the magnet did quench?' knowing the harmonic
-decomposition of the magnetic field measured at the center of the magnet, where the beam will move
+decomposition of the magnetic field measured at the center of the magnet, where the beam will pass
 in production, this magnetic field is the result of the contribution of the magnetization of the
 superconducting coils and the iron yoke that locks the coils in place. The analyses have been
 conducted after the quench event manifested itself, to avoid damaging the material the magnet was
-tested in a protected environment connected to a Quench Protection System to avoid material damage
-(the experiment will be introduced and explained in \Cref{chp:problem}).
+tested in a protected environment, connected to a Quench Protection System, (the experiment will be
+explained further in \Cref{chp:problem}).
 
-\smallskip
-
-In the following I will be explaining some of the studies and results obtained in the field of
-quench event recognition and quench event localization by using machine learning models to abstract
+In the following, we will be explaining some of the studies and results obtained in the field of
+quench event recognition and quench event localization, using machine learning models to abstract
 patterns from the measurements of magnetic field harmonics captured by the co-advisor for this
-thesis, researcher Samuele, during his own experiments. The resulting models could be of use in the field of magnet testing and behavior explanation for future research work in the field of magnet manufacturing.
+thesis, researcher Samuele, during his own experiments. The resulting models could be of use in the
+field of magnet testing and behavior explanation for future research work in the field of magnet
+manufacturing and magnet protection systems.
 
-\smallskip
-
-In this document I chose to approach the matter as follows:
+In this document we will explore the matter as follows:
 \begin{description}
 	\item[\Cref{chp:soupcond-quench}] gives an overview of superconductivity and quench on a
 		theoretical level.
 	\item[\Cref{chp:ml}] gives an overview of machine learning and the various models used
 		within the project on a theoretical level.
-	\item[\Cref{chp:problem}] explains the challenges associated with the project, the datasets
-		that have been used and the various testing and model selection procedures.
+	\item[\Cref{chp:problem}] gives some background for the original experiment and explains the
+		structure of the dataset used throughout testing.
 	\item[\Cref{chp:qrp}] introduces the Quench Recognition Problem, as well as the models
 		utilized to solve the problem and the results obtained, alongside some
 		considerations on the models' structure.
@@ -46,6 +44,6 @@ In this document I chose to approach the matter as follows:
 		obtained models to this new instance, and the final results.
 	\item[\Cref{chp:future}] lists other ideas that came along while designing a solution for
 		the two problems at hand.
-	\item[\Cref{chp:conclusion}] closes the dissertation with some on the design and development
+	\item[\Cref{chp:conclusion}] closes the dissertation with some notes on the design and development
 		processes.
 \end{description}
