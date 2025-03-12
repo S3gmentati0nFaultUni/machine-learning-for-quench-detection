@@ -11,21 +11,21 @@ unsupervised machine learning models.
 Due to the popularization of artificial intelligence in recent times, it's very important to establish the field to avoid the risk of
 incurring in misunderstandings. \emph{Machine learning} is a subset of artificial
 intelligence, and is a technique that allows us to solve a problem without the need to actually invent an
-algorithm to solve it (as long as there is enough data). There are many different problems that
+algorithm to solve it (caveat the constraint of having a large enough dataset to work with). There are many different problems that
 either lack an algorithmic solution or have an inefficient one; in such cases, machine learning is
 an alternative worth exploring. The tradeoff of using machine learning instead of 'classic'
 problem-solving techniques is that the solution is built using heuristic methods,
-therefore is not \emph{correct} for the problem \cite{Rebala2019}.
+ herefore is not \emph{correct} for the problem~\cite{Rebala2019}.
 
 \medskip
 
 A supervised machine learning model is a model $\model$ capable of learning a mapping between the
 input space $\ins$ and the output space $\outs$ and then apply this mapping to unseen
-data to predict the output \cite{Cunningham2008}.
+data to predict the output~\cite{Cunningham2008}.
 
 \smallskip
 
-Given a problem $\problem$, a specific instance of $\problem$, $\problem_i$, is characterized by a pair
+Given a problem $\problem$, a specific instance, $\problem_i$, is characterized by a pair
 $(\vec{x}_i, y_i)$ where $\vec{x}_i \in \ins$ are vectors taken from an input space $\ins$, usually
 highly dimensional, and $y_i \in \outs$ are the expected solutions, which can be scalar or
 vector\footnote{Outcomes will be considered scalars for the rest of this thesis unless explicitly
@@ -62,14 +62,14 @@ the problem:
 	      associated with pattern recognition tasks, a very easy example of binary classification is our mock-problem.
 	\item $\outs = \{a_1,\ldots, a_m\}$, for \emph{multi-class classification} problems, in
 	      which an element can be part of one of the classes in a certain set, a classic
-	      example is the character recognition problem, in which a certain character given in input can belong to one of 10 different classes (the numbers from 0 to 9) \cite{pal2010handwritten}.
+	      example is the character recognition problem, in which a certain character given in input can belong to one of 10 different classes (the numbers from 0 to 9)~\cite{pal2010handwritten}.
 	\item $\outs = \mathbb{R}$, for \emph{regression problems}, which are usually associated
 	      with function approximation tasks, an example of regression problem
 	      is: 'Based on the current amount of wins for Oklahoma City Thunder\footnote{An
 		      amazing \textsc{nba} team}, predict the team's win rate at the end of the season'.
 \end{itemize}
 
-Most machine learning models have to go through the same steps, described here below
+Most machine learning models have to go through the same steps, described here below:
 \begin{itemize}
 	\item \emph{Model selection}: if we consider an instance of a decision tree (introduced in
 	      \Cref{sec:dt}), the model can be described through a set of characteristics (e.g.,
@@ -95,9 +95,9 @@ more complex splitting procedure will be introduced at a later time.
 
 \medskip
 
-As a first non-trivial aspect of the splitting procedure is that, depending on the problem, making
-sure that the distribution of training dataset $T$ and testing dataset $G$ is the same as the
-original dataset distribution is important. To understand why, let's think about a dataset
+Making sure that the distribution of training and test datasets, respectively $T$ and $G$ follow the
+same distribution as the original dataset is the first non-trivial aspect of the splitting
+procedure. To understand why, let's think about a dataset
 $\dset$ in which every $\mathbf{x}_i \in \ins$ is a vector of features describing a patient's
 conditions (e.g., age, sex, body temperature, blood saturation, \ldots) and every $y_i \in \outs$ is
 a string indicating which illness was diagnosed (e.g., flu, pneumonia, \textsc{covid}, ...). Supposing we want to find a
@@ -109,7 +109,7 @@ can reliably recognize a common flu but can't correctly identify serious illness
 \medskip
 
 The second non-trivial aspect of the splitting procedure is that it's always necessary to make sure
-that the operation is carried out independently for each dataset, this means that data that is in the
+that the splitting operation is carried out independently for each dataset, this means that data that is in the
 training set cannot be in the testing set, and vice versa. If this were not to be true then we would
 have a data leak from one set to the other.
 
@@ -132,7 +132,7 @@ testing performance is unacceptably bad; this means that the mapping found by $\
 and $\outs$ is too closely related to the specific data chosen to do the training, therefore
 unable to generalize effectively. In other
 words, $\model$ is overfitting whenever, instead of abstracting some general patterns in the
-data, it actually learns some peculiarities of the specific training dataset $T$ \cite{ZhouZhi-Hua2021ML}
+data, it actually learns some peculiarities of the specific training dataset $T$~\cite{ZhouZhi-Hua2021ML}
 which are not found later in the testing dataset $G$.
 
 \smallskip
@@ -146,7 +146,7 @@ utilized.
 \medskip
 
 The problem that this thesis aims to solve takes full advantage of supervised models, since the data at our
-disposal has already been analyzed and labelled in previous works \cite{mariotto2022}\cite{mariotto2022-generic}.
+disposal has already been analyzed and labelled in previous works~\cite{mariotto2022}\cite{mariotto2022-generic}.
 
 \medskip
 
@@ -166,7 +166,7 @@ be evaluated on one or more features (e.g.,  the root of \Cref{fig:simple-dt} re
 whether the humidity feature of the input is $\geq 80\%$), if the result of the evaluation is true
 the computation proceeds with the left child, otherwise the right path will be taken. Once a leaf is
 reached, the class associated to the point is identified. If we consider again \Cref{fig:simple-dt}
-we could say that if the humidity of the input is $\geq 80\%$ and the temperature is $\geq 10C$ then
+we could say that if the humidity of the input is $\geq 80\%$ and the temperature is $\geq 10\C$ then
 the inputs will be classified as 'rain'.
 
 Any path leading from root to leaf is known as a \emph{decision path}. It's evident that such structures have a very high degree of explainability and that is why usually they are the first model chosen to solve a machine learning problem.
@@ -200,7 +200,6 @@ computation, avoiding overfitting through pre- and post- pruning.
 	\label{fig:simple-dt}
 \end{figure}
 \subsection{Indices and node split computation}
-\comment{Proof read this section}{}
 In \Cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
 its regard could be: 'Why this structure and not another one?'. Other than it being a simple example
 nothing is really preventing us from describing the 'rain' event based on different threshold values
@@ -286,12 +285,13 @@ $1$, and $1$ labelled $0$, then the purity of the node is going to be very high.
 
 A split is going to be performed on feature $a$ only if the resulting purity increase is the best
 possible. There are many different indices used to compute purity, in the following I will be
-considering only the ones important for the model selection process that will be introduced in
-a future chapter: \emph{Entropy} and \emph{Gini index}.
+considering only the ones we chose to consider in the parameter grid we used for the Cross
+Validation procedure we used to do model selection (the technique will be introduced in
+\Cref{chp:problem}): \emph{Entropy} and \emph{Gini index}.
 
 \subsubsection{Entropy}
-There are many different ways of defining information entropy, a more general definition, compared
-to the one found in \cite{ZhouZhi-Hua2021ML}, is found in \cite{gray2011entropy}. Let's consider a
+There are many different ways of defining information entropy, but a more general definition, compared
+to the one found in~\cite{ZhouZhi-Hua2021ML}, is found in~\cite{gray2011entropy}. Let's consider a
 random variable $f$ built on the alphabet $B = \{b_1, \ldots, b_{|B|}\}$ we can define the
 partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} = f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger
 probability space $\Omega$. Every partition is chosen based on the outcome of the measurement of the random variable $f$. In the case of a discrete random variable we can define the information entropy as shown in \Cref{eq:information-entropy}
@@ -318,7 +318,8 @@ where $p_k$ denotes the proportion of the $k$-th class inside dataset $D$.
 If we consider the binary classification problem ('true' or 'false' response), whenever a splitting procedure
 is done on a node in the tree, the split is computed on every feature based on the possible
 values of the feature itself (only for discrete features). If we consider our mock-problem, a split
-could be computed on a feature called 'amount of clouds' which can have one of two values $\{\text{overcast}, \text{clear}\}$ the new node could be built in two different ways and the class distribution for each is different, having different levels of purity based on how well the data is partitioned between the classes 'rain' and 'no rain'.
+could be computed on a feature called 'amount of clouds' which can have one of two values
+$\{\text{overcast}, \text{clear}\}$. The new node could be built in two different ways and the class distribution for each is different, having different levels of purity based on how well the data is partitioned between the classes 'rain' and 'no rain'.
 
 \smallskip
 
@@ -358,7 +359,7 @@ can be computed as shown in \Cref{eq:intrinsic-value}.
 	\label{eq:intrinsic-value}
 	\textsc{iv}(a) = - \sum_{v = 1}^V\frac{|D^v|}{|D|} \log{\frac{|D^v|}{|D|}}
 \end{equation}
-Due to how intrinsic value is defined the gain ratio corrects the bias of the information gain towards features
+Due to how intrinsic value is defined, the gain ratio corrects the bias of the information gain towards features
 with a higher number of values but is biased towards features with a lower amount of values
 \cite{ZhouZhi-Hua2021ML}.
 
@@ -377,7 +378,7 @@ node. The Gini value of a dataset can be computed as shown in \Cref{eq:gini-valu
 	\textsc{Gini}(D) = \sum_{k = 1}^{|\outs|}\sum_{k' \neq k} p_kp_{k'} = 1 - \sum_{k =
 		1}^{|\outs|}p_k^2
 \end{equation}
-As explained in \cite{ZhouZhi-Hua2021ML}, \Cref{eq:gini-value} can be interpreted as the
+As explained in~\cite{ZhouZhi-Hua2021ML}, \Cref{eq:gini-value} can be interpreted as the
 likelihood of taking samples from two different classes by drawing them randomly from the
 dataset, the lower the $\textsc{Gini}(D)$, the higher the purity of a node. Gini index can be
 computed as the weighted sum of all the Gini values for the dataset after the split, as shown in
@@ -404,7 +405,7 @@ and \emph{post-pruning}.
 
 Pre-pruning forces an early stop of the algorithm whenever a series of conditions allow it, in other
 words, pre-pruning is a group of techniques meant to keep the size of the decision tree in check
-\cite{ZhouZhi-Hua2021ML} \cite{bramer2007principles} \cite{fisher1996learning}. Even if the split
+\cite{ZhouZhi-Hua2021ML}~\cite{bramer2007principles}~\cite{fisher1996learning}. Even if the split
 produces a decrease in the impurity of the current node it might be detrimental to proceed greedily,
 a couple of examples could clarify this suggestion:
 \begin{itemize}
@@ -435,13 +436,13 @@ scikit-learn are the following:
 Post-pruning is the alternative to pre-pruning, the essential difference between the two is that
 post-pruning is done after the tree has been fully constructed. In the a posteriori phase,
 a series of branches will be chosen to be pruned based on the impurity decrease that they provide.
-Scikit-learn is working with Cost Complexity Pruning (\textsc{ccp}), introduced in \cite{breiman1984classification}.
+Scikit-learn is working with Cost Complexity Pruning (\textsc{ccp}), introduced in~\cite{breiman1984classification}.
 
 \section{Ensemble learning}
 \label{sec:el}
 In the previous chapter we introduced decision trees, and we have talked about their
 strengths and weaknesses, providing some instruments to counter their shortcomings. Sometimes,
-despite our efforts, the decision tree model is simply not enough for the task at hand, if we don't
+despite our efforts, the decision tree model is simply not enough for the task at hand. If we don't
 want to give up the explainability, in favor of higher performance, we can construct an ensemble.
 
 \medskip
@@ -458,7 +459,7 @@ game):
 	\item Using a group of models alleviates the shortcomings of the weaker learners. If we consider our example, the weaker players, and lesser role players, stay on the bench while the main rotation is playing; but can still contribute with some quality minutes when the main rotation is facing a difficulty.
 \end{itemize}
 
-In \cite{ZhouZhi-Hua2021ML} a proof was given to relate the error rate of an ensemble with its size,
+In~\cite{ZhouZhi-Hua2021ML} a proof was given to relate the error rate of an ensemble with its size,
 the proof will be shown here below.
 
 \medskip
@@ -498,7 +499,7 @@ f(\vec{x}))$. The ensemble misclassifies a sample only if the number of learners
 	\label{eq:insucc-probability}
 	Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq f(\vec{x})) = \sum_{k = 0}^{\lfloor{T / 2}\rfloor} \binom{T}{k} (1 - \epsilon)^k \epsilon^{T - k}
 \end{equation}
-Finally, we can exploit Hoeffding's inequality \cite{ZhouZhi-Hua2021ML} on
+Finally, we can exploit Hoeffding's inequality~\cite{ZhouZhi-Hua2021ML} on
 \Cref{eq:insucc-probability}, the result is an upper bound for the error rate of the ensemble.
 \begin{equation}
 	\label{eq:hoeffding}
@@ -517,11 +518,11 @@ ensemble algorithms.
 
 \subsubsection{Bagging}
 
-Bagging, introduced by Leo Breiman in \cite{Breiman1996}, is a method for generating multiple
+Bagging, introduced by Leo Breiman in~\cite{Breiman1996}, is a method for generating multiple
 versions of a base predictor that are then aggregated in a single model, the simple algorithm is
-outlined in \Cref{algo:bagging} following \cite{ZhouZhi-Hua2021ML} and \cite{Bauer1999}.
+outlined in \Cref{algo:bagging} following~\cite{ZhouZhi-Hua2021ML} and~\cite{Bauer1999}.
 \begin{algorithm}
-	\caption{The bagging algorithm, taken from \cite{Bauer1999}}\label{algo:bagging}
+	\caption{The bagging algorithm, taken from~\cite{Bauer1999}}\label{algo:bagging}
 	\begin{algorithmic}[1]
 		\Require A training dataset $\dset$, a base learner $\mathcal{L}$, a certain number
 		of training rounds $T$.
@@ -539,7 +540,7 @@ outlined in \Cref{algo:bagging} following \cite{ZhouZhi-Hua2021ML} and \cite{Bau
 
 The algorithm can be described as follows: given a dataset $\dset$ of size $n$, we create a new
 dataset of size $n$ ($D_{bs}$ in \Cref{algo:bagging}) by randomly picking samples from $D$ without
-removing them from it\footnote{The technique is known as bootstrap sampling \cite{ZhouZhi-Hua2021ML}}. If we repeat the procedure $T$ times we obtain $T$ different datasets of size $n$, which can be used to train different base learners. Once the training is over, predictions can be done on inputs and the results can be aggregated using different techniques (e.g., majority voting or averaging).
+removing them from it\footnote{The technique is known as bootstrap sampling~\cite{ZhouZhi-Hua2021ML}}. If we repeat the procedure $T$ times we obtain $T$ different datasets of size $n$, which can be used to train different base learners. Once the training is over, predictions can be done on inputs and the results can be aggregated using different techniques (e.g., majority voting or averaging).
 
 \medskip
 
@@ -563,7 +564,7 @@ which is called validation set, and can be used to understand how much the singl
 \subsubsection{Random Forests}
 
 Random forests are an extension of the Bagging model described above, they were introduced
-by Leo Breiman in \cite{Breiman2001}, while decision trees perform the splitting procedure for every
+by Leo Breiman in~\cite{Breiman2001}. While decision trees perform the splitting procedure for every
 node by selecting the feature that yields the best impurity reduction, random forests pick the
 feature that yields the best impurity decrease from a random subset of features of size $k$. The
 value of $k$ controls how random the splitting procedure is going to be, if $k = d$, where $d$ is the size of the feature set, then the behavior of the random forest is the same as the decision tree introduced
@@ -577,10 +578,9 @@ having to deal with more than one learner at the same time).
 
 \section{SVM}
 \label{sec:svm}
-With this section we leave behind the tree-based models to talk about the benchmark model that we
-chose for this thesis, an \textsc{svm} is a model with very high performance but low explainability,
-in this chapter we will understand the theoretical foundations of this model. The main reference for
-this chapter is going to be \cite{ZhouZhi-Hua2021ML}.
+With this section, we leave behind the tree-based models to talk about our benchmark. An
+\textsc{svm} is a model charactherized by very high performance but low explainability. In this
+chapter we will understand the theoretical foundations of this model, our main reference is going to be~\cite{ZhouZhi-Hua2021ML}.
 
 \medskip
 
@@ -685,14 +685,15 @@ be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is
 		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
 	\end{aligned}
 \end{equation}
-The hyperplane that we are looking for can be modelled as shon in \Cref{eq:of}, the second
+The hyperplane that we are looking for can be modelled as shown in \Cref{eq:of}, the second
 formulation is virtue of the substitution found for $\vec{w}$ in \Cref{eq:pd-lagrangian}.
 \begin{equation}
 	\label{eq:of}
 	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \sum_{i = 1}^m\alpha_iy_i\vec{x}_i\vec{x} + b
 \end{equation}
 Since \Cref{eq:primal} is an optimization problem with inequality constraints we
-know from \cite{kkt1951} that solving it is equivalent to solving the dual problem based on the
+know from~\cite{kkt1951}\footnote{For a small introduction to the Karush--Kuhn--Tucker conditions,
+refer to \Cref{app:kkt}.} that solving it is equivalent to solving the dual problem based on the
 Lagrangian defined in \Cref{eq:lagrangian} subject to the \textsc{kkt} constraints shown in
 \Cref{eq:kkt-constraints}.
 \begin{equation}
@@ -716,10 +717,14 @@ described by using only support vectors, since they are the ones that yield a co
 calculation of \Cref{eq:of}.
 
 There are different techniques to solve the problem defined in \Cref{eq:dual}: one of the possibilities is to use quadratic
-programming solvers, another possibility is to use the \textsc{smo} method; Proposed in
-\cite{platt1998} and consisting of: an iterative resolution of the problem, by successive
+programming solvers, another possibility is to use the \textsc{smo} (Sequential Minimal Optimization) method; Proposed in
+\cite{platt1998} it consists of an iterative resolution of the problem, by successive
 identifications of local approximations of the Lagrange multipliers $\alpha_i$, while keeping all
-other parameters frozen as constants.
+other parameters frozen as constants. Platt's algorithm, compared to the competition
+(Osuna's~\cite{osuna1997} and Chunking), spends much less time doing Lagrange multiplier
+optimization, during training. In the project we used Support Vector Classifiers (\svcs) and their implementation in
+scikit--learn relies upon \textsc{libsvm}, which is an open source library to work with \svms. The
+library was born in $2000$, initially written in C\+\+ is now used by most modern languages and, to decompose the dual problem, uses a variant of the \textsc{smo} method which was described in \cite{fang2005}.
 
 \medskip
 
@@ -736,9 +741,9 @@ shown in \Cref{eq:sm-primal}.
 	\label{eq:sm-primal}
 	\min_{\vec{w}, b} \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \ell_{0 / 1}(y_i (\vec{w}^\top \vec{x}_i + b) - 1)
 \end{equation}
-In equation \Cref{eq:sm-primal} $C > 0$ is a regularization constant and $\ell_{0 / 1}$ is the $0/1$
+In \Cref{eq:sm-primal} $C > 0$ is a regularization constant and $\ell_{0 / 1}$ is the $0/1$
 loss. Solving directly the equation can be complicated, due to the poor mathematical properties of
-the $0/1$ loss function, even if there are approximate methods to minimize it \cite{nguyen2013},
+the $0/1$ loss function, even if there are approximate methods to minimize it~\cite{nguyen2013},
 usually a convex loss function is used to replace it.
 
 The soft margin \textsc{svm} is defined by substituting $0/1$ loss with hinge loss, a convex function for binary
@@ -803,7 +808,7 @@ Until now the topic was treated under the important assumption that the points i
 linearly separable, but it's known that this condition rarely holds in practice. To address the issue the
 problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$, this is done in
 the hope that increasing the number of dimensions will make the data linearly separable.
-From \cite{cover1965} we have the guarantee that given a set of $N$ points in Euclidean $d$
+From~\cite{cover1965} we have the guarantee that given a set of $N$ points in Euclidean $d$
 dimensional space, then \Cref{eq:dichotomies} is the number of ways we can split the points in two
 non-intersecting sets.
 \begin{equation}
@@ -865,7 +870,7 @@ an expression of the hyperplane which is dependent from the kernel function $\ka
 
 An explanation of the kernel function was given, but no definition was provided, that is due to its
 dependence from the mapping $\phi$. Such mapping is unknown in most practical cases, however a
-theorem \cite{learning-with-kernels} grants us that if we can find a symmetric function
+theorem~\cite{learning-with-kernels} grants us that if we can find a symmetric function
 $\kappa(\cdot, \cdot): \ins \times \ins \rightarrow \ins$, then $\kappa$ is a kernel function if and
 only if, however chosen the dataset $D = \{\vec{x}_1, \ldots, \vec{x}_m\}$, the kernel matrix
 $\mathbf{K}$ (\Cref{eq:kernel-matrix}) is positive semidefinite.
@@ -888,24 +893,25 @@ high-dimensional space, and therefore how good the separating hyperplane is goin
 
 \section{Unsupervised models}
 \label{sec:uml}
-The \textsc{svm} was the last supervised model considered, in this new section we
-consider a new kind of model, the \emph{unsupervised} model.
+With \svms\ we leave supervised models behind, in this chapter we are going to consider unsupervised
+machine learning, which takes advantage of a series of tricks to extrapolate patterns from data that
+hasn't been previously classified.
 
 Unsupervised machine learning models, contrarily to the supervised case, are trained on datasets
 that do not contain an expected answer $y_i$ for the $i$th instance of problem $\problem$.
 
 This section is going to be dedicated to explore the theory behind the $k$-means clustering
-algorithm, once again the main material used is \cite{ZhouZhi-Hua2021ML}.
+algorithm, once again the main material used is~\cite{ZhouZhi-Hua2021ML}.
 
-\section{Clustering with k\-means}
+\section{Clustering with k--means}
 \label{sec:kmeans}
-Given a dataset $\udset$ a clustering algorithm is partitions the data into non-intersecting sets
-known as \emph{clusters}, the data is grouped based on how similar they are; idealy, the more two
+Given a dataset $\udset$ a clustering algorithm partitions the data into non-intersecting sets
+known as \emph{clusters}, the data is grouped based on how similar they are; ideally, the more two
 points are similar, the closer they are.
 
 If on the one hand these algorithms are capable of giving us an idea of the
 meaning of the points, as well as a hint about the nature of the relations that have with each
-other, on the other hand understanding the results of a clustering procedue, is not as
+other, on the other hand understanding the results of a clustering procedure, is not as
 straightforward as it sounds; that is why it has to be found by experts working on the
 interpretation side of the problem.
 
@@ -971,7 +977,7 @@ The $i < j$ constraint is necessary to make sure that each pair is counted only 
 		$\model$ and $\model^*$.
 \end{itemize}
 In the project, we didn't have a reference model to compare the performance with, therefore, we only
-used external indices; for completeness's sake I will include some examples of internal indices taken from \cite{ZhouZhi-Hua2021ML}.
+used external indices; for completeness's sake I will include some examples of internal indices taken from~\cite{ZhouZhi-Hua2021ML}.
 
 \begin{itemize}
 	\item Fowlkes and Mallows Index (\textsc{fmi})\cite{Fowlkes1983}, which computes the square root of the
@@ -999,7 +1005,7 @@ introduced in the following section) then, \Cref{eq:cluster-avg} defines the ave
 	avg(C) = \frac{2}{|C|(|C| - 1)}\sum_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j)
 \end{equation}
 
-\Cref{eq:cluster-diam} defines the diameter of a cluster, which is he maximum distance between any
+\Cref{eq:cluster-diam} defines the diameter of a cluster, which is the maximum distance between any
 two given points within the cluster.
 \begin{equation}
 	\label{eq:cluster-diam}
@@ -1029,7 +1035,7 @@ examples are the main clustering scores used within the project.
 		\begin{equation*}
 			\textsc{dbi} = \frac{1}{k}\sum_{i = 1}^k\max_{j \neq i}\left(\frac{avg(C_i) + avg(C_j)}{d_{cen}(C_i, C_j)}\right)
 		\end{equation*}
-	\item The \emph{Silhouette Coefficient} built on a sample $i$ was defined in \cite{rousseuw1987}
+	\item The \emph{Silhouette Coefficient} built on a sample $i$ was defined in~\cite{rousseuw1987}
 		is built using two different metrics: $e(i)$\footnote{Compared to the literature I
 		chose different names for the metrics used to compute the Silhouette index just to
 		avoid confusion, since they would have to be called $a$ and $b$, which were already
@@ -1071,13 +1077,13 @@ the \emph{Chebyshev distance}.
 Usually techniques like clustering are coupled with \emph{dimensionality reduction} techniques
 (e.g., $\textsc{pca}$, $\textsc{svd}$, $\textsc{mdv}$), that is because distances lose their meaning
 when the number of dimensions is too high, this condition is known as the \emph{curse of
-dimensionality} \cite{aggrawal2001}.
+dimensionality}~\cite{aggrawal2001}.
 
 In the upcoming section we will be talking about the very well known $k$-means clustering algorithm.
 
 \subsection{K-means algorithm}
-The $k$-means algorithm \cite{macqueen1967} \cite{lloyd1982} is a very well known and studied
-\emph{prototype-based} clustering algorithm. The solution is computed by starting froma \emph{prototype},
+The $k$-means algorithm~\cite{macqueen1967}~\cite{lloyd1982} is a very well known and studied
+\emph{prototype-based} clustering algorithm. The solution is computed by starting from a \emph{prototype},
 or a point in the dataset that represents what is going to be contained in the cluster, these
 prototypes are then updated and optimized. More formally, given a dataset $\udset$, the $k$-means
 algorithm minimizes the squared error (\Cref{eq:squared-error}) of clusters $\mathcal{C} = \{C_1,
@@ -1095,7 +1101,7 @@ indicates a higher intra-cluster similarity. Since the process of minimizing
 point for every possible cluster, the actual implementation of $k$-means takes a greedy approach
 (the algorithm is shown in \Cref{algo:kmeans}).
 \begin{algorithm}
-	\caption{The $k$-means algorithm taken from \cite{ZhouZhi-Hua2021ML}}\label{algo:kmeans}
+	\caption{The $k$-means algorithm taken from~\cite{ZhouZhi-Hua2021ML}}\label{algo:kmeans}
 	\begin{algorithmic}[1]
 		\Require Dataset $\udset$ and Number of clusters $k$.
 		\Ensure A set of clusters $\mathcal{C} = \{C_1, \ldots, C_k\}$

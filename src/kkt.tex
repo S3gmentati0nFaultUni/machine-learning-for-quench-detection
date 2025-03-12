@@ -1,0 +1,55 @@
+\chapter{Karush--Kuhn--Tucker conditions}
+\label{app:kkt}
+\Cref{eq:opt-problem} defines a non--linear optimization problem, we consider a minimization
+problem, with both inequality and equality constraints. Karush--Kuhn--Tucker conditions (\kkt) are
+necessary conditions to solve such problems.
+\begin{equation}
+	\label{eq:opt-problem}
+	\begin{aligned}
+		\min{f(x)} &        \\
+		g_i(x)     & \leq 0 \\
+		h_j(x)     & = 0
+	\end{aligned}
+\end{equation}
+
+To make sure that \kkt\ can identify local minima it's important that the regularity condition for
+constraints is satisfied. One of these conditions need to be valid in a neighbourhood of $x^*$ and
+there is many of them, ranging in complexity:
+\begin{enumerate}
+	\item Linearity constraint qualification: if $g_i$ and $h_j$ are affine functions, then no
+	      other condition is needed.
+	\item Linear independence constraint qualification: The gradients of the active inequality
+	      constraints and the gradients of the equality constraints are linearly independent at $x^*$.
+	\item Constant rank constraint qualification: For each subset of the gradients of the active
+	      inequality constraints and the gradients of the equality constraints the rank at a vicinity
+	      of $x^*$ is constant.
+\end{enumerate}
+These are not all available constraints, more can be found, the lower the rank of the
+constraint the broader its applicability is.
+
+If $x*$ is a point that satisfies the regularity conditions just introduced, $f: \R^n \rightarrow
+	\R$, $g_i: \R^n \rightarrow \R$, $h_j: \R^n \rightarrow \R$ and the functions are continuously
+differentiable functions, then we can define Lagrange multipliers $m_j, j = 1, \ldots, l$ and
+$\lambda_i, i = 1, \ldots, m$ such that the following conditions hold:
+\begin{enumerate}
+	\item Stationarity condition,
+	      \begin{equation*}
+		      \grad{f(x^*)} + \sum_{i = 1}^m{\lambda_i\grad{g_i(x^*)}} + \sum_{j =
+			      1}^l{\mu_j\grad{h_j(x^*)}} = 0
+	      \end{equation*}
+	\item Primal feasibility conditions
+	      \begin{equation*}
+		      \begin{aligned}
+			      g_i(x^*) & \leq 0 \hspace{10pt} \forall i \in \{1, \ldots, m\} \\
+			      h_j(x^*) & = 0 \hspace{10pt} \forall j \in \{1, \ldots, l\}
+		      \end{aligned}
+	      \end{equation*}
+	\item Dual feasibility condition
+	      \begin{equation*}
+		      \lambda_i \geq 0 \hspace{10pt} \forall i \in \{1, \ldots, m\}
+	      \end{equation*}
+	\item Complementary slackness condition
+	      \begin{equation*}
+		      \sum_{i = 1}^m \lambda_i g_i(x^*) = 0
+	      \end{equation*}
+\end{enumerate}
