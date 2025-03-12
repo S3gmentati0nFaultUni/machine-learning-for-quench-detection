@@ -1,2 +1,54 @@
 \chapter{Conclusions}
 \label{chp:conclusion}
+In this thesis we have proposed a solution to the problem of identifying quench events and
+localizing them within the magnet structure using the harmonic decomposition of magnetic field. We
+have provided a very strong solution for the first and we have provided a good starting point for
+the second, during the project different ideas came to mind to branch the current solution and
+further explore the interesting realm of machine learning applied to superconductor physics.
+
+We remark that, while the analysis we have done has been thorough, the performance achieved and the
+identified models only works on the specific case of the High order corrector quadrupolar magnets,
+we have serious doubts that this analysis could be extended to any other quadrupole and we are sure
+that extending it to magnets with a different number of poles would yield unusable results.
+
+Lastly, while in the case of \qlp\ we could probably achieve higher performance by doing a more
+thorough study of models built for the coils that are struggling the most, achieving higher
+performance in both cases would require more data, but an increase in dataset size might leade to a
+decrease in result interpretability.
+
+\subsubsection{Analysis of the decision rules and general detection model}
+In the project we have identified highly explainable models, capable of solving \qrp\ and \qlp\
+maintaining high performance, an obvious next step is to open the models the models and abstract
+useful rules capable of explaining quench and localizing events in certain coils. These rules could
+be used:
+\begin{itemize}
+	\item In the field of sensor calibration, to isolate the harmonics that we truly need and
+	      simplifying sensor design, while also making the Quench Protection System more efficient,
+	\item Support in the magnet design process
+\end{itemize}
+
+\subsubsection{Fuzzification of quench-event description}
+For both our problems the quench-event was described by a binary value, if $0$ then the sample
+remained in the superconducting state, if $1$, then the material transitioned to the normal-conducting state. An option that came to mind was to change the description of quenches using variables capable of explaining a transition using a real number in the interval $[0, 1]$.
+
+Using this description would be beneficial because a quench event could be described more thoroughly
+by highlighting the rapidity of the transition, which could be used as a measure of its
+disruptiveness, quench that spreads rapidly poses a larger threat than a quench that spreads very
+slowly and therefore has a very high chance of disappearing without the intervention of the
+Quench Protection System.
+
+\subsubsection{High performance quench localization}
+We tried to find explainable models capable of reliably detect and localize quench inside
+quadrupoles, a different area of research consists in exploring extremely high performance models
+for online quench detection and localization~\cite{hoang2021}~\cite{zhou2021}~\cite{einstein2023}.
+
+Many are the alternatives: the \svcs\ explored in this thesis, neural networks or anomaly detection
+via autoencoders. Clearly, pursuing such path forces us to invalid the explainability property we
+granted throughout the project, unless explainable-ai models were used.
+
+\subsubsection{Clustering-based preprocessing for classification}
+Another technique that could be worth exploring is Clustering, we saw in the last chapter how the
+points were very nicely distributed in bidimensional space, specifically for attribute \an, but also
+for attribute \cnmod\ (after some extra work). We didn't have enough time to fully explore the
+possibility of using clustering as a preprocessing step to then train a \dt\ on data that have
+already been partly classified.

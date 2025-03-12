@@ -909,8 +909,80 @@
 	url = {https://doi.org/10.1007/s10948-018-4916-0},
 }
 
+@article{hoang2021,
+	author = {Hoang, Duc and Boffo, Cristian and Tran, Nhan and Krave,
+	          Steven and Kazi, Sujay and Stoynev, Stoyan and Marinozzi,
+	          Vittorio},
+	journal = {IEEE Transactions on Applied Superconductivity},
+	title = {Intelliquench: An Adaptive Machine Learning System for
+	         Detection of Superconducting Magnet Quenches},
+	year = {2021},
+	volume = {31},
+	number = {5},
+	pages = {1-5},
+	abstract = {In superconducting magnets, the irreversible transition of a
+	            portion of the conductor to resistive state is called a
+	            “quench.” Having large stored energy, magnets can be damaged
+	            by quenches due to localized heating, high voltage, or large
+	            force transients. Unfortunately, current quench protection
+	            systems can only detect a quench after it happens, and
+	            mitigating risks in Low Temperature Superconducting (LTS)
+	            accelerator magnets often requires fast response (down to
+	            ms). Additionally, protection of High Temperature
+	            Superconducting (HTS) magnets is still suffering from
+	            prohibitively slow quench detection. In this study, we lay
+	            the groundwork for a quench prediction system using an
+	            auto-encoder fully-connected deep neural network. After
+	            dynamically trained with data features extracted from
+	            acoustic sensors around the magnet, the system detects
+	            anomalous events seconds before the quench in most of our
+	            data. While the exact nature of the events is under
+	            investigation, we show that the system can “forecast” a
+	            quench before it happens under magnet training conditions
+	            through a randomized experiment. This opens up the way of
+	            integrated data processing, potentially leading to faster and
+	            better diagnostics and detection of magnet quenches.},
+	keywords = {Superconducting magnets;Magnetoacoustic
+	            effects;Training;Magnetomechanical effects;Sensors;Magnetic
+	            sensors;Heuristic algorithms;Machine learning;online
+	            learning;quench detection;real-time system;superconducting
+	            magnets;quench},
+	doi = {10.1109/TASC.2021.3058229},
+	ISSN = {1558-2515},
+	month = {Aug},
+}
 
-
+@article{zhou2021,
+	author = {Zhou, Xiao and Shi, Jing and Gong, Kang and Zhu, Changdong and
+	          Hua, Jing and Xu, Jun},
+	journal = {IEEE Transactions on Applied Superconductivity},
+	title = {A Novel Quench Detection Method Based on CNN-LSTM Model},
+	year = {2021},
+	volume = {31},
+	number = {5},
+	pages = {1-5},
+	abstract = {The quench of high-temperature superconducting (HTS) devices
+	            will seriously affect its safety operation. A fast and
+	            reliable quench detection method is of great significance for
+	            quench protection. In this paper, a quench detection method
+	            based on the CNN-LSTM model is proposed. By processing and
+	            analyzing the collected voltage signals in real time, the
+	            model can realize quench detection instantly and accurately.
+	            Furthermore, by adjusting the probability threshold, the
+	            sensitivity and the accuracy of the model can be balanced.
+	            Based on a series of quench experiments of HTS tapes and
+	            derived data, the CNN-LSTM model is trained and tested. The
+	            results show that the proposed method is advanced compared
+	            with the voltage threshold method.},
+	keywords = {Logic gates;Data models;High-temperature
+	            superconductors;Feature extraction;Deep
+	            learning;Training;Convolution;Quench
+	            Detection;High-temperature Superconducting
+	            (HTS);CNN;LSTM;Deep Learning},
+	doi = {10.1109/TASC.2021.3070735},
+	ISSN = {1558-2515},
+	month = {08},
+}
 
 
 
@@ -1013,4 +1085,52 @@
 	keywords = {Protocols;Costs;Biological system modeling;Machine
 	            learning;Feature extraction;Reflection;Planning},
 	doi = {10.1109/EMBC46164.2021.9629697},
+}
+
+@inproceedings{einstein2023,
+	author = {J.A. Einstein-Curtis and K.A. Drees and J.P. Edelen and M.C.
+	          Kilpatrick and J.S. Laster and R. O’Rourke and M. Valette},
+	title = {{Classification and Prediction of Superconducting Magnet
+	         Quenches}},
+	booktitle = {Proc. 19th Int. Conf. Accel. Large Exp. Phys. Control Syst.
+	             (ICALEPCS'23)},
+	eventdate = {2023-10-09/2023-10-13},
+	pages = {856--859},
+	paper = {TUPDP117},
+	language = {english},
+	keywords = {power-supply, superconducting-magnet, GUI, operation,
+	            experiment},
+	venue = {Cape Town, South Africa},
+	series = {International Conference on Accelerator and Large Experimental
+	          Physics Control Systems},
+	number = {19},
+	publisher = {JACoW Publishing, Geneva, Switzerland},
+	month = {02},
+	year = {2024},
+	issn = {2226-0358},
+	isbn = {978-3-95450-238-7},
+	doi = {10.18429/JACoW-ICALEPCS2023-TUPDP117},
+	url = {https://jacow.org/icalepcs2023/papers/tupdp117.pdf},
+	abstract = {{Robust and reliable quench detection for superconducting
+	            magnets is increasingly important as facilities push the
+	            boundaries of intensity and operational runtime. RadiaSoft
+	            has been working with Brookhaven National Lab on quench
+	            detection and prediction for superconducting magnets
+	            installed in the RHIC storage rings. This project has
+	            analyzed several years of power supply and beam position
+	            monitor data to train automated classification tools and
+	            automated quench precursor determination based on input
+	            sequences. Classification was performed using supervised
+	            multilayer perceptron and boosted decision tree architectures
+	            , while models of the expected operation of the ring were
+	            developed using a variety of autoencoder architectures. We
+	            have continued efforts to maximize area under the receiver
+	            operating characteristic curve for the multiple
+	            classification problem of real quench, fake quench, and
+	            no-quench events. We have also begun work on long short-term
+	            memory (LSTM) and other recurrent architectures for quench
+	            prediction. Examinations of future work utilizing more robust
+	            architectures, such as variational autoencoders and Siamese
+	            models, as well as methods necessary for uncertainty
+	            quantification will be discussed. }},
 }
