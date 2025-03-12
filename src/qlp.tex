@@ -421,10 +421,41 @@ prediction array, therefore the sub-models are not helping each other and 'cover
 \end{figure}
 
 \subsection{Random forests}
-Similarly to what we did for \qrp, we also tested the performance of \rfs\ on the single coils, as we
-said when we discussed the model in the resolution of \qrp, we didn't spend too much time perfecting
-the model, since having a \rf\ per coil would make the aggregate much harder to explore than other
-alternatives.
+Similarly to what we just did for \dts\ we also evaluated the performance of a model containing one
+single forest per coil, we expected higher performance compared to the ones just obtained on \dts,
+at the expense of a lower explainability.
+
+\Cref{fig:brfs-qlp} shows the performance for the best rfs built on a mix of different attributes
+(each taken in its entirety), as we can see the performance metrics are better, but we are not far
+off from the numbers obtained in the case of \dts\ (see \Cref{fig:bdts-qlp}), also, our weakest
+learner, the one built for coil $3$ is not much worse than the proposed random forest, while being
+much simpler than the alternative.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{img/best_rfs_qlp.png}
+	\caption{The best random forest trained on a sub-view or mix of sub-views, for every coil,
+		since all of the models have been plotted without indicating the harmonic content it means
+		that they are using full attributes.}\label{fig:brfs-qlp}
+\end{figure}
+The \rfs\ in figure contain respectively $5, 10, 10$ and $10$ trees. As we have already said
+previously, while trees have a high level of explainablilty, trying to interpret a structure
+containing $10$ of them is certaintly a complex task, and I would consider it explainable only on
+paper. This is why, for all intents and pourposes, while we provide the results for the Hamming
+score in the following, we decided to not follow this lead too much, since it would mean having an
+excessive amount of models to consider at the same time.
+
+While the trees for the first three forests are, overall, quite simple (not too deep), contained in
+the number of leaves and nodes, the last forest contains complex trees with many layers ($4$ on
+average), many internal nodes and leaves. Seeing the complexity of this last tree it's evident that
+the forest approach would not be feasible even in an hybrid approach based on both three trees for
+the first three coils and an \rf\ for the last one.
+
+Since the \rfs\ are more complicated than we would like we avoided the calculation of the Hamming
+score, also because the performance are good but not good enough to make us consider their use when
+compared to the simpler \dts\.
+
+
+
 
 
 
