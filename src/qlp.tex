@@ -450,12 +450,39 @@ average), many internal nodes and leaves. Seeing the complexity of this last tre
 the forest approach would not be feasible even in an hybrid approach based on both three trees for
 the first three coils and an \rf\ for the last one.
 
-Since the \rfs\ are more complicated than we would like we avoided the calculation of the Hamming
+Since \rfs\ are more complicated than we would like we avoided the calculation of the Hamming
 score, also because the performance are good but not good enough to make us consider their use when
-compared to the simpler \dts\.
+compared to the simpler \dts.
 
-
-
+\subsubsection{Support Vector Classifiers}
+If we analyze the benchmark model, and we train it without constraints (one or more sub-views for
+different datasets), the results are that we can aim at a very high level of performance if we
+forget about explainability. Performance have been plotted in \Cref{fig:bsvcs-qlp}, the metrics were
+taken from the outer \cv\ loop and the models chosen were the best for each specific coil.
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\textwidth]{img/best_svcs_qlp.png}
+	\caption{Performance metrics for the best \svcs\ trained on every coil, all attributes
+		have been taken with their full harmonic content.} \label{fig:bsvcs-qlp}
+\end{figure}
+There are a couple of very interesting takeaways:
+\begin{itemize}
+	\item The best \svc\ trained on coil $0$ is based on attribute \an. This is exactly what we
+	      expected since the very beginning of this chapter.
+	\item The best models for coils $1$ and $3$, were trained on \bn\ and another dataset (\cnmod\ for $1$
+	      and \phin\ for $3$). This is interesting for two reasons:
+	      \begin{inparaenum}[(i)]
+		      \item \bn\ is actually the best attribute for the two coils, as we saw in the analysis
+		      we did in the beginning of the chapter,
+		      \item the \svc\ trained on the sole \bn\ performed worse than the alternatives. This
+		      lead us to believe that, like in the case of \qrp, \bn\ alone doesn't contain
+		      enough information
+	      \end{inparaenum}.
+	\item Interestingly, while \cnmod\ didn't perform well enough in our tests on trees for coil
+	      $2$, in the case of \svc\ the model was picked over \an.
+\end{itemize}
+Evidently, the ceiling of performance is still very high, and we can still find ways to get closer
+to the performance of our benchmark model.
 
 
 
