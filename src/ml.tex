@@ -691,11 +691,9 @@ formulation is virtue of the substitution found for $\vec{w}$ in \Cref{eq:pd-lag
 	\label{eq:of}
 	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \sum_{i = 1}^m\alpha_iy_i\vec{x}_i\vec{x} + b
 \end{equation}
-Since \Cref{eq:primal} is an optimization problem with inequality constraints we
-know from~\cite{kkt1951}\footnote{For a small introduction to the Karush--Kuhn--Tucker conditions,
-refer to \Cref{app:kkt}.} that solving it is equivalent to solving the dual problem based on the
-Lagrangian defined in \Cref{eq:lagrangian} subject to the \textsc{kkt} constraints shown in
-\Cref{eq:kkt-constraints}.
+Since \Cref{eq:primal} is an optimization problem with inequality constraints, it must satisfy
+Karush-Kuhn-Tucker necessary conditions, first introduced in~\cite{kkt1951}\footnote{For a small
+ex-cursus on Karush-Kuhn-Tucker conditions, refer to \Cref{app:kkt}.}.
 \begin{equation}
 	\label{eq:kkt-constraints}
 	\begin{cases}
@@ -704,7 +702,7 @@ Lagrangian defined in \Cref{eq:lagrangian} subject to the \textsc{kkt} constrain
 		 & \alpha_i(y_if(\vec{x}_i) - 1) = 0
 	\end{cases}
 \end{equation}
-For every point in the training set $(\vec{x}_i, y_i)$ only two scenarios are possible:
+Constraints in \Cref{eq:kkt-constraints} reveal that, for every point in the training set $(\vec{x}_i, y_i)$, only two scenarios are possible:
 \begin{enumerate}
 	\item Lagrange multiplier $\alpha_i = 0$, Therefore the point $(\vec{x}_i, y_i)$ is not
 		influencing \Cref{eq:of}.
@@ -712,7 +710,7 @@ For every point in the training set $(\vec{x}_i, y_i)$ only two scenarios are po
 	      \Cref{eq:kkt-constraints} yields $y_if(\vec{x}_i) = 1$ which means that the point is
 	      laying on the maximum margin hyperplanes, therefore it's a support vector.
 \end{enumerate}
-This reveals a very important detail: once the training is completed, the model can be entirely
+Which leads us to a very important conclusion: once the training is completed, the model can be entirely
 described by using only support vectors, since they are the ones that yield a contribution in the
 calculation of \Cref{eq:of}.
 
@@ -903,7 +901,7 @@ that do not contain an expected answer $y_i$ for the $i$th instance of problem $
 This section is going to be dedicated to explore the theory behind the $k$-means clustering
 algorithm, once again the main material used is~\cite{ZhouZhi-Hua2021ML}.
 
-\section{Clustering with k--means}
+\section{Clustering with k-means}
 \label{sec:kmeans}
 Given a dataset $\udset$ a clustering algorithm partitions the data into non-intersecting sets
 known as \emph{clusters}, the data is grouped based on how similar they are; ideally, the more two

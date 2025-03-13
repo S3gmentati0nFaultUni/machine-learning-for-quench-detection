@@ -1,7 +1,7 @@
-\chapter{Karush--Kuhn--Tucker conditions}
+\chapter{Karush-Kuhn-Tucker conditions}
 \label{app:kkt}
-\Cref{eq:opt-problem} defines a non--linear optimization problem, we consider a minimization
-problem, with both inequality and equality constraints. Karush--Kuhn--Tucker conditions (\kkt) are
+\Cref{eq:opt-problem} defines a non-linear optimization problem, we consider a minimization
+problem, with both inequality and equality constraints. Karush-Kuhn-Tucker conditions (\kkt) are
 necessary conditions to solve such problems.
 \begin{equation}
 	\label{eq:opt-problem}
@@ -13,19 +13,19 @@ necessary conditions to solve such problems.
 \end{equation}
 
 To make sure that \kkt\ can identify local minima it's important that the regularity condition for
-constraints is satisfied. One of these conditions need to be valid in a neighbourhood of $x^*$ and
-there is many of them, ranging in complexity:
+constraints is satisfied. One of the following conditions needs to be valid for $x^*$ to be a local
+minimum for the objective function:
 \begin{enumerate}
-	\item Linearity constraint qualification: if $g_i$ and $h_j$ are affine functions, then no
+	\item Linearity constraint qualification (\textsc{lcq}): if $g_i$ and $h_j$ are affine functions, then no
 	      other condition is needed.
-	\item Linear independence constraint qualification: The gradients of the active inequality
+	\item Linear independence constraint qualification (\textsc{licq}): The gradients of the active inequality
 	      constraints and the gradients of the equality constraints are linearly independent at $x^*$.
-	\item Constant rank constraint qualification: For each subset of the gradients of the active
+	\item Constant rank constraint qualification (\textsc{crcq}): For each subset of the gradients of the active
 	      inequality constraints and the gradients of the equality constraints the rank at a vicinity
 	      of $x^*$ is constant.
 \end{enumerate}
-These are not all available constraints, more can be found, the lower the rank of the
-constraint the broader its applicability is.
+This is only a small selection of the available conditions, the lower the rank, the broader the
+applicability ($\textsc{lcq} \implies \textsc{licq} \implies \textsc{crcq}$).
 
 If $x*$ is a point that satisfies the regularity conditions just introduced, $f: \R^n \rightarrow
 	\R$, $g_i: \R^n \rightarrow \R$, $h_j: \R^n \rightarrow \R$ and the functions are continuously
