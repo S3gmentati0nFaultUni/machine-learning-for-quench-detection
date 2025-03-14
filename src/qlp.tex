@@ -66,31 +66,20 @@ A less-than-ideal distribution of the samples in bidimensional space was expecte
 correlation between the attribute and the labels for coils $1$ and $3$ highlighted in \Cref{fig:an-lcorr-qlp}.
 
 \begin{figure}[!ht]
-	% Font size = 70
+	% Font size = 40
 	\centering
-	\begin{subfigure}{\linewidth}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp/single_vs_multiple_An.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_0_An.png}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/quench_dist_qlp_an.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_1_An.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_2_An.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_3_An.png}
-		\subcaption{}
-	\end{subfigure}
-	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \an\ attribute. The sub-figures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
-	\label{fig:an-coilq-dist}
+	\caption{Visualization of the \an\ attribute, the values were plotted after a run of \pca\
+		dimensionality reduction.}\label{fig:an-coilq-dist}
 \end{figure}
 
 \subsubsection{\bn}
@@ -133,31 +122,21 @@ homogeneity of the samples belonging to the central cluster is very high. While 
 induce us to think that the performance for models based on \bn\ is going to be bad, we are drawn to
 consider the possibility that \bn\ might not be a good enough attribute if taken on its own.
 
-\begin{figure}[!h]
-	% Font size = 70
+\begin{figure}[!ht]
+	% Font size = 40
 	\centering
-	\begin{subfigure}{\linewidth}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp/single_vs_multiple_Bn.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_0_Bn.png}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/quench_dist_qlp_bn.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_1_Bn.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_2_Bn.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_3_Bn.png}
-		\subcaption{}
-	\end{subfigure}
-	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \bn\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
+	\caption{Visualization of the \bn\ attribute, the values were plotted after a run of \pca\
+		dimensionality reduction.}
 	\label{fig:bn-coilq-dist}
 \end{figure}
 
@@ -211,30 +190,20 @@ As far as single coil quench is concerned (subfigures (b) - (e)), we can see, in
 level of homogeneity of quench and non-quench samples.
 
 \begin{figure}[!ht]
-	% Font size = 70
+	% Font size = 40
 	\centering
-	\begin{subfigure}{\linewidth}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp/single_vs_multiple_Cnmod.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_0_Cnmod.png}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/quench_dist_qlp_cnmod.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_1_Cnmod.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_2_Cnmod.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_3_Cnmod.png}
-		\subcaption{}
-	\end{subfigure}
-	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \cnmod\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
+	\caption{Visualization of the \cnmod\ attribute, the values were plotted after a run of \pca\
+		dimensionality reduction.}
 	\label{fig:cnmod-coilq-dist}
 \end{figure}
 
@@ -276,30 +245,20 @@ task.
 \end{figure}
 
 \begin{figure}[!ht]
-	% Font size = 70
+	% Font size = 40
 	\centering
-	\begin{subfigure}{\linewidth}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp/single_vs_multiple_Phi.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_0_Phi.png}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/quench_dist_qlp_phi.png}
 		\subcaption{}
 	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_1_Phi.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_2_Phi.png}
-		\subcaption{}
-	\end{subfigure}
-	\begin{subfigure}{0.49\linewidth}
-		\includegraphics[width=\linewidth]{img/quench_dist_qlp/quenches_coil_3_Phi.png}
-		\subcaption{}
-	\end{subfigure}
-	\caption{The distribution of the samples in bidimensional space after a round of \pca, for
-		the \phin\ attribute. the subfigures contain different views of the same data: (a) differenciates between non-quench and single or multiple quench events, (b) highlights the distribution of quenches for coil $0$, (c) highlights the distribution of quenches for coil $1$, (d) highlights the distribution of quenches for coil $2$ and finally (e) highlights the distribution of quenches for coil $3$.}
+	\caption{Visualization of the \phin\ attribute, the values were plotted after a run of \pca\
+		dimensionality reduction.}
 	\label{fig:phi-coilq-dist}
 \end{figure}
 
@@ -316,54 +275,86 @@ only bother to show the results obtained for \an\ and \cnmod\ since they are the
 Data was plotted using \pca, but we also used other dimensionality reduction techniques, generally
 with inferior results.
 
-\Cref{fig:clustering-an} plots the result of a $8$ cluster $k$-means clustering run. As we can see,
+We tried to achieve similar results using \cnmod, but the data seems to be too homogeneously
+distributed in some cases, leading to the generation of clusters that are not splitting data that
+actually belong to different classes. Clustering-specific performance (originally introduced in
+\Cref{chp:ml}) actually tell us that the best results were obtained when we built $4$ clusters on
+both \an\ and \cnmod. \Cref{fig:4-means-results} shows the results for the \an\ and \cnmod\
+attributes after a run of $4$-means clustering, we chose to highlight the labels of single and
+multiple coil quench. In the picture the orange lines represent the borders
+of the clusters, if the line is solid then the cluster has a finite size, otherwise the cluster has
+infinite size.
+
+While the result for \an\ (subfigure (a)) contains $3$ clusters that essentially have a high degree
+of purity (the top for the magnet in normal operating conditions, the left and right for quench
+events). The central cluster mixes quench and non-quench data, making it less useful for our
+classification needs. If we consider \cnmod (subfigure (b)), while it's far from perfect, we can see
+that the clusters have a decent level of purity since each cluster contains, essentially, a majority
+of samples coming from a specific class (in the case of quench and non-quench classification).
+\begin{figure}[!ht]
+	\centering
+	\begin{subfigure}{0.8\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/clustering_an_qlp_4c.png}
+		\caption{}
+	\end{subfigure}
+	\begin{subfigure}{0.8\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{img/clustering_cnmod_qlp_4c.png}
+		\caption{}
+	\end{subfigure}
+	\caption{} \label{fig:4-means-results}
+\end{figure}
+
+Technically, according to the clustering-specific performance metrics that we obtained on the dataset using
+$4$ clusters was supposed to yield the best possible performance in both cases and we suppose that,
+at least for \cnmod, it could be a good preprocessing step for \qrp. We could then achieve very high
+performance with a simple tree classifier built on the cluster(s) with the lowest purity. This
+approach, though interesting, would lose the propriety of explainability (since both \pca\ and
+$k$-means are unsupervised techniques).
+
+We experimented with higher cluster counts and we discovered that, while the cluster distribution
+for \cnmod\ gets worse with the increase, the algorithm finds very well separated clusters with a
+high level of purity on \an. \Cref{fig:clustering-an} plots the result of a $8$ cluster $k$-means clustering run. As we can see,
 the clusters identified by the algorithm are very clearly trying to separate three classes of
 samples: one associated to the magnet being in normal working condition, one associated to the
 magnet containing \emph{at most} one quenched coil, and finally, one associated to the magnet
-containing \emph{at least} one quenched coil. In the picture the orange lines represent the borders
-of the clusters, if the line is solid then the cluster has a finite size, otherwise the cluster has
-infinite size.
+containing \emph{at least} one quenched coil.
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=\textwidth]{img/clustering_an_qlp.png}
+	\includegraphics[width=0.8\linewidth]{img/clustering_an_qlp_8c.png}
 	\caption{}\label{fig:clustering-an}
 \end{figure}
-In \Cref{fig:cluster-score-an} we plot the clustering-specific performance metrics we introduced in
-\Cref{chp:ml}. We can draw two different conclusions by looking at the plot:
-\begin{inparaenum}[(i)]
-	\item The performance of the clustering model without \pca\ are atrocious, an expected effect of the
-	curse of dimensionality,
-	\item the best performance was obtained when the number of clusters reached $5$ and when it
-	reached $8$. Afterwards, we register a performance decline due to useless splits identified by the algorithm
-\end{inparaenum}.
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=\textwidth]{img/clustering_scores_an.png}
-	\caption{}\label{fig:cluster-score-an}
-\end{figure}
+Clustering provided very interesting results, that could be further explored by using diverse
+techniques, one example could be to use a supervised clustering algorithm like $k$-nn to correct the
+cluster structure computed using $k$-means.
 
 \section{Results}
-We thought that a good idea to solve \qlp\ was to extend the original models used to solve \qrp. The
-very first experiments we worked on included trying to solve the new problem using the
-multiclass-classification version of the original models, we didn't have high expectations for this
-since the new models have to predict $4$ different bits, instead of just one, making the problem
-effectively much more difficult than \qrp.
+After our brief exploration of the possibilities offered by clustering algorithms, we moved back to
+supervised machine learning algorithms to solve \qlp. Our first approach was to do a na\"ive
+extention of the models used to solve \qrp, to the multiclass-classification environment. We didn't
+have high expectations for such models since they would have to predict $4$ different bits, instead of just one, making the problem
+much more difficult than the original one.
 
-As an example, we started with trees, and even if they always had maximum depth between $5$ and $10$
+As a matter of fact, trees, which have always been quite easy to interpret, in the case of \qlp\
+became much more complicated to read. Even if they always had maximum depth between $5$ and $10$
 (therefore having a structure close to the limit of what we would consider explainable) the accuracy
-was close to $60 - 70\%$. The performance were obtained by doing micro averaging, which means that
-the resulting metrics are mindful of the class imbalance.
+was close to $60 - 70\%$. This rough performance number was obtained by micro averaging the accuracy
+for every class, in other words, the resulting metric is the average of the metric computed on each
+class weighted on the cardinality of the class.
 
 Since the performance obtained using a direct extension of trees didn't really suit our expectations
-we chose to change approach: Decision trees (and the other models) have performed at a very high
-level in \qrp, therefore all that we have to do to solve \qlp\ is solve \qrp\ four times (one for
-each coil). We need to find new estimators, different from the ones used to solve \qrp, because they
-have been trained on a single label that had a completely different analytical representation, if we
-tried to use the same models to the single coils they would be trying to abstract the same pattern
-from a different classification problem, which leads to very poor performance.
+we chose to change approach. Our new idea was simply to turn \qlp\ into a problem that could be
+solved by simply solving a variation of \qrp\ $4$ different times, one per coil. We solved a
+variation of \qrp\ and not \emph{the actual} \qrp, since the relation we originally wanted to find
+connected the harmonic decomposition of magnetic field to quench events in a quadrupole. This new
+version of \qrp\ requires us to find a function that links \emph{the same data} to a different
+value, that states whether coil $i$ quenched or not.
 
-In the following we will retrace the steps we walked in \Cref{chp:qrp} and we will describe the best
-models found to solve the problem.
+It might sound like a very subtle change, but it's an important one. So much so that, if we tried to
+reuse the best models we found for \qrp, to solve \qlp, we wouldn't get similar performance metric.
+In the following sections we will retrace our steps in \Cref{chp:qrp} and discuss the obtained
+results for the various models.
 
 \subsection{Decision trees}
 As we said previously, decision trees utilized in the multiclass-classification environment provided
