@@ -29,7 +29,7 @@ cfr. \Cref{fig:an-corr}), and finally, \an[2]\ and another high-order harmonic c
 the very low correlation between the \an\ harmonics and the labels for coil $1$ and $3$ we didn't really
 consider it as an attribute worth exploring.
 \begin{figure}[!ht]
-	% Font size = 40
+	% Font size = 70
 	\centering
 	\begin{subfigure}{0.49\linewidth}
 		\includegraphics[width=\linewidth]{img/qlp_corr/An_coil0.png}
@@ -82,20 +82,20 @@ predict quench localization on coils $3$ and $1$ \Cref{fig:an-lcorr-qlp}.
 	\caption{Visualization of the \an\ attribute, the data was plotted after a run of \pca\
 		dimensionality reduction. Sub-figure (a) highlights the samples based on how many quenches
 		are associated to the specific sample $\{0, 1, \text{many}\}$. Sub-figure (b) highlights the
-		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$}\label{fig:an-coilq-dist}
+		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$.}\label{fig:an-coilq-dist}
 \end{figure}
 
 \subsubsection{\bn}
-In \qrp, \bn\ was the worst attribute we could use, because it contained a very low amounts of
-information and samples were distributed very poorly (see \Cref{fig:bn-dist}). We did expect the
-same for \qlp, but, as it turns out, \bn\ contains a good amount of information that are
-'complementary' to the ones contained in \an.
+While experimenting with \qrp, we discovered that \bn\ was the attribute that performed the least
+among the ones available. We expected similar results for \qlp, but from preprocessing alone we
+could not understand whether the attribute promised good or bad performance.
 
 \Cref{fig:bn-lcorr-qlp} highlights the correlation between \bn\ harmonics and the label associated
-to each coil. The attribute, similarly to \an, sees a pattern of strong correlations between its
-harmonics and coils $1$ and $3$. Since the pattern of sub-figures (b) and (d) is very similar to the
-one shown in sub-figures (a) and (c) of \Cref{fig:an-lcorr-qlp}, we were taken to similar
-conclusions.
+to each coil (as described in \Cref{chp:problem}). The attribute, similarly to \an, sees a pattern
+of strong correlations between its odd-numbered harmonics and coils $1$ and $3$. Since the pattern
+of sub-figures (b) and (d) is very similar to the one shown in sub-figures (a) and (c) of
+\Cref{fig:an-lcorr-qlp}, we imagined that a plausible dataset composition would have followed rules
+similar to the ones identified for \an.
 \begin{figure}[!ht]
 	% Font size = 70
 	\centering
@@ -119,12 +119,10 @@ conclusions.
 	\label{fig:bn-lcorr-qlp}
 \end{figure}
 
-In \Cref{fig:bn-coilq-dist} we propose different visualizations of the samples contained in \bn\
-after a round of \pca. Independently of the sub-figure we consider it's clear that the level of
+In \Cref{fig:bn-coilq-dist} we visualized the samples in \bn\ after a round of \pca. Independently of the sub-figure we consider it's clear that the level of
 homogeneity of the samples belonging to the central cluster is very high. While this, alone, cannot
-induce us to think that the performance for models based on \bn\ is going to be bad, we are drawn to
+induce us to think that the performance of models based on \bn\ is going to be bad, we are drawn to
 consider the possibility that \bn\ might not be a good enough attribute if taken on its own.
-
 \begin{figure}[!ht]
 	% Font size = 40
 	\centering
@@ -138,8 +136,10 @@ consider the possibility that \bn\ might not be a good enough attribute if taken
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp_bn.png}
 		\subcaption{}
 	\end{subfigure}
-	\caption{Visualization of the \bn\ attribute, the values were plotted after a run of \pca\
-		dimensionality reduction.}
+	\caption{Visualization of the \bn\ attribute, the data was plotted after a run of \pca\
+		dimensionality reduction. Sub-figure (a) highlights the samples based on how many quenches
+		are associated to the specific sample $\{0, 1, \text{many}\}$. Sub-figure (b) highlights the
+		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$.}
 	\label{fig:bn-coilq-dist}
 \end{figure}
 
@@ -148,19 +148,16 @@ As we said in \Cref{chp:problem}, \cnmod\ was expected to be very informative fo
 \qlp. Interestingly, though, the correlation between the harmonics for the attribute and the labels
 associated to each coil, shown in \Cref{fig:cnmod-lcorr-qlp}, seem to be telling a different story.
 If we consider coils $0$ and $3$, we can see a very strong correlation between the harmonics and the
-label, it's also worth noting that in all the sub-figures, \cnmod[2]\ seems to be extremely
+label, it's also worth noting that, in sub-figures (a) through (d), \cnmod[2]\ seems to be extremely
 important to explain the value associated with the labels.
 
 If we look back at the correlation matrix computed for \cnmod\ during the preprocessing for \qrp\
-(see \Cref{fig:cnmod-corr}) we could say that the structure of a sub-view of \cnmod\ could be built:
+(cfr. \Cref{fig:cnmod-corr}) a sub-view of \cnmod\ could be built as follows:
 \begin{itemize}
-	\item in the case of coil $0$, \cnmod[2] and adding a high-order candidate.
-	      While this would technically maximize the total correlation with the label, we have
-	      seen in \qrp\ that choosing \cnmod[2]\ was a choice that didn't pay. That
-	      is why we should be using \cnmod[3], \cnmod[6] and another high order harmonics like \cnmod[9] or \cnmod[11].
-	\item in the case of coil $3$, we could be taking harmonic \cnmod[1] and then using one or
-	      more from \{\cnmod[4], \cnmod[5], \cnmod[6], \cnmod[7], \cnmod[8]\}; finally, if it makes performance better, we could also add
-	      another high order harmonic like \cnmod[10].
+	\item For coil $0$, \cnmod[2] and adding a high-order candidate. While this would technically maximize the total correlation with the label, we have seen in \qrp\ that choosing \cnmod[2]\ was a choice that didn't pay. That is why we might select \cnmod[3] or \cnmod[6] in the end, accompanied by another high order harmonic like \cnmod[9] or \cnmod[11].
+	\item For coil $3$, we could be taking harmonic \cnmod[1] and then using one or more from
+	      \{\cnmod[4], \cnmod[5], \cnmod[6], \cnmod[7], \cnmod[8]\}; finally, if it leads to
+	      better performance, we could also add another high-order harmonic like \cnmod[10].
 \end{itemize}
 \begin{figure}[!ht]
 	% Font size = 70
@@ -185,13 +182,12 @@ If we look back at the correlation matrix computed for \cnmod\ during the prepro
 	\label{fig:cnmod-lcorr-qlp}
 \end{figure}
 
-As we did for \an\ and \bn, we visualized the distribution of the data after a round of \pca\
-dimensionality reduction. \Cref{fig:cnmod-coilq-dist} shows a similar situation to \an, if we
-consider the specific case of sub-figure (a), while the clusters are not as clean cut, as the
-alternative, there is much more separation of the classes compared to \bn.
-As far as single coil quench is concerned (subfigures (b) - (e)), we can see, in most cases, a high
-level of homogeneity of quench and non-quench samples.
-
+As we did for \an\ and \bn, we visualized \cnmod\ after a round of \pca\ dimensionality reduction.
+\Cref{fig:cnmod-coilq-dist} shows a similar situation to \an, if we consider the specific case of
+sub-figure (a), while the clusters are not as clean cut as the alternative, there is much more
+separation of the classes compared to \bn. As far as single coil quench is concerned (cfr. sub-figure
+(b)), there is clearly a high degree of homogeneity due to having many groups of points labelled
+differently but extremely close together.
 \begin{figure}[!ht]
 	% Font size = 40
 	\centering
@@ -205,25 +201,25 @@ level of homogeneity of quench and non-quench samples.
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp_cnmod.png}
 		\subcaption{}
 	\end{subfigure}
-	\caption{Visualization of the \cnmod\ attribute, the values were plotted after a run of \pca\
-		dimensionality reduction.}
+	\caption{Visualization of the \cnmod\ attribute, the data was plotted after a run of \pca\
+		dimensionality reduction. Sub-figure (a) highlights the samples based on how many quenches
+		are associated to the specific sample $\{0, 1, \text{many}\}$. Sub-figure (b) highlights the
+		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$.}
 	\label{fig:cnmod-coilq-dist}
 \end{figure}
 
 \subsubsection{\phin}
-To close this section we are going to talk about the \phin\ dataset. As we can see in
-\Cref{fig:phi-lcorr-qlp}, due to how high the correlation is between most harmonics and basically
-all the coils, we might be lead to think that this is the best attribute available to us. Since the
-harmonics are also very weakly correlated among themselves (cfr. \Cref{fig:phi-corr}), it probably
-means that one of the most high-performing sub-views for this attribute is to just keep it as is,
-without removing any harmonics. The other side of the coin, the bidimensional visualization of the
-data, is telling a different story, closer, as a matter of fact, to what we discovered for \bn.
+To close the section we are going to consider the \phin\ attribute. In \Cref{fig:phi-lcorr-qlp} we
+plotted the cross-correlation between the harmonics and the labels. Due to how high the correlation
+is between most harmonics and basically all the coils, we might be lead to think that this is the
+best attribute available to us. Since the harmonics are also very weakly correlated among themselves
+(cfr. \Cref{fig:phi-corr}), we just chose to not extract any features and keep the attribute as is.
+On the other hand, the bidimensional visualization of the data is telling a different story (cfr.
+\Cref{fig:phi-coilq-dist}), closer, as a matter of fact, to what we discovered for \bn.
 
-\Cref{fig:phi-coilq-dist} plots the data after a round of dimensionality reduction in bidimensional
-space. Independently of the sub-figure we consider, it's apparent that the data is homogeneously
-mixed, therefore making it hard to separate them. As was said already, this might lead us to think
-that \phin, just as it was for \bn, might be one of the least favorable attributes to use for this
-task.
+\Cref{fig:phi-coilq-dist} plots the data after a round of \pca\ dimensionality reduction.
+Independently of the sub-figure we consider, the sparsity and the homogeneity of the data makes it
+extremely hard to define clusters with a high level of purity.
 \begin{figure}[!ht]
 	% Font size = 70
 	\centering
@@ -260,8 +256,10 @@ task.
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp_phi.png}
 		\subcaption{}
 	\end{subfigure}
-	\caption{Visualization of the \phin\ attribute, the values were plotted after a run of \pca\
-		dimensionality reduction.}
+	\caption{Visualization of the \phin\ attribute, the data was plotted after a run of \pca\
+		dimensionality reduction. Sub-figure (a) highlights the samples based on how many quenches
+		are associated to the specific sample $\{0, 1, \text{many}\}$. Sub-figure (b) highlights the
+		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$.}
 	\label{fig:phi-coilq-dist}
 \end{figure}
 
