@@ -266,33 +266,26 @@ extremely hard to define clusters with a high level of purity.
 \section{First approaches using Clustering}
 \label{sec:qlp-cluster}
 We initially discovered that \an\ and \cnmod\ data was scattered favorably in bidimensional space
-while we were still studying \qrp. We had the idea to use clustering because it was unsupervised,
+while we were still studying \qrp. We decided to use clustering because it was unsupervised,
 and we wanted to understand if there was a way for us to get very early results in \qlp\ by
 leveraging some undiscovered patterns in the data.
 
 We remark that the clustering algorithm is always working by using distance between samples,
 therefore the pattern that it's capable of identifying is unknown to us, and we, as researchers,
-have to identify it. Even if we applied clustering to all the attributes in the following we will
-only bother to show the results obtained for \an\ and \cnmod\ since they are the more promising.
-Data was plotted using \pca, but we also used other dimensionality reduction techniques, generally
-with inferior results.
+have to identify it. Even if we applied clustering to all the attributes, we will only show
+relevant results obtained on \an\ and \cnmod. Data was plotted using \pca, but we also explored
+other dimensionality reduction techniques, namely FastICA and Metric multiDimensional Scaling (MDS),
+generally yielding inferior results.
 
-We tried to achieve similar results using \cnmod, but the data seems to be too homogeneously
-distributed in some cases, leading to the generation of clusters that are not splitting data that
-actually belong to different classes. Clustering-specific performance (originally introduced in
-\Cref{chp:ml}) actually tell us that the best results were obtained when we built $4$ clusters on
-both \an\ and \cnmod. \Cref{fig:4-means-results} shows the results for the \an\ and \cnmod\
-attributes after a run of $4$-means clustering, we chose to highlight the labels of single and
-multiple coil quench. In the picture the orange lines represent the borders
-of the clusters, if the line is solid then the cluster has a finite size, otherwise the cluster has
-infinite size.
+\Cref{fig:4-means-results} shows results of a $4$-means clustering run on both attributes, we chose
+to label the samples based on the number of quenched coils $\{0, 1, \text{many}\}$. The orange lines
+in the figure represent the cluster borders, if the line is solid then the cluster has a finite size, otherwise the cluster has infinite size.
 
-While the result for \an\ (subfigure (a)) contains $3$ clusters that essentially have a high degree
+While the result for \an\ (sub-figure (a)) contains $3$ clusters that essentially have a high degree
 of purity (the top for the magnet in normal operating conditions, the left and right for quench
 events). The central cluster mixes quench and non-quench data, making it less useful for our
-classification needs. If we consider \cnmod (subfigure (b)), while it's far from perfect, we can see
-that the clusters have a decent level of purity since each cluster contains, essentially, a majority
-of samples coming from a specific class (in the case of quench and non-quench classification).
+classification needs. If we consider \cnmod (sub-figure (b)), while it's far from perfect, we can see
+that the clusters have a decent level of purity.
 \begin{figure}[!ht]
 	\centering
 	\begin{subfigure}{0.8\linewidth}
@@ -305,31 +298,30 @@ of samples coming from a specific class (in the case of quench and non-quench cl
 		\includegraphics[width=\linewidth]{img/clustering_cnmod_qlp_4c.png}
 		\caption{}
 	\end{subfigure}
-	\caption{} \label{fig:4-means-results}
+	\caption{A run of $4$-means on attributes \an\ and \cnmod\ after a round of \pca\
+		dimensionality reduction. As we can see using $4$ clusters leads to a suboptimal division of
+		the samples, while \cnmod\ has clusters with a bit more purity (at least quench-events are
+		not mixed with non-quenches).} \label{fig:4-means-results}
 \end{figure}
 
-Technically, according to the clustering-specific performance metrics that we obtained on the dataset using
-$4$ clusters was supposed to yield the best possible performance in both cases and we suppose that,
-at least for \cnmod, it could be a good preprocessing step for \qrp. We could then achieve very high
-performance with a simple tree classifier built on the cluster(s) with the lowest purity. This
-approach, though interesting, would lose the propriety of explainability (since both \pca\ and
-$k$-means are unsupervised techniques).
-
-We experimented with higher cluster counts and we discovered that, while the cluster distribution
-for \cnmod\ gets worse with the increase, the algorithm finds very well separated clusters with a
-high level of purity on \an. \Cref{fig:clustering-an} plots the result of a $8$ cluster $k$-means clustering run. As we can see,
-the clusters identified by the algorithm are very clearly trying to separate three classes of
-samples: one associated to the magnet being in normal working condition, one associated to the
-magnet containing \emph{at most} one quenched coil, and finally, one associated to the magnet
-containing \emph{at least} one quenched coil.
+According to the clustering-specific performance metrics (Silhouette and \textsc{db} scores, cfr.
+\Cref{chp:ml}) for both \an\ and \cnmod, using $4$ clusters represented the best possible solution.
+As we discussed above, though, this choice lead to suboptimal results, especially for \an.  We
+experimented with higher cluster counts, and discovered that, while the result gets visually worse
+for \cnmod, probably because it's trying to split single quench clusters belonging to different
+coils (cfr. the south-east sector in \Cref{fig:cnmod-coilq-dist}, sub-figure (b)). A run of
+$8$-means on \an\ generates clusters with a high level of purity. \Cref{fig:clustering-an} plots the result, the clusters identified by the algorithm are very clearly trying to separate three classes of samples: one associated to the magnet being in normal working condition, one associated to the magnet containing \emph{at most} one quenched coil, and finally, one associated to the magnet containing \emph{at least} one quenched coil.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{img/clustering_an_qlp_8c.png}
-	\caption{}\label{fig:clustering-an}
+	\caption{The results of a run of $8$-means on the sole attribute \an, after a round of \pca
+		dimensionality reduction. As we can see all clusters have a high purity and only a handful of points have been misclassified.}\label{fig:clustering-an}
 \end{figure}
-Clustering provided very interesting results, that could be further explored by using diverse
-techniques, one example could be to use a supervised clustering algorithm like $k$-nn to correct the
-cluster structure computed using $k$-means.
+
+Using clustering we achieved very interesting results and, while it's not a technique that can be
+used as a classifier on its own (not even in cases in which the performance seems to be the best),
+we could easily use it as a preprocessing step for other models like decision trees, or for a run of
+the supervised clustering algorithm $k$-nn.
 
 \section{Results}
 After our brief exploration of the possibilities offered by clustering algorithms, we moved back to
