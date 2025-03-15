@@ -539,7 +539,7 @@ In \Cref{fig:svc-hs} we plotted $\hs$ for the $5$ cross validation folds, as we 
 \Cref{tbl:svc-err} we indicated the error done by each model on the $5$ folds and the total for each
 model. Clearly, while the \svc\ trained on \an performs way better than the others, the models
 mounted on the remaining coils have more modest performance. The average $\hs$ score for the \svc\
-is $0.969$ and its standard deviation is $0.015$.
+is $0.968$ and its standard deviation is $0.013$.
 \begin{table}[!ht]
 	\caption{Description of the best \rf\ for every coil.}\label{tbl:svc-err}
 
@@ -551,20 +551,21 @@ is $0.969$ and its standard deviation is $0.015$.
 		\textbf{}                     & \textbf{Coil 0}    & \textbf{Coil 1} & \textbf{Coil 2} & \textbf{Coil 3}
 		\\
 		\midrule
-		\textsc{Fold 0}         & $0$           & $4$           & $2$            & $5$            \\
-		\textsc{Fold 1}         & $0$		& $2$		& $1$            & $0$		  \\
-		\textsc{Fold 2}		& $1$           & $3$		& $1$            & $0$            \\
-		\textsc{Fold 3}         & $0$           & $5$ 		& $2$            & $1$            \\
-		\textsc{Fold 4}         & $0$		& $0$           & $1$            & $3$            \\
+		\textsc{Fold 0}         & $0$           & $2$           & $2$            & $2$            \\
+		\textsc{Fold 1}         & $0$		& $2$		& $1$            & $1$		  \\
+		\textsc{Fold 2}		& $1$           & $5$		& $1$            & $4$            \\
+		\textsc{Fold 3}         & $0$           & $2$ 		& $2$            & $3$            \\
+		\textsc{Fold 4}         & $0$		& $1$           & $1$            & $2$            \\
 		\midrule
-		\textsc{total errors}	& $1$		& $14$		& $7$		& $9$
+		\textsc{total errors}	& $1$		& $12$		& $7$		& $12$
 		\\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-Evidently, the ceiling of performance is still very high, and we can still find ways to get closer
-to the performance of our benchmark model.
+On the blind test set the \svc\ did $4$ errors, and had a final $\hs$ of average $0.966$ and
+standard deviation $0.086$. The performance for \svcs\ and \dts\ are not that far off, meaning that
+we might be hitting a performance ceiling.
 
 
 
