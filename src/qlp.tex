@@ -1,19 +1,16 @@
 \chapter{Quench Localization Problem (\qlp)}
 \label{chp:qlp}
-This chapter is dedicated to some initial results for the Quench Localization Problem (\qlp), as we did for \qrp,
-we will discuss:
+This chapter is dedicated to some initial results for the Quench Localization Problem (\qlp), we will discuss:
 \begin{inparaenum}[(i)]
 	\item some of the preprocessing we have done, specific for the labels,
-	\item the first approaches with clustering, and finally,
+	\item some preliminary results obtained by clustering, and finally,
 	\item the results obtained, just like we did in \Cref{sec:results-qrp}
 \end{inparaenum}.
 \section{Data preprocessing}
 \label{sec:qlp-preprocessing}
 As we said in \Cref{chp:problem}, the main difference between \qlp\ and \qrp\ is the number of
-classes. While \qrp\ is a binary classification problem, \qlp\ is multiclass-classification, and we
-have a binary label for each coil ($1$ if the coil quenched, $0$ if the sample represtents it in
-normal working condition). In this section, we will concentrate on the considerations arisen from the analysis
-of the new labels, and the visualization of the samples in bidimensional space.
+classes. While \qrp\ is a binary classification problem, \qlp\ is a multiclass-classification
+problem. As was already stated in \Cref{chp:problem}, the expected outcome is a $4$ bit binary array, each of the bits represents the state of one of the coils in the magnet ($1$ if the coil quenched, $0$ if it is in normal working conditions). In this section, we will concentrate on the considerations arisen from the analysis of the new labels, and the visualization of the samples in bidimensional space.
 
 \subsubsection{\an}
 \Cref{fig:an-lcorr-qlp} shows the correlation with the labels, \an\ is correlated very strongly with
@@ -22,17 +19,17 @@ ourselves of the correlation existing among the harmonics, originally shown in \
 \begin{itemize}
 	\item Contrarily to what we discovered in \Cref{sec:qrp-preprocessing}, \an[2]\ is not
 	      fundamental to explain the expected results;
-	\item Now we have a strong correlation for \an[1]\ and \an[3]\ (which are very
-	      strongly correlated with each other, see \Cref{fig:an-corr}, therefore we will not be able
-	      to use them together);
+	\item The harmonics containing more information are the odd ones (\an[1], \an[3], \an[5],
+	      \ldots). This means that we will be able to only take one from the bunch, due to the
+	      strong correlation among odd-numbered harmonics (cfr. \Cref{fig:an-corr}).
 \end{itemize}
 A potential dataset could be constructed using a primary odd harmonic (like \an[1]\ or \an[3]), the
-harmonic performing the best among \an[4], \an[8]\ and \an[12]\ (which are all strongly correlated, see
-\Cref{fig:an-corr}); and finally \an[2]\ and another high-order harmonic could be beneficial. Due to
-the very low correlation between the \an\ and the labels for coil $1$ and $3$ we didn't really
+harmonic performing the best among \an[4], \an[8]\ and \an[12]\ (which are all strongly correlated,
+cfr. \Cref{fig:an-corr}), and finally, \an[2]\ and another high-order harmonic could be beneficial. Due to
+the very low correlation between the \an\ harmonics and the labels for coil $1$ and $3$ we didn't really
 consider it as an attribute worth exploring.
 \begin{figure}[!ht]
-	% Font size = 70
+	% Font size = 40
 	\centering
 	\begin{subfigure}{0.49\linewidth}
 		\includegraphics[width=\linewidth]{img/qlp_corr/An_coil0.png}
@@ -55,15 +52,19 @@ consider it as an attribute worth exploring.
 \end{figure}
 
 In figure \Cref{fig:an-coilq-dist} we visualized the distribution of samples for \an\ in
-bidimensional space, after a round of \pca\ dimensionality reduction. If we color the samples based
-on the number of coils quenched for that specific sample ($0, 1, \geq 1$), as shown in sub-figure
-(a), we can easily identify and label clusters with a high level of purity. If we color samples
-based on whether a specific coil quenched or not (sub-figures (b) through (e)), it's quite clear that it's not
-as easy to find clusters that contain only samples labelled as quench, especially in the case of
-coils $1$, sub-figure (c), and $3$, sub-figure (e).
+bidimensional space, after a round of \pca\ dimensionality reduction (moving from $15$ to $2$
+dimensions). Sub-figure (a) labels data based on the number of quenched coils associated to the
+sample. We can evidently identify a series of clusters, characterized by a high degree of purity, in
+\Cref{sec:qlp-cluster} we are going to discuss the clustering approach on this specific attribute.
+In sub-figure (b), we labelled the data based on which coil was quenched. The division of the labels
+is not as neat as in sub-figure (a), which lead us to think that clustering could be used as a
+preprocessing step to then have another machine learning model work on the clustered data to
+predict quench localization.
 
-A less-than-ideal distribution of the samples in bidimensional space was expected due to the poor
-correlation between the attribute and the labels for coils $1$ and $3$ highlighted in \Cref{fig:an-lcorr-qlp}.
+While sub-figure (b) doesn't tell us everything we need to know, we can see that coil $1$ and coil
+$3$ are fairly mixed together, furthermore both of them are usually involved in multi-coil quenches.
+These hints are giving us another possible reason why the attribute is less-than-ideal to
+predict quench localization on coils $3$ and $1$ \Cref{fig:an-lcorr-qlp}.
 
 \begin{figure}[!ht]
 	% Font size = 40
@@ -78,8 +79,10 @@ correlation between the attribute and the labels for coils $1$ and $3$ highlight
 		\includegraphics[width=\linewidth]{img/quench_dist_qlp_an.png}
 		\subcaption{}
 	\end{subfigure}
-	\caption{Visualization of the \an\ attribute, the values were plotted after a run of \pca\
-		dimensionality reduction.}\label{fig:an-coilq-dist}
+	\caption{Visualization of the \an\ attribute, the data was plotted after a run of \pca\
+		dimensionality reduction. Sub-figure (a) highlights the samples based on how many quenches
+		are associated to the specific sample $\{0, 1, \text{many}\}$. Sub-figure (b) highlights the
+		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$}\label{fig:an-coilq-dist}
 \end{figure}
 
 \subsubsection{\bn}
@@ -263,6 +266,7 @@ task.
 \end{figure}
 
 \section{First approaches using Clustering}
+\label{sec:qlp-cluster}
 We initially discovered that \an\ and \cnmod\ data was scattered favorably in bidimensional space
 while we were still studying \qrp. We had the idea to use clustering because it was unsupervised,
 and we wanted to understand if there was a way for us to get very early results in \qlp\ by
