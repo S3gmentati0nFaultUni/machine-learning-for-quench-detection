@@ -326,52 +326,52 @@ the supervised clustering algorithm $k$-nn.
 \section{Results}
 After our brief exploration of the possibilities offered by clustering algorithms, we moved back to
 supervised machine learning algorithms to solve \qlp. Our first approach was to do a na\"ive
-extention of the models used to solve \qrp, to the multiclass-classification environment. We didn't
-have high expectations for such models since they would have to predict $4$ different bits, instead of just one, making the problem
-much more difficult than the original one.
+extension of the models used to solve \qrp, to the multiclass-classification environment. We didn't
+have high expectations for such models since they would have to predict $4$ different bits, instead of just one, making the problem much more difficult than the original one.
 
 As a matter of fact, trees, which have always been quite easy to interpret, in the case of \qlp\
-became much more complicated to read. Even if they always had maximum depth between $5$ and $10$
-(therefore having a structure close to the limit of what we would consider explainable) the accuracy
-was close to $60 - 70\%$. This rough performance number was obtained by micro averaging the accuracy
-for every class, in other words, the resulting metric is the average of the metric computed on each
-class weighted on the cardinality of the class.
+became much more complicated. Even if they always had maximum depth between $5$ and $10$, the number
+of total nodes was quite high, and the accuracy was close to $60 - 70\%$. This rough performance
+number was obtained by micro averaging the accuracy of the classifier for every class, in other words, the resulting metric is the average of the metric computed on each class weighed on the cardinality of the class.
 
-Since the performance obtained using a direct extension of trees didn't really suit our expectations
-we chose to change approach. Our new idea was simply to turn \qlp\ into a problem that could be
-solved by simply solving a variation of \qrp\ $4$ different times, one per coil. We solved a
-variation of \qrp\ and not \emph{the actual} \qrp, since the relation we originally wanted to find
-connected the harmonic decomposition of magnetic field to quench events in a quadrupole. This new
-version of \qrp\ requires us to find a function that links \emph{the same data} to a different
-value, that states whether coil $i$ quenched or not.
+Since the extension of \dts\ did not suite our expectations, we chose to change approach. Our new
+idea was simply to turn \qlp\ into a binary classification problem.
 
-It might sound like a very subtle change, but it's an important one. So much so that, if we tried to
-reuse the best models we found for \qrp, to solve \qlp, we wouldn't get similar performance metric.
-In the following sections we will retrace our steps in \Cref{chp:qrp} and discuss the obtained
-results for the various models.
+To operate this transformation we had to first define a variation of \qrp\ defined on single coils
+instead of the whole quadrupole. This variation, which we will call \qrp-$i$, is capable of predicting,
+given the harmonic decomposition of magnetic field, whether a certain coil quenched $1$ or not $0$.
+
+The $4$ bit label associated to each sample for \qlp, can be decomposed into the $4$ different bits,
+stating whether one of the $4$ coils has quenched or not. Being able to predict this vector means
+solving \qrp-$i$ for $i \in \{0, 1, 2, 3\}$.
+
+We solved a variation of \qrp\ and not \emph{the actual} \qrp, since the function we found with
+\qrp, links the harmonic decomposition of magnetic field to quench events in a quadrupole. \qrp-$i$
+uses the same data to pose a different question, it might sound like a very subtle change, but it's
+an important one. So much so that, if we tried to reuse the best models we found for \qrp, to solve
+\qrp-$i$ (for any $i \in \{0, 1, 2, 3\}$), we wouldn't necessarily get the expected performance metrics.
+
+In the following sections we will retrace our steps in \Cref{chp:qrp} and discuss the obtained results for the various models.
 
 \subsection{Decision trees}
-As we said previously, decision trees utilized in the multiclass-classification environment provided
-performance that left a lot to be desired, to counteract this we chose to reinterpret \qlp\ as a
-problem in which we need to understand whether each coil has quenched, separately (therefore
-solving \qrp\ $4$ different times). To keep the discussion of the performance concise we will be
-discussing the structure of the best models and concentrate on the performance of the aggregate.
-
-To evaluate the performance of the aggregate model, containing one classifier per coil, we defined a
-metric named 'Hamming score' ($\hs$ in the following), which simply computes how different are the
-prediction and the expected outcome.
+To keep the discussion concise, we will be describing the structure of the best models and
+concentrate on the performance of the aggregate. \Cref{eq:hamming} shows the technique we used to
+compute the performance for the aggregate model, which contains one classifier per coil, we
+denominated the metric 'Hamming score' ($\hs$ in the following), and it computes the Hamming distance between the expected and the predicted vectors, and then normalizes it.
+\begin{equation}
+	\label{eq:hamming}
+	\hs = 1 - \frac{d_h(\hat{y}, y)}{4}
+\end{equation}
 
 \Cref{fig:bdts-qlp} contains the performance metrics obtained in the outer \cv\ for the best single
 tree trained on each coil. The metrics are quite close to each other, with the only clear outlier
 being the model trained on coil $3$.
 
 Instead of including a plot of the various trees we condensed the most important information
-in \Cref{tbl:tree-description}, all the trees described have a depth of maximum $5$ and the number
-of internal nodes and leaves is always very acceptable, while the trees built on \an\ remain on the
-smaller side, the trees built for coil $1$ and $3$ are larger (with the one built on \cnmod\ being
-the largest at $15$ total nodes), despite their structure being more complex, these trees struggle
-compared to the ones trained on sub-views of \an.
-
+in \Cref{tbl:tree-description}, all the trees described have a depth of maximum $5$, the number
+of internal nodes and leaves is always acceptable. While the trees built on \an\ remain on the
+smaller side, the trees used for coil $1$ and $3$ are larger (with the one built on \cnmod\ being
+the largest at $15$ total nodes).
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/best_dts_qlp.png}
@@ -407,36 +407,63 @@ compared to the ones trained on sub-views of \an.
 \end{table}
 
 In \Cref{fig:dt-qlp-hs}, we plotted the performance of the aggregate model, which are obtained as we
-did when testing \tas\ for \qrp: A run of $5$-fold \cv\ and we computed the number of errors done by
-the ensemble on the $4$ bit array. On average the classifiers makes $2$ errors or less, since the
+did when testing \tas\ for \qrp: A run of $5$-fold \cv, for each sample we computed $\hs$ and then
+plotted the point. On average the ensemble makes $2$ errors or less, on each sample, since the
 minimum accuracy is $0.5$, averaging the performance of all the folds we get a final Hamming score
 which is $0.95$ and with a standard deviation of $0.024$. Testing the performance of the aggregate
 on the final blind-test, if we average the Hamming score on the $29$ samples, we get higher
-performance on average $0.966$ and a higher standard deviation $0.086$ (this difference is probably
-due to the lower amount of data we are averaging on), the trained aggregate makes $4$ single errors
-on the $116$ total labels that it needs to predict.
-
-Our supposition at the moment is that finding a better model for coil $3$ would make the performance of
-the ensemble better because, while we have been saying that the model is an aggregate of trees, no
-aggregation is happening (like in the case of \tas) apart from inserting the predicted bits in a
-prediction array, therefore the sub-models are not helping each other and 'covering for each other'.
-
+performance on average $0.966$ and a standard deviation $0.086$ of (this difference is probably
+due to the lower amount of data we are averaging on), the trained ensemble makes $4$ single errors
+on the $116$ total labels ($4$ binary labels for $29$ samples) that it needs to predict.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/best_dts_hs.png}
 	\caption{The Hamming score computed on every fold (for the $50$ samples therein contained), the lower reaching is the line the lower is going to be the accuracy.} \label{fig:dt-qlp-hs}
 \end{figure}
 
+In \Cref{tbl:dt-errors} calculated the number of errors done by every model on all the testing folds
+to compare it better to alternatives. It's very interesting that the highest amount of errors came
+from the model built on coil $1$, which technically was the one that provided the highest possible
+accuracy.
+\begin{table}[!ht]
+	\caption{Each column contains the errors done by the model built on the specific coil for
+	the specific testing fold, each fold contains $50$ samples.}\label{tbl:dt-errors}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{ccccc}
+		\toprule
+		\textbf{}                     & \textbf{Coil 0}    & \textbf{Coil 1} & \textbf{Coil 2} & \textbf{Coil 3}
+		\\
+		\midrule
+		\textsc{Fold 0}         & $2$           & $4$           & $1$            & $3$            \\
+		\textsc{Fold 1}         & $1$		& $2$		& $1$            & $2$		  \\
+		\textsc{Fold 2}		& $2$           & $3$		& $0$            & $2$            \\
+		\textsc{Fold 3}         & $9$           & $5$ 		& $1$            & $2$            \\
+		\textsc{Fold 4}         & $8$		& $0$           & $1$            & $3$            \\
+		\midrule
+		\textsc{total errors}	& $22$		& $14$		& $4$		& $12$
+		\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Our supposition at the moment is that finding a better model for coil $3$ would make the performance of
+the ensemble better because, while we have been saying that the model is an aggregate of trees, we
+only inserted the bits in a prediction array. This entails that the stronger model is not making up
+for the errors made by the weaker classifiers (which is actually one of the reasons why \rfs\ are
+more powerful than single trees, cfr. \Cref{chp:ml}).
+
 \subsection{Random forests}
 Similarly to what we just did for \dts\ we also evaluated the performance of a model containing one
 single forest per coil, we expected higher performance compared to the ones just obtained on \dts,
 at the expense of a lower explainability.
 
-\Cref{fig:brfs-qlp} shows the performance for the best rfs built on a mix of different attributes
+\Cref{fig:brfs-qlp} shows the performance for the best \rfs\ built on a mix of different attributes
 (each taken in its entirety), as we can see the performance metrics are better, but we are not far
-off from the numbers obtained in the case of \dts\ (see \Cref{fig:bdts-qlp}), also, our weakest
-learner, the one built for coil $3$ is not much worse than the proposed random forest, while being
-much simpler than the alternative.
+off from the numbers obtained in the case of \dts\ (cfr. \Cref{fig:bdts-qlp}). The weakest
+learner, in this case as well, was the one built on coil $3$.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/best_rfs_qlp.png}
@@ -444,22 +471,41 @@ much simpler than the alternative.
 		since all of the models have been plotted without indicating the harmonic content it means
 		that they are using full attributes.}\label{fig:brfs-qlp}
 \end{figure}
-The \rfs\ in figure contain respectively $5, 10, 10$ and $10$ trees. As we have already said
-previously, while trees have a high level of explainablilty, trying to interpret a structure
-containing $10$ of them is certaintly a complex task, and I would consider it explainable only on
-paper. This is why, for all intents and pourposes, while we provide the results for the Hamming
-score in the following, we decided to not follow this lead too much, since it would mean having an
-excessive amount of models to consider at the same time.
 
-While the trees for the first three forests are, overall, quite simple (not too deep), contained in
-the number of leaves and nodes, the last forest contains complex trees with many layers ($4$ on
-average), many internal nodes and leaves. Seeing the complexity of this last tree it's evident that
-the forest approach would not be feasible even in an hybrid approach based on both three trees for
-the first three coils and an \rf\ for the last one.
+\Cref{tbl:forest-description} contains basic information regarding the $4$ forests we just
+identified as the best ones. The depth, Number of internal nodes and number of leaves has been
+averaged on all the trees to give an idea of what the average tree would look like. In the table was
+also included the $5$ most important harmonics for each forest, it's interesting that in the case of
+coil $0$, despite it using $3$ different datasets, predilects the use of \an\ harmonics to perform
+the splits. Clearly the easiest configuration is the one built for coil $0$, the ones for coils $1, 2$ and $3$ are more complex and definitely reach a point where, in our opinion, the model is explainable only on paper.
+\begin{table}[!ht]
+	\caption{Description of the best \rf\ for every coil.}\label{tbl:forest-description}
 
-Since \rfs\ are more complicated than we would like we avoided the calculation of the Hamming
-score, also because the performance are good but not good enough to make us consider their use when
-compared to the simpler \dts.
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{}                     & \textbf{Coil 0}    & \textbf{Coil 1} & \textbf{Coil 2} & \textbf{Coil 3}
+		\\
+		\midrule
+		\textsc{attribute}            & \an, \cnmod, \phin & \bn, \phin
+		                              & \an                & \phin                                               \\
+			\multirow{2}{*}{\textsc{harmonics}} & \an[3], \an[10], \an[11]   & \phin[6],
+			\bn[13], \bn[3], & \an[3], \an[7], \an[13], & \phin[6], \phin[11], \phin[13] \\
+							    & \an[7], \an[9]
+							    & \bn[9], \bn[5] & \an[10], \an[12]
+							    &\phin[1], \phin[10]                                                            \\
+		\textsc{N estimators}         & $5$                & $10$            & $10$            & $10$            \\
+		\textsc{avg. depth}            & $2.6$              & $3.7$
+		                              & $3  $              & $4  $                                               \\
+		\textsc{avg. N int. nodes} & $2.6$              & $4.4$
+		                              & $3.5$              & $7.9$                                               \\
+		\textsc{avg. N leaves}         & $4.5$              & $5.4$
+		                              & $4.9$              & $8.9$                                               \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \subsubsection{Support Vector Classifiers}
 If we analyze the benchmark model, and we train it without constraints (one or more sub-views for
@@ -488,6 +534,35 @@ There are a couple of very interesting takeaways:
 	\item Interestingly, while \cnmod\ didn't perform well enough in our tests on trees for coil
 	      $2$, in the case of \svc\ the model was picked over \an.
 \end{itemize}
+
+In \Cref{fig:svc-hs} we plotted $\hs$ for the $5$ cross validation folds, as we did for \dts, in
+\Cref{tbl:svc-err} we indicated the error done by each model on the $5$ folds and the total for each
+model. Clearly, while the \svc\ trained on \an performs way better than the others, the models
+mounted on the remaining coils have more modest performance. The average $\hs$ score for the \svc\
+is $0.969$ and its standard deviation is $0.015$.
+\begin{table}[!ht]
+	\caption{Description of the best \rf\ for every coil.}\label{tbl:svc-err}
+
+	\bigskip
+	\setlength{\tabcolsep}{6pt}
+	\centering
+	\begin{tabular}{ccccc}
+		\toprule
+		\textbf{}                     & \textbf{Coil 0}    & \textbf{Coil 1} & \textbf{Coil 2} & \textbf{Coil 3}
+		\\
+		\midrule
+		\textsc{Fold 0}         & $0$           & $4$           & $2$            & $5$            \\
+		\textsc{Fold 1}         & $0$		& $2$		& $1$            & $0$		  \\
+		\textsc{Fold 2}		& $1$           & $3$		& $1$            & $0$            \\
+		\textsc{Fold 3}         & $0$           & $5$ 		& $2$            & $1$            \\
+		\textsc{Fold 4}         & $0$		& $0$           & $1$            & $3$            \\
+		\midrule
+		\textsc{total errors}	& $1$		& $14$		& $7$		& $9$
+		\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
 Evidently, the ceiling of performance is still very high, and we can still find ways to get closer
 to the performance of our benchmark model.
 
