@@ -410,7 +410,7 @@ In \Cref{fig:dt-qlp-hs}, we plotted the performance of the aggregate model, whic
 did when testing \tas\ for \qrp: A run of $5$-fold \cv, for each sample we computed $\hs$ and then
 plotted the point. On average the ensemble makes $2$ errors or less, on each sample, since the
 minimum accuracy is $0.5$, averaging the performance of all the folds we get a final Hamming score
-which is $0.95$ and with a standard deviation of $0.024$. Testing the performance of the aggregate
+which is $0.967$ and with a standard deviation of $0.051$. Testing the performance of the aggregate
 on the final blind-test, if we average the Hamming score on the $29$ samples, we get higher
 performance on average $0.966$ and a standard deviation $0.086$ of (this difference is probably
 due to the lower amount of data we are averaging on), the trained ensemble makes $4$ single errors
@@ -422,9 +422,11 @@ on the $116$ total labels ($4$ binary labels for $29$ samples) that it needs to 
 \end{figure}
 
 In \Cref{tbl:dt-errors} calculated the number of errors done by every model on all the testing folds
-to compare it better to alternatives. It's very interesting that the highest amount of errors came
-from the model built on coil $1$, which technically was the one that provided the highest possible
-accuracy.
+to compare it better to alternatives. Our supposition at the moment is that finding a better model for coil $3$ would make the performance of
+the ensemble better because, while we have been saying that the model is an aggregate of trees, we
+only inserted the bits in a prediction array. This entails that the stronger model is not making up
+for the errors made by the weaker classifiers (which is actually one of the reasons why \rfs\ are
+more powerful than single trees, cfr. \Cref{chp:ml}).
 \begin{table}[!ht]
 	\caption{Each column contains the errors done by the model built on the specific coil for
 	the specific testing fold, each fold contains $50$ samples.}\label{tbl:dt-errors}
@@ -437,23 +439,17 @@ accuracy.
 		\textbf{}                     & \textbf{Coil 0}    & \textbf{Coil 1} & \textbf{Coil 2} & \textbf{Coil 3}
 		\\
 		\midrule
-		\textsc{Fold 0}         & $2$           & $4$           & $1$            & $3$            \\
-		\textsc{Fold 1}         & $1$		& $2$		& $1$            & $2$		  \\
-		\textsc{Fold 2}		& $2$           & $3$		& $0$            & $2$            \\
-		\textsc{Fold 3}         & $9$           & $5$ 		& $1$            & $2$            \\
-		\textsc{Fold 4}         & $8$		& $0$           & $1$            & $3$            \\
+		\textsc{Fold 0}         & $2$           & $0$           & $0$            & $5$            \\
+		\textsc{Fold 1}         & $2$		& $3$		& $0$            & $3$		  \\
+		\textsc{Fold 2}		& $0$           & $0$		& $1$            & $4$            \\
+		\textsc{Fold 3}         & $2$           & $2$ 		& $2$            & $1$            \\
+		\textsc{Fold 4}         & $0$		& $3$           & $0$            & $3$            \\
 		\midrule
-		\textsc{total errors}	& $22$		& $14$		& $4$		& $12$
+		\textsc{total errors}	& $6$		& $8$		& $3$		& $16$
 		\\
 		\bottomrule
 	\end{tabular}
 \end{table}
-
-Our supposition at the moment is that finding a better model for coil $3$ would make the performance of
-the ensemble better because, while we have been saying that the model is an aggregate of trees, we
-only inserted the bits in a prediction array. This entails that the stronger model is not making up
-for the errors made by the weaker classifiers (which is actually one of the reasons why \rfs\ are
-more powerful than single trees, cfr. \Cref{chp:ml}).
 
 \subsection{Random forests}
 Similarly to what we just did for \dts\ we also evaluated the performance of a model containing one
@@ -535,11 +531,18 @@ There are a couple of very interesting takeaways:
 	      $2$, in the case of \svc\ the model was picked over \an.
 \end{itemize}
 
-In \Cref{fig:svc-hs} we plotted $\hs$ for the $5$ cross validation folds, as we did for \dts, in
+In \Cref{fig:svc-qlp-hs} we plotted $\hs$ for the $5$ cross validation folds, as we did for \dts, in
 \Cref{tbl:svc-err} we indicated the error done by each model on the $5$ folds and the total for each
 model. Clearly, while the \svc\ trained on \an performs way better than the others, the models
 mounted on the remaining coils have more modest performance. The average $\hs$ score for the \svc\
-is $0.968$ and its standard deviation is $0.013$.
+is $0.994$ and its standard deviation is $0.006$.
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{img/svc_qlp_hs.png}
+	\caption{The Hamming score computed on every fold (for the $50$ samples therein contained),
+	fir \svcs. The lower reaching is the line the lower is going to be the accuracy.}
+	\label{fig:svc-qlp-hs}
+\end{figure}
 \begin{table}[!ht]
 	\caption{Description of the best \rf\ for every coil.}\label{tbl:svc-err}
 
@@ -551,23 +554,21 @@ is $0.968$ and its standard deviation is $0.013$.
 		\textbf{}                     & \textbf{Coil 0}    & \textbf{Coil 1} & \textbf{Coil 2} & \textbf{Coil 3}
 		\\
 		\midrule
-		\textsc{Fold 0}         & $0$           & $2$           & $2$            & $2$            \\
-		\textsc{Fold 1}         & $0$		& $2$		& $1$            & $1$		  \\
-		\textsc{Fold 2}		& $1$           & $5$		& $1$            & $4$            \\
-		\textsc{Fold 3}         & $0$           & $2$ 		& $2$            & $3$            \\
-		\textsc{Fold 4}         & $0$		& $1$           & $1$            & $2$            \\
+		\textsc{Fold 0}         & $0$           & $0$           & $0$            & $0$            \\
+		\textsc{Fold 1}         & $0$		& $0$		& $2$            & $0$		  \\
+		\textsc{Fold 2}		& $0$           & $0$		& $0$            & $1$            \\
+		\textsc{Fold 3}         & $1$           & $1$ 		& $1$            & $0$            \\
+		\textsc{Fold 4}         & $0$		& $0$           & $0$            & $0$            \\
 		\midrule
-		\textsc{total errors}	& $1$		& $12$		& $7$		& $12$
+		\textsc{total errors}	& $1$		& $1$		& $3$		& $1$
 		\\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-On the blind test set the \svc\ did $4$ errors, and had a final $\hs$ of average $0.966$ and
-standard deviation $0.086$. The performance for \svcs\ and \dts\ are not that far off, meaning that
-we might be hitting a performance ceiling.
-
-
+Despite the aggregate of \svcs\ performs much better than the aggregate of \dts, we see that both
+models make $4$ mistakes on the blind-test set \db. This leads us to say that we found a solid
+solution in \dts that could be further improved by using more advanced techniques.
 
 
 
