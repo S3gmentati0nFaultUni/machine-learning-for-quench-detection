@@ -8,10 +8,6 @@ This chapter is dedicated to the solution of \qrp, which we introduced in \Cref{
 	\item Select the 'best' possible model.
 \end{itemize}
 
-\section{Problem description}
-As was introduced in the previous chapter our dataset consists of four tables of $279$ samples
-each, divided between 'quench' ($1$) and 'non-quench' ($0$) events, the distribution is not exactly balanced: $192$ quench events and $87$ non-quench events; since the imbalance is not extreme we didn't take explicit action against it.
-
 \section{Data preprocessing}
 \label{sec:qrp-preprocessing}
 Before working on the actual models we analyzed:
@@ -224,17 +220,16 @@ introduced in \Cref{chp:ml}.
 \subsection{Decision trees}
 \label{sec:qrp-dt}
 As we already alluded to in previous sections we wanted to find a highly explainable model with good
-performance that could be used to solve \qrp, that is exactly why the development process started
-with \dts.
+performance that could be used to solve \qrp, we deemed \dts\ the best possible starting point.
 
-With our experiments we tried different approaches and different datasets, after a careful analysis
-and many experiments we found that the best \dts\ were based on \an, the best classifier, trained
-\an[2] and \an[12], makes only $4$ errors total, $3$ false negatives (quench events that were
-predicted non-quenches) and $1$ false positive (non-quench predicted as quench event).
-
-The performance of the model, averaged over the outer \cv\ folds, is reported in \Cref{tbl:an-2-12-perf},
-as we can see, the numbers are already very solid, showing high average fold performance and low
-standard deviation.
+With our experiments we tried different approaches and different datasets. After a careful analysis
+we found that the best \dts\ were based on \an; the best classifier, trained \an[2] and \an[12],
+makes only $4$ errors total: $3$ false negatives (quench events that were predicted non-quenches)
+and $1$ false positive (non-quench predicted as quench event). The performance of the model,
+averaged over the outer \cv\ folds, is reported in \Cref{tbl:an-2-12-perf}, as we can see, the
+numbers are already very solid; showing high averages and low standard deviations. This implies that
+the performance difference between the worst and the best folds is very marginal, thus the models on
+the various folds perform quite similarly.
 \begin{table}[!ht]
 	\caption{Average and standard deviation of the performance for the best \dt\ over the outer \cv\
 		folds.}\label{tbl:an-2-12-perf}
@@ -253,20 +248,17 @@ standard deviation.
 		\bottomrule
 	\end{tabular}
 \end{table}
-The table is telling us that the performance are very good on average, since the standard deviation
-is also small, therefore the metrics computed on the best and the worst folds are not widely
-different, which hints at a model that will perform good independently of the data used on it.
 
 \Cref{fig:dt-an-2-12-pt} shows the structure of the decision tree, built on \an[2] and \an[12], this
 structure is extremely simple, contained in depth, using mostly \an[2] to perform the splits, and
-having only one node where the impurity is not zero.
+having only one node where the impurity is not zero (light-orange in \Cref{fig:dt-an-2-12-pt}).
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/An_2_12_pt_dt.png}
 	\caption{The structure of the tree built on \an[2] and \an[12]} \label{fig:dt-an-2-12-pt}
 \end{figure}
-Many \dts\ were trained on different sub-views of the various attributes, but all of them fell short
-of the classifier just described, in \Cref{fig:best-dts} we plotted the best \dt\ for every
+Many \dts\ were trained on different sub-views of the attributes, but all of them fell short
+of the classifier just described. In \Cref{fig:best-dts} we plotted the best \dt\ for every
 attribute against each other, despite \cnmod\ having similar accuracy to the classifier just
 described, it cannot recognize non-quench events as effectively (the Irec score is lower).
 \begin{figure}[!ht]
@@ -274,8 +266,7 @@ described, it cannot recognize non-quench events as effectively (the Irec score 
 	\includegraphics[width=\linewidth]{img/best_dts.png}
 	\caption{Performance comparison of the best decision tree for each attribute. The
 		performance plotted here are average and standard deviation of the metrics calculated on the
-		outer \cv\ of the \ncv\ hyperparameter optimization and model testing procedure described in
-		\Cref{chp:problem}.} \label{fig:best-dts}
+		outer loop of the \ncv.} \label{fig:best-dts}
 \end{figure}
 
 Finally, if we use our blind-test set \db, we can see that the best model, trained on a sub-view of
@@ -301,9 +292,8 @@ false negative. The final performance metrics are listed in \Cref{tbl:blind-test
 \label{sec:qrp-rf}
 As we said in \Cref{chp:ml}, random forests (\rfs) use an ensemble of trees trained by bootstrap
 sampling and perform splits on a random subset of features. As long as the trees are not too
-complex and the ensemble is not too big, \rfs\ are still quite easy to interpret, while
-performing usually at least as good, if not better than the worst tree in the ensemble. Since a
-single \rf\ contains more \dts\, they can extrapolate information from complicated datasets containing different sub-views (e.g., a dataset containing a sub-view for each of \an, \bn and \cnmod).
+complex, and the ensemble is not too big, \rfs\ are still quite easy to interpret. We expect
+performance to be at least as good, if not better, than the worst tree in the ensemble (cfr. \cref{chp:ml}). Since a single \rf\ contains more \dts\, they can extrapolate information from complicated datasets containing different sub-views (e.g., a dataset containing a sub-view for each of \an, \bn and \cnmod).
 
 In most of our tests we considered \rfs\ trained on datasets built from one or more attributes, each
 taken in its entirety, we also did some tests on forests built on datasets containing sub-views for
@@ -313,40 +303,36 @@ harmonics within the dataset.
 
 Feature importance is a measure that we can use to understand which features are more prominent in
 the \rf\ structure, this can give us insights on how to design better the sub-views used for model
-training. We analyzed the feature importance of \rfs\ built on single attributes (e.g., an \rf\
+training. We analyzed the feature importance of \rfs\ built on single attributes (e.g., a \rf\
 trained only on \an) and then of a \rf\ constructed on the whole dataset, we concluded that:
 \begin{itemize}
 	\item The forest built on \an, performs most of the splits ($\approx 80\%$) using \an[2].
 	\item The forest built on \bn, performs most of the splits using a mix of different
-	      harmonics, \bn[2] is not among the first $6$ for importance (we could also evince
-	      this from the fact that \bn[2] is not correlated with any other harmonic). \bn[6],
-	      \bn[9], \bn[3], \bn[14], \bn[7] and \bn[5] are the ones used the most to perform splits inside the random forest.
-	\item The forest built on \cnmod, uses \cnmod[2] to perform over $50\%$ of the splits, the
-	      rest are handled mainly \cnmod[5], \cnmod[9] and \cnmod[13].
+	      harmonics. \bn[6], \bn[9], \bn[3], \bn[14], \bn[7] and \bn[5] are the ones used the most to perform splits inside the random forest.
+	\item The forest built on \cnmod, uses \cnmod[2] to perform over $50\%$ of the splits, the rest are handled mainly \cnmod[5], \cnmod[9] and \cnmod[13].
 	\item The forest built on \phin, uses many different harmonics to perform the splits (mainly
 	      \phin[10], \phin[12] and \phin[6]).
 	\item If we train a forest on the whole dataset, we can see that $\approx90\%$ of the splits
-	      were computed by using \cnmod[2] and \cnmod[3], and \an[12], \an[2] and \an[14].
-	      This is very interesting because it corroborates the fact that \cnmod is the more
-	      important attribute for \qrp.
+	      were computed by using \cnmod[2], \cnmod[3], \an[12], \an[2] and \an[14]. This is very
+	      interesting because it corroborates the hypothesis that \cnmod\ and \an\ are
+	      important attributes for \qrp.
 \end{itemize}
 
 In \Cref{fig:best-rfs} we plotted the metrics for the $4$ best performing random forests,
-independently of the dataset they were trained on, the best model achieved accuracy of $\approx 98.8\%$, while the other models remain above $98\%$.
+independently of the dataset they were trained on, the best model achieved accuracy of
+$\approx 98.8\%$, while the others average around $98\%$.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/best_rfs.png}
-	\caption{Performance for the $4$ highest performing forests, independently from which
+	\caption{Performance for the $4$ highest performing forests, independently of which
 		dataset they were trained on, the plotted measurements are the average for each metric and
-		the standard deviation, each computed on the outer \cv\ of the \ncv\ procedure described in
-		\Cref{chp:problem}.} \label{fig:best-rfs}
+		the standard deviation, each computed on the outer loop of \ncv.} \label{fig:best-rfs}
 \end{figure}
-The performance for the best \rf\ \Cref{tbl:rf-cnmod-phi-perf} are definitely solid, and with some more work we could probably achieve better
-results, since the models considered above are trained on datasets obtained by grouping
-different sub-views\footnote{Which is very different from grouping trees trained on different
-	sub-views.}, regardless of the correlation among harmonics of different attributes. We
+In \Cref{tbl:rf-cnmod-phi-perf} we reported the performance for the best \rf. While good, we could probably achieve better
+results, since the models we tested were trained on datasets containing different sub-views\footnote{Which is very different from grouping trees trained on different
+	sub-views.}; regardless of the correlation among harmonics belonging to different attributes. We
 decided not to explore this solution more since, as we will see briefly, \rfs\ can be more
-complicated to interpret than a model we devised, which will be introduced in a later section.
+complicated to interpret than a model we devised, which will be introduced in \Cref{sec:qrp-ta}.
 \begin{table}[!ht]
 	\caption{Average and standard deviation for each metric computed on the best \rf\ in the outer \cv\ folds.}\label{tbl:rf-cnmod-phi-perf}
 
@@ -366,7 +352,7 @@ complicated to interpret than a model we devised, which will be introduced in a 
 \end{table}
 %{'accuracy-mean': np.float64(0.9879999999999999), 'accuracy-std': np.float64(0.009797958971132722), 'precision-mean': np.float64(0.9887301587301588), 'precision-std': np.float64(0.01380496184454534), 'recall-mean': np.float64(0.9942857142857143), 'recall-std': np.float64(0.011428571428571432), 'inv-recall-mean': np.float64(0.9741666666666667), 'inv-recall-std': np.float64(0.03166666666666666), 'f1-mean': np.float64(0.991385997142274), 'f1-std': np.float64(0.0070348834762717265), 'roc_auc-mean': np.float64(1.0), 'roc_auc-std': np.float64(0.0)}
 
-The best \rf\ we just found contains $5$ trees, each has a maximum depth of $4$ and the number of
+The best \rf\ contains $5$ trees, each has a maximum depth of $4$ and the number of
 internal nodes and leaves is always quite limited (on average the trees inside the forest contain
 $4$ internal nodes). The most important harmonics are \cnmod[2], \cnmod[5], \phin[6]\ and \phin[10].
 If we test the model on the blind-test set, \db, we see that the classifier only makes one classification error among the $29$ samples, specifically a false positive.
@@ -386,46 +372,41 @@ If we test the model on the blind-test set, \db, we see that the classifier only
 	\end{tabular}
 \end{table}
 
-Before exploring the performance of the \rf\ alternative we will have a small digression dedicated
-to the benchmarking model, \svcs.
-
 \subsection{\svc}
-A binary Support Vector Classifier (SVC), is a different declination of the \svm\ model, introduced
-in \Cref{chp:ml}, and considers each sample as a vector in Euclidean space, and finds a decision
+A binary Support Vector Classifier (\svc), is a classifier using the \svm\ architecture (cfr.
+\Cref{sec:svm}). \svcs consdier each sample as a vector in Euclidean space, and find a decision
 surface separating the vectors corresponding to two classes. This is achieved by maximizing the
-\emph{margin} we introduced in \Cref{chp:ml}, intended as the minimal distance between the decision surface and the data images through a nonlinear mapping. The related optimization process exploits the \emph{kernel trick} to automatically select this mapping within some prefixed families.
+\emph{margin} we introduced in \Cref{sec:svm}, intended as the minimal distance between the decision
+surface and the data images through a nonlinear mapping.
 
-This model is meant to have very high performance at the expense of its explainability property,
-that is why we chose it as our benchmarking model.
+This model is meant to have very high performance at the expense of explainability, that is why we chose it as our benchmarking model.
 
-To close the chapter dedicated to \qrp\ we will discuss Tree Aggregators (\tas from here on).
+To close the chapter dedicated to \qrp\ we will discuss Tree Aggregators (\tas).
 
 \subsection{Tree Aggregators}
 \label{sec:qrp-ta}
 While the best \rf\ described in \Cref{sec:qrp-rf} has a relatively simple structure, we can still do better.
 
 Since many of the \dts\ generated in previous phases of testing have all been serialized, and we
-know how well they perform from the analysis of the performance obtained in the outer \cv\
-folds, we can create an ensemble of the best tree for every attribute, and then we can aggregate the
-performance by doing majority voting.
+know how well they perform based on the performance readings obtained in the outer loop of \ncv; we
+can create an ensemble of the best tree for every attribute, and then aggregate the performance by majority voting.
 
 To test the performance of such models, which we called Tree Aggregators (\tas), to differenciate them from
-\rfs, we first aggregated the best decision tree for every attribute, then we retrained the
-single classifiers on the reduced dataset using a $5$-fold \cv, and finally we aggregate all the predictions via
-majority voting. To avoid defining a procedure to break ties, in the following, we will be
-presenting the performance obtained by training \tas\ on triplets (e.g., \an, \bn, \cnmod).
+\rfs, we first aggregated the best decision tree for every attribute; then we retrained the
+single classifiers on \dr\ using a $5$-fold \cv; and finally we aggregate all the predictions via
+majority voting. Since we didn't define a procedure break ties, \tas\ were tested on triplets of
+attributes (e.g., \an, \bn, \cnmod).
 
 We remark that the retraining procedure was necessary since \dts\ were stored after a full retrain on
-the reduced dataset (the $250$ samples at our disposal). This choice forced us to repeat a
-training procedure whenever we wanted to test the performance of models in different configurations,
-since the only non-used data available to us were the ones stored in the safe, which was not used
-until the last possible moment to avoid biased model choices.
+\dr\ (the $250$ samples at our disposal). This choice forced us to repeat a
+training procedure whenever we wanted to test the performance of models in different configurations.
+Since the only unused data available to us were the $29$ samples stored in \db, meant only for a
+final performance estimate.
 
 We constructed \tas\ by aggregating three sub-views of the original dataset, and we benchmarked it
 against \rfs\ trained on the best performing sub-view for each triplet and \svcs trained on
 datasets simply merging the attributes in the triplet. As we can see in \Cref{fig:triplets-performance}, \tas\ usually perform
-closer to \svcs\ than \rfs, with the exception of the RAUC score, which predilects \rfs\,
-performance for the best \ta\ among the $4$ benchmarked in \Cref{fig:triplets-performance} are
+closer to \svcs\ than \rfs, with the only exception of the ROC-AUC score. Performance for the best \ta\ among the $4$ benchmarked in \Cref{fig:triplets-performance} are
 indicated in \Cref{tbl:an-bn-cnmod-ta-perf}.
 \begin{figure}[!h]
 	\centering
@@ -473,16 +454,17 @@ indicated in \Cref{tbl:an-bn-cnmod-ta-perf}.
 %inv-recall -- avg: 1.0000   std: 0.0000
 %f1 -- avg: 0.9971   std: 0.0058
 %roc_auc -- avg: 0.9971   std: 0.0057
+The best aggregator was trained on \an, \bn\ and \cnmod, the model contains $3$ trees: one built
+on a sub-view of \an, is shown in \Cref{fig:dt-an-2-12-pt}; the other two, one built on \bn, and one
+built on \cnmod, are shown in \Cref{fig:part-of-bta}. Compared to the trees we described at the end
+of the end of \Cref{sec:qrp-rf} they are a bit more complex: having depth between $4$ and $5$, which
+is still very reasonable, while also having a larger volume of both internal nodes and leaves.
 
-We tested the performance of the \ta\ model also using a different sub-view for \cnmod, which performed
-better as a tree, but it yielded worse performance when put in the ensemble. For further
-testing, we picked the best \ta\ (the one built on \an, \bn\ and \cnmod) and we compared its
-performance against the best \svc\ and the best \rf.\Cref{fig:ta-rf-svc-comparison} compares the
-performance of the models, the performance of \tas\ are closer to \svc\ than they are to \rf, the only case in which \rf\ is better than \ta\ is the ROC-AUC score.
-
-Since both \ta\ and \rf\ predictions are aggregated via majority voting we could explain this odd
-behavior by highlighting that the number of trees contained in the \rf\ is larger than the number of
-trees contained in the \ta\ therefore decisions could be slightly more biased: in the first case we need
+\Cref{fig:ta-rf-svc-comparison} compares the performance of the best: \ta\ (\an, \bn and \cnmod\ in
+\Cref{fig:triplets-performance}), \rf\ and \svc. Once more, \ta\ performance are generally better
+than \rf\ performance, with the exception of the ROC-AUC metric. Since both \ta\ and \rf\
+predictions are aggregated via majority voting, we could explain this odd
+behavior by highlighting that the forest contains more trees than the aggregator. Decisions could be slightly more biased in the case of \ta: in the first case we need
 three estimators to obtain majority, while in the latter we only need two.
 \begin{figure}[!ht]
 	\centering
@@ -491,12 +473,6 @@ three estimators to obtain majority, while in the latter we only need two.
 		each of them trained on the sub-view of the original datasets the yields the best possible
 		performance} \label{fig:ta-rf-svc-comparison}
 \end{figure}
-
-The best aggregator was trained on \an, \bn\ and \cnmod, the model contains $3$ trees: The one built
-on a sub-view of \an\ is shown in \Cref{fig:dt-an-2-12-pt}, the other two, one built on \bn, and one
-built on \cnmod, are shown in \Cref{fig:part-of-bta}. Compared to the trees we described at the end
-of the end of \Cref{sec:qrp-rf} they are a bit more complex: having depth between $4$ and $5$, which
-is still very reasonable, while also having a larger volume of both internal nodes and leaves.
 
 \begin{figure}[!ht]
 	\centering
@@ -512,7 +488,7 @@ is still very reasonable, while also having a larger volume of both internal nod
 		shown in \Cref{fig:dt-an-2-12-pt}} \label{fig:part-of-bta}
 \end{figure}
 
-Finally, we evaluated the best TA on the blind test set \db, obtaining only an incorrect
+Finally, we evaluated the best \ta\ on the blind-test set \db, obtaining only an incorrect
 classification over $29$ examples (precisely, a false positive), corresponding to the metric values
 detailed in Table \Cref{tbl:qrp-ta-test}, essentially confirming our initial estimate.
 
@@ -532,21 +508,17 @@ detailed in Table \Cref{tbl:qrp-ta-test}, essentially confirming our initial est
 	\end{tabular}
 \end{table}
 
-
 \subsection{Final considerations on \qrp}
-In this chapter we have introduced the problem of \qrp\ we showed many different models and we
+In this chapter we have introduced the problem of \qrp: we showed different models and we
 chose the best estimator for each class (\dt, \rf\ and \ta). In each subsection we have
-highlighted the strengths and the characteristics of the classifiers found, and we provided the
-results of a final blind-test. In light of all the experiments that we have done we have good reason
-to believe that the \ta\ is better than the alternatives because of the very high performance and
-ease of interpretability.
+highlighted the strengths, weaknesses and characteristics of the classifiers found, and we provided the
+results of a final blind-test. We have now a good reason to believe that the \ta\ is better than the
+alternatives because of the very high performance and simplicity.
 
-If we had to declare an alternative we would indicate the Decision tree as the second best model
-simply because of the extreme simplicity of the architecture, only a couple of seconds are necessary
-to understand whether a sample is quench or non-quench and it gives an extremely simple description
-of the problem. We chose it over random forests because they involve many different harmonics from
-different attributes making them more powerful but also less understandable than both \tas\ and
-\dts.
+If we had to declare an alternative we would indicate the Decision tree as the best backup due to
+the relatively strong performance compared to the extremely simple architecture (only $7$ nodes and
+$\approx 0.984$ accuracy). To compare, the best \rf\ reaches similar numbers but contains $5$
+different trees.
 
 
 
