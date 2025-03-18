@@ -508,10 +508,8 @@ The excessive complexity of these models lead us to abandon the model early beca
 performance increase over \dts\ wasn't really worth the complexity jump.
 
 \subsubsection{Support Vector Classifiers}
-As a benchmark model we used, once again, \svcs. If we train it without constraints (one or more sub-views for
-different datasets), the results are that we can aim at a very high level of performance if we
-forget about explainability. Performance have been plotted in \Cref{fig:bsvcs-qlp}, the metrics were
-taken from the outer \cv\ loop and the models chosen were the best for each specific coil.
+\svcs\ were our benchmark model for \qlp\ as well. In \Cref{fig:bsvcs-qlp} we plotted the
+performance metrics for the best \svc\ trained on every coil.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\textwidth]{img/best_svcs_qlp.png}
@@ -522,24 +520,22 @@ There are a couple of very interesting takeaways:
 \begin{itemize}
 	\item The best \svc\ trained on coil $0$ is based on attribute \an. This is exactly what we
 	      expected since the very beginning of this chapter.
-	\item The best models for coils $1$ and $3$, were trained on \bn\ and another dataset (\cnmod\ for $1$
-	      and \phin\ for $3$). This is interesting for two reasons:
+	\item The best models for coils $1$ and $3$, were trained on \bn\ and another dataset (\cnmod\ for $1$ and \phin\ for $3$). This is interesting for two reasons:
 	      \begin{inparaenum}[(i)]
-		      \item \bn\ is actually the best attribute for the two coils, as we saw in the analysis
-		      we did in the beginning of the chapter,
-		      \item the \svc\ trained on the sole \bn\ performed worse than the alternatives. This
+	      \item The correlation between \bn\ and the labels of coils $1$ and $3$ is very strong,
+		      (cfr. \Cref{fig:bn-lcorr-qlp}),
+	      \item the \svc\ trained on the sole \bn\ performed worse than the alternatives. This
 		      lead us to believe that, like in the case of \qrp, \bn\ alone doesn't contain
 		      enough information
 	      \end{inparaenum}.
-	\item Interestingly, while \cnmod\ didn't perform well enough in our tests on trees for coil
-	      $2$, in the case of \svc\ the model was picked over \an.
+	\item Interestingly, while \cnmod\ didn't perform well enough in our tests on \dts\ for coil
+	      $2$; the \svc\ trained on it was chosen over alternative trained on \an.
 \end{itemize}
 
-In \Cref{fig:svc-qlp-hs} we plotted $\hs$ for the $5$ cross validation folds, as we did for \dts, in
-\Cref{tbl:svc-err} we indicated the error done by each model on the $5$ folds and the total for each
-model. Clearly, while the \svc\ trained on \an performs way better than the others, the models
-mounted on the remaining coils have more modest performance. The average $\hs$ score for the \svc\
-is $0.994$ and its standard deviation is $0.006$.
+In \Cref{fig:svc-qlp-hs} we plotted $\hs$ for every point in the $5$ cross validation folds, as we
+did for \dts. In \Cref{tbl:svc-err} we indicated the error done by each model on the $5$ folds and
+the total for each model. Clearly, all \svcs\ have very high performance, doing just a handful of
+errors in total. The average $\hs$ score for the \svc\ is $0.994$ and its standard deviation is $0.006$.
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{img/svc_qlp_hs.png}
@@ -570,9 +566,10 @@ is $0.994$ and its standard deviation is $0.006$.
 	\end{tabular}
 \end{table}
 
-Despite the aggregate of \svcs\ performs much better than the aggregate of \dts, we see that both
-models make $4$ mistakes on the blind-test set \db. This leads us to say that we found a solid
-solution in \dts that could be further improved by using more advanced techniques.
+While the $\hs$ obtained in the outer loop of \ncv\ by \svcs\ is very high, the performance doesn't
+scale effectively for the final test on \db. As a matter of fact, the model does a total of $4$
+errors over the $116$ bits that need to be predicted (average over the $29$ samples of $0.966$ and
+standard deviation of 0.086).
 
 
 
