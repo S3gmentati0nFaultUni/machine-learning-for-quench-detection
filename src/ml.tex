@@ -3,47 +3,37 @@
 This chapter is dedicated to the theoretical exploration of some of the most important concepts in
 machine learning alongside the various models that have been used in the project. We will begin with
 a concise explanation of the more basic concepts linked to machine learning, then we will move to a
-theoretical overview of the supervised models used for the project, followed by a brief introduction to
+theoretical overview of the supervised models of our choice, followed by a brief introduction to
 unsupervised machine learning models.
 
 \section{Supervised machine learning}
 \label{sec:sml}
-Due to the popularization of artificial intelligence in recent times, it's very important to establish the field to avoid the risk of
-incurring in misunderstandings. \emph{Machine learning} is a subset of artificial
-intelligence, and is a technique that allows us to solve a problem without the need to actually invent an
-algorithm to solve it (caveat the constraint of having a large enough dataset to work with). There are many different problems that
-either lack an algorithmic solution or have an inefficient one; in such cases, machine learning is
-an alternative worth exploring. The tradeoff of using machine learning instead of 'classic'
-problem-solving techniques is that the solution is built using heuristic methods,
- herefore is not \emph{correct} for the problem~\cite{Rebala2019}.
+Due to the popularization of artificial intelligence in recent times, it's very important to
+establish the field to avoid the risk of incurring in misunderstandings. \emph{Machine learning} is
+a subset of artificial intelligence, and is a technique that allows us to solve a problem without
+the need to actually \emph{invent} an algorithm to solve it (caveat the constraint of having a large
+enough dataset to work with). There are many different problems that either lack an algorithmic
+solution, or have an inefficient one. In such cases, machine learning is an alternative worth
+exploring. The tradeoff of using machine learning instead of 'classic' problem-solving techniques is
+that the solution is built using heuristic methods, therefore is not \emph{correct} for the problem~\cite{Rebala2019}.
 
-\medskip
-
-A supervised machine learning model is a model $\model$ capable of learning a mapping between the
-input space $\ins$ and the output space $\outs$ and then apply this mapping to unseen
+A supervised machine learning model $\model$ is capable of learning a mapping between an
+input space $\ins$ and an output space $\outs$ and then apply this mapping to unseen
 data to predict the output~\cite{Cunningham2008}.
-
-\smallskip
 
 Given a problem $\problem$, a specific instance, $\problem_i$, is characterized by a pair
 $(\vec{x}_i, y_i)$ where $\vec{x}_i \in \ins$ are vectors taken from an input space $\ins$, usually
-highly dimensional, and $y_i \in \outs$ are the expected solutions, which can be scalar or
-vector\footnote{Outcomes will be considered scalars for the rest of this thesis unless explicitly
-	stated}. The single components of every input vector, $\vec{x}_i$, are called
-\emph{features}, and are values (numerical or other) representing a particular aspect of the domain.
+highly dimensional, and $y_i \in \outs$ are the expected solutions, which can be expressed using a scalar or vector\footnote{Outcomes will be considered scalars for the rest of this thesis unless explicitly stated}. The single components of every input vector, $\vec{x}_i$, are called \emph{features}, and are values representing a particular aspect of the domain.
 
-A \emph{dataset} is a set containing $m$ problem instances $\dset$, and
-a supervised machine learning model $\model$, trained on $D$, can be used to predict the outcome,
-$\hat{y}$, of any instance of the problem $\problem_i$. Note that a machine learning model is the result of a
-statistical process, therefore is susceptible to change unless the randomicity is kept under control.
-On a practical level we can make sure that, for reproducibility purposes, the random number
-generators associated to the various libraries are set to a definite value.
-
-\medskip
+A \emph{dataset} is a set containing $n$ problem instances can be described as follows: \[\dset
+\enspace.\] A supervised machine learning model $\model$, trained on $D$, can be used to predict the
+outcome, $\hat{y}$, of any instance of the problem $\problem_i$. Note that a machine learning model
+is the result of a statistical process, therefore is susceptible to change unless randomness is kept
+under control. We will cover this concept in \Cref{chp:problem}
 
 To clarify the concepts just introduced, let us consider the following mock-problem: 'Is it going to rain
 tomorrow?'. The dataset $D$ contains $365$ instances of the problem, one per day, for a year. The
-input vector for every problem is a set of atmospheric measurements (e.g., temperature, atmospheric
+input vector for every instance is a set of atmospheric measurements (e.g., temperature, atmospheric
 pressure, exposure, humidity, \ldots), each measurement a different feature of the dataset. The
 output of every instance $\problem_i$ is a flag answering the question 'did it rain on day $i$?'
 with a $1$, for True, and a $0$, for False.
@@ -51,89 +41,68 @@ with a $1$, for True, and a $0$, for False.
 Due to the high grade of complexity of the problem solved in this thesis, future concepts will be clarified
 using this exact mock-problem or its variations.
 
-\medskip
-
 In general, a machine learning problem can be defined as the process of finding the mapping that
 relates the input space $\ins$ to the output space $\outs$ by abstracting patterns from
 a training set. Conventionally, the output space can be interpreted differently based on
 the problem:
 \begin{itemize}
-	\item $\outs = \{-1, 1\}$, for \emph{binary classification} problems, which are usually
-	      associated with pattern recognition tasks, a very easy example of binary classification is our mock-problem.
+	\item $\outs = \{0, 1\}$\footnote{Binary labels can actually vary based on the context, in
+		most cases $\{0, 1\}$ can work, but in the literature there are also cases in which
+		the output space labels are $\{-1, 1\}$~\cite{ZhouZhi-Hua2021ML}.}, for \emph{binary classification} problems, which are usually associated with pattern recognition tasks, a very easy example of binary classification is our mock-problem. 
 	\item $\outs = \{a_1,\ldots, a_m\}$, for \emph{multi-class classification} problems, in
 	      which an element can be part of one of the classes in a certain set, a classic
-	      example is the character recognition problem, in which a certain character given in input can belong to one of 10 different classes (the numbers from 0 to 9)~\cite{pal2010handwritten}.
+	      example is the character recognition problem, in which a certain character given in
+		input can belong to one of 10 different classes (the digits from 0 to 9)~\cite{pal2010handwritten}.
 	\item $\outs = \mathbb{R}$, for \emph{regression problems}, which are usually associated
 	      with function approximation tasks, an example of regression problem
 	      is: 'Based on the current amount of wins for Oklahoma City Thunder\footnote{An
 		      amazing \textsc{nba} team}, predict the team's win rate at the end of the season'.
 \end{itemize}
 
-Most machine learning models have to go through the same steps, described here below:
+Most machine learning models have to go through the same steps, described here below.
 \begin{itemize}
 	\item \emph{Model selection}: if we consider an instance of a decision tree (introduced in
 	      \Cref{sec:dt}), the model can be described through a set of characteristics (e.g.,
 	      number of nodes, depth, splitting method, \ldots), all of these are known as
 	      \emph{hyperparameters}. An important step of solving a machine learning problem is
-	      doing an exploration, even if not thorough, due to the exponential complexity of the
-	      task, of the hyperparameter space, to find the best possible combination for the
-	      problem.
+	      doing a partial exploration of the hyperparameter space to find the best combination
+		for the problem. The search is only partial due to the exponential complexity of the task.
 	\item \emph{Model training}: during the training procedure, the instance of the model abstracts
 	      patterns from a sample of the dataset, which we will call \emph{training set} $T$.
-	\item \emph{Model testing}: during the testing procedure the model performance is tested on a
-	      part of the dataset, which we will call \emph{test set} $G$ (standing for
-	      \emph{generalization}). This set is used to understand whether the performance found for model
-	      $\model$ is a statistical anomaly (therefore depending on the points
-	      chosen to build $T$) or extends also to unseen data.
+	\item \emph{Model testing}: during the testing procedure the model performance is tested on
+		a part of the dataset, which we will call \emph{test set} or \emph{generalization
+		set} $G$. This set is used to understand whether the performance found for $\model$
+		is a statistical anomaly (therefore depending on the choice of $T$) or extends also to unseen data.
 \end{itemize}
 
-There are many different approaches to splitting a dataset $D$ into a series of separate parts
+There are many different approaches to splitting a dataset $D$ into a series of separate subsets
 for the various tasks involved in the machine learning problem resolution (e.g., model training,
 model testing, model selection, \ldots). In the following I will describe two non-trivial aspects of
-the basic procedure to split a dataset $D$ into a training dataset $T$ and a testing dataset $G$ and a
-more complex splitting procedure will be introduced at a later time.
+the basic procedure to split a dataset $D$ into a training set $T$ and a generalization set $G$; a
+more complex splitting procedure will be introduced in \Cref{sec:cv}.
 
-\medskip
+\smallskip
 
-Making sure that the distribution of training and test datasets, respectively $T$ and $G$ follow the
+Making sure that the distribution of training and test datasets, respectively $T$ and $G$, follow the
 same distribution as the original dataset is the first non-trivial aspect of the splitting
-procedure. To understand why, let's think about a dataset
-$\dset$ in which every $\mathbf{x}_i \in \ins$ is a vector of features describing a patient's
-conditions (e.g., age, sex, body temperature, blood saturation, \ldots) and every $y_i \in \outs$ is
-a string indicating which illness was diagnosed (e.g., flu, pneumonia, \textsc{covid}, ...). Supposing we want to find a
-model $\model$ capable of doing a diagnosis effectively: we need to make sure that the least
-represented illnesses (which are usually the more dangerous ones) are well represented in both $T$
-and $G$. If this splitting process was not done correctly we might end up with a model $\model$ that
-can reliably recognize a common flu but can't correctly identify serious illnesses like pneumonia.
-
-\medskip
+procedure. To understand why, let's think about a dataset $\dset$ in which every $\mathbf{x}_i \in
+\ins$ is a vector of features describing a patient's conditions (e.g., age, sex, body temperature,
+blood saturation, \ldots) and every $y_i \in \outs$ is a string indicating which illness was
+diagnosed (e.g., flu, pneumonia, \textsc{covid}, ...). Suppose we want to find a model $\model$ capable of doing a diagnosis effectively: we need to make sure that the least represented illnesses (which are usually the more dangerous ones) are well represented in both $T$ and $G$. If this splitting process was not done correctly we might end up with a model $\model$ that can reliably recognize a common flu but can't correctly identify serious illnesses like pneumonia.
 
 The second non-trivial aspect of the splitting procedure is that it's always necessary to make sure
-that the splitting operation is carried out independently for each dataset, this means that data that is in the
-training set cannot be in the testing set, and vice versa. If this were not to be true then we would
-have a data leak from one set to the other.
+that the splitting operation is carried out independently for each dataset. Data in the training set
+cannot be in the testing set and vice versa. Having such a situation would mean that there is a data
+leak from $T$ to $G$, leading to more optimistic performance reads, relaying unjustifed confidence in the model performance.
 
 \smallskip
 
-Whenever a data leak is identified from the training set $T$ to the testing set $G$, some points
-that were used to train $\model$ are used once more to test its performance, which leads to a higher
-performance metric, relaying higher and unjustifed confidence in the model performance.
-
-\medskip
-
-To close this section about supervised learning, we will be introduced to two issues specific to
-supervised learning models. Whenever we work in the field of supervised learning it's important to be aware of two classic issues: \emph{overfitting} and \emph{underfitting}.
-
-\smallskip
-
-Given the generic machine learning problem $\problem$ and a dataset $\dset$, the model $\model$ that
-solves $\problem$, is said to be overfitting when the training performance is acceptable, but the
-testing performance is unacceptably bad; this means that the mapping found by $\model$ to link $\ins$
-and $\outs$ is too closely related to the specific data chosen to do the training, therefore
-unable to generalize effectively. In other
-words, $\model$ is overfitting whenever, instead of abstracting some general patterns in the
-data, it actually learns some peculiarities of the specific training dataset $T$~\cite{ZhouZhi-Hua2021ML}
-which are not found later in the testing dataset $G$.
+Data leaks can be a cause of the \emph{overfitting} phenomenon\footnote{
+	Data leakage is not the only cause, a model can overfit for many other reasons, such as: the
+	training set is too small, the model is too complex and picks up noise, the dataset was not
+	cleaned prior to use, \ldots
+	}.
+Given the generic machine learning problem $\problem$ and a dataset $\dset$, the model $\model$ that solves $\problem$, is said to be overfitting when the training performance is acceptable, but the testing performance is unacceptably bad. This means that the mapping found by $\model$ to link $\ins$ and $\outs$ is too closely related to the specific data chosen to do the training, therefore unable to generalize effectively. In other words, $\model$ is overfitting whenever, instead of abstracting some general patterns from the data, it actually learns peculiarities of the specific training dataset $T$~\cite{ZhouZhi-Hua2021ML}, which are not found later in the testing dataset $G$.
 
 \smallskip
 
@@ -145,31 +114,23 @@ utilized.
 
 \medskip
 
-The problem that this thesis aims to solve takes full advantage of supervised models, since the data at our
-disposal has already been analyzed and labelled in previous works~\cite{mariotto2022}\cite{mariotto2022-generic}.
-
-\medskip
-
-In the following we will be discussing, on a theoretical level, the various supervised models deployed
-to solve the problem.
+Since the data at our disposal has already been labelled in previous works~\cite{mariotto2022,
+mariotto2022-generic}, we mostly relied on supervised machine learning models, while also leveraging
+some unsupervised models for specific approaches. In the following we will be discussing, on a theoretical level, the various supervised models deployed to solve the problem.
 
 \section{Decision Trees}
 \label{sec:dt}
 This section is a theoretical introduction to decision trees, the implementation we used for the
 model is the \emph{DecisionTreeClassifier} class contained in scikit-learn.
 
-\medskip
+\smallskip
 
 A decision tree is a machine learning model based on a tree structure, an example of such a
 structure can be seen in \Cref{fig:simple-dt}. Each internal node contains a condition that needs to
 be evaluated on one or more features (e.g.,  the root of \Cref{fig:simple-dt} requires us to check
 whether the humidity feature of the input is $\geq 80\%$), if the result of the evaluation is true
 the computation proceeds with the left child, otherwise the right path will be taken. Once a leaf is
-reached, the class associated to the point is identified. If we consider again \Cref{fig:simple-dt}
-we could say that if the humidity of the input is $\geq 80\%$ and the temperature is $\geq 10\C$ then
-the inputs will be classified as 'rain'.
-
-Any path leading from root to leaf is known as a \emph{decision path}. It's evident that such structures have a very high degree of explainability and that is why usually they are the first model chosen to solve a machine learning problem.
+reached, the class associated to the point is identified as the prediction made by the model. If we consider again \Cref{fig:simple-dt} we could say that if the humidity feature for the input is $\geq 80\%$ and the temperature feature is $\geq 10\C$ then it will be classified as 'rain'. Any path leading from root to leaf is known as a \emph{decision path}. It's evident that such structures have a very high degree of explainability and that is why usually they are the first model chosen to solve a machine learning problem.
 
 \medskip
 
@@ -189,7 +150,7 @@ computation, avoiding overfitting through pre- and post- pruning.
 		% Root node
 		\node {Humidity $\geq 80\%$}
 		% First level
-		child {node {Temperature $\geq 10C$}
+		child {node {Temperature $\geq 10\C$}
 				% Second level
 				child {node {rain}}
 				child {node {no rain}}
@@ -201,9 +162,8 @@ computation, avoiding overfitting through pre- and post- pruning.
 \end{figure}
 \subsection{Indices and node split computation}
 In \Cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
-its regard could be: 'Why this structure and not another one?'. Other than it being a simple example
-nothing is really preventing us from describing the 'rain' event based on different threshold values
-or different feature sets altogether.
+its regard could be: 'Why this structure and not another one?'. Other than it being a simple
+example, nothing is really preventing us from describing the 'rain' event based on different threshold values or different feature sets altogether.
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[
@@ -218,7 +178,7 @@ or different feature sets altogether.
 		% Root node
 		\node {Humidity $\geq 80\%$}
 		% First level
-		child {node {Temperature $< 4C$}
+		child {node {Temperature $< 4\C$}
 				% Second level
 				child {node {no rain}}
 				child {node {atmospheric pressure $< 1.0015$ atm}
@@ -233,15 +193,14 @@ or different feature sets altogether.
 	\label{fig:simple-dt-alt}
 \end{figure}
 The mock tree shown in \Cref{fig:simple-dt-alt} is a different tree compared to the one shown in
-\Cref{fig:simple-dt} and yet they solve the same problem by characterizing it differently.
+\Cref{fig:simple-dt}; and yet they solve the same problem by characterizing it differently.
 \Cref{algo:decision-tree} shows how the decision tree is built, the procedure is greedy, since it
 tries to pick the best splitting feature with every iteration (at line $10$ the choice is taken
-based on a \emph{purity} index applied to the tree nodes), therefore the resulting
-trees could be different even if the dataset stays the same.
+based on a \emph{purity} index applied to the tree nodes, we will clarify the concept later), therefore the resulting trees could be different even if the dataset stays the same.
 
-This variability is due to the stochastic nature of the construction process, as we will see, there
-are many things to keep in mind as well as precautions that can be taken to make sure that the
-training and testing procedure do not change with every run.
+This variability is due to the stochastic nature of the construction process, as we will see in
+\Cref{chp:problem}, there are many things to keep in mind, as well as precautions that can be taken
+to make sure that the results do not change with every run.
 
 \begin{algorithm}
 	\caption{The decision tree base algorithm taken from
@@ -277,49 +236,57 @@ training and testing procedure do not change with every run.
 	\end{algorithmic}
 \end{algorithm}
 
-\medskip
-
 The purity of a node defines how heterogeneous are the samples associated to it. Intuitively, in the
 context of our mock-problem: if the distribution of samples arriving to a node $i$ is $15$ labelled
 $1$, and $1$ labelled $0$, then the purity of the node is going to be very high.
 
 A split is going to be performed on feature $a$ only if the resulting purity increase is the best
 possible. There are many different indices used to compute purity, in the following I will be
-considering only the ones we chose to consider in the parameter grid we used for the Cross
-Validation procedure we used to do model selection (the technique will be introduced in
-\Cref{chp:problem}): \emph{Entropy} and \emph{Gini index}.
+covering only those relevant to the parameter grid used in the context of Nested Cross Validation
+(described in \Cref{sec:cv}): \emph{Entropy} and \emph{Gini index}.
 
 \subsubsection{Entropy}
+We will define \emph{entropy} following the approach in~\cite{gray2011entropy}. Let us consider a
+triple $(\Omega, \mathcal{B})$, the first is called \emph{sample space}, the second is a $\sigma$-algebra, which is a collection of elements of $\Omega$ having the following properties:
+\begin{itemize}
+	\item $\Omega \in \mathcal{B}$;
+	\item if $F \in \mathcal{B}$, then $F^C = \{\omega: \omega \notin F\} \in \mathcal{B}$;
+	\item if $F_i \in \mathcal{B}, i = 1, 2, \ldots;$ then $\bigcup_i{F_i} \in \mathcal{B}$.
+\end{itemize}
+We can define the probability space $(\Omega, \mathcal{B}, P)$ and if we consider a discrete random
+variable $f$, then we can compute entropy as follows: \[H(f) = - \sum_{a \in A}\].
+
+
+
 There are many different ways of defining information entropy, but a more general definition, compared
-to the one found in~\cite{ZhouZhi-Hua2021ML}, is found in~\cite{gray2011entropy}. Let's consider a
+to the one found in~\cite{ZhouZhi-Hua2021ML}, is found in. Let's consider a
 random variable $f$ built on the alphabet $B = \{b_1, \ldots, b_{|B|}\}$ we can define the
-partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} = f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger
-probability space $\Omega$. Every partition is chosen based on the outcome of the measurement of the random variable $f$. In the case of a discrete random variable we can define the information entropy as shown in \Cref{eq:information-entropy}
+partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} =
+f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger probability space $\Omega$. Every
+partition is chosen based on the outcome of the measurement of the random variable $f$. In the case
+of a discrete random variable we can define the information entropy as follows
 \begin{equation}
 	\label{eq:information-entropy}
-	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|B|}{P(Q_i)\log{P(Q_i)}}
+	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|B|}{P(Q_i)\log{P(Q_i)}} \enspace;
 \end{equation}
 this definition of entropy can be easily extended to the dataset case since:
 \begin{itemize}
-	\item The partition set $\mathcal{Q}$ can be mapped to the dataset $D$,
-	\item Every partition $Q_i$ can be mapped to the single class of the machine learning
+	\item the partition set $\mathcal{Q}$ can be mapped to the dataset $D$,
+	\item every partition $Q_i$ can be mapped to the single class of the machine learning
 	      problem that is being considered,
-	\item The alphabet $B$ can be mapped to the set of possible outcomes of the machine learning
+	\item the alphabet $B$ can be mapped to the set of possible outcomes of the machine learning
 	      problem.
 \end{itemize}
 Therefore, we can rewrite \Cref{eq:information-entropy} as:
 \begin{equation}
-	H_p(D) = - \sum_{k = 1}^{|\outs|}p_k \log{p_k}
+	H_p(D) = - \sum_{k = 1}^{|\outs|}p_k \log{p_k} \enspace,
 \end{equation}
 where $p_k$ denotes the proportion of the $k$-th class inside dataset $D$.
 
-\medskip
+\smallskip
 
-If we consider the binary classification problem ('true' or 'false' response), whenever a splitting procedure
-is done on a node in the tree, the split is computed on every feature based on the possible
-values of the feature itself (only for discrete features). If we consider our mock-problem, a split
-could be computed on a feature called 'amount of clouds' which can have one of two values
-$\{\text{overcast}, \text{clear}\}$. The new node could be built in two different ways and the class distribution for each is different, having different levels of purity based on how well the data is partitioned between the classes 'rain' and 'no rain'.
+In the case of features with a discrete number of values, the impurity decrease (which is equivalent
+to the purity increase) is computed on all possible values for the feature we are splitting on. If we consider our mock-problem, a split could be computed on a feature called 'amount of clouds' which can have one of two values $\{\text{overcast}, \text{clear}\}$. The new node could be built in two different ways and the class distribution for each is different, having different levels of purity based on how well the data is partitioned between the classes 'rain' and 'no rain'.
 
 \smallskip
 
@@ -327,17 +294,13 @@ To choose which of the two nodes to take in our mock-problem using the entropy m
 introduce the concept of \emph{information gain}, which is expressed as follows:
 \begin{equation}
 	\label{eq:information-gain}
-	\textsc{Gain}(D, a) = H_p(D) - \sum_{v = 1}^V\frac{|D^v|}{|D|}H_p(D^v)
+	\textsc{Gain}(D, a) = H_p(D) - \sum_{v = 1}^V\frac{|D^v|}{|D|}H_p(D^v) \enspace.
 \end{equation}
-The concept expressed by information gain in \Cref{eq:information-gain} is that the amount of
-information gained by doing a split of dataset $D$ on feature $a$ is given by the entropy of dataset
-$D$ at the moment of the split from which we remove the entropy of the dataset resulting from the
-split of feature $a$ at every value $v$ scaled by the ratio between the cardinality of the new dataset to
-the cardinality of the original dataset.
+The concept expressed by information gain in is that the amount of information gained by doing a split of dataset $D$ on feature $a$ is given by the entropy of dataset $D$ at the moment of the split from which we remove the entropy of the dataset resulting from the split of feature $a$ at every value $v$ scaled by the ratio between the cardinality of the new dataset to the cardinality of the original dataset.
 
 \smallskip
 
-The feature used to perform the actual splitting is going to be the one with the highest possible
+The feature used to perform the split on is going to be the one with the highest possible
 information gain. It's very important to notice that information gain is an index biased towards
 features that have many different values (and therefore $|D^v|$ is small). In the case of our mock
 problem, if we consider 'status of the sky' and we compare it to another feature containing many
@@ -346,96 +309,79 @@ $\{\text{white}, \text{light grey}, \text{grey}, \text{black}, \text{pink}, \tex
 	\text{red}\}$, it's clear that the $|D^v|/|D|$ is going to be lower for each of them, therefore
 leading to a lower entropy decrease and a higher information gain.
 
-\medskip
-
-The alternative to using information gain is to use the \emph{gain ratio}
+\emph{Gain ratio} is an alternative to information gain, it is defined as follows
 \begin{equation}
 	\label{eq:gain-ratio}
 	\textsc{GainRatio}(D, a) = \frac{\textsc{Gain}(D, a)}{\textsc{iv}(a)}
 \end{equation}
-the \textsc{iv} function in \Cref{eq:gain-ratio} is the \emph{intrinsic value} of feature $a$ and
-can be computed as shown in \Cref{eq:intrinsic-value}.
+the \textsc{iv} function is the \emph{intrinsic value} of feature $a$
 \begin{equation}
 	\label{eq:intrinsic-value}
-	\textsc{iv}(a) = - \sum_{v = 1}^V\frac{|D^v|}{|D|} \log{\frac{|D^v|}{|D|}}
+	\textsc{iv}(a) = - \sum_{v = 1}^V\frac{|D^v|}{|D|} \log{\frac{|D^v|}{|D|}} \enspace.
 \end{equation}
-Due to how intrinsic value is defined, the gain ratio corrects the bias of the information gain towards features
-with a higher number of values but is biased towards features with a lower amount of values
-\cite{ZhouZhi-Hua2021ML}.
+Due to how intrinsic value is defined, the gain ratio corrects the bias of the information gain
+towards features with a higher number of values, but it also makes it biased towards features with a lower amount of values~\cite{ZhouZhi-Hua2021ML}.
 
-\medskip
+\smallskip
 
-The actual implementation of the decision tree model in the scikit-learn library is an optimized version of
-the \textsc{cart} algorithm, which  is similar to the \textsc{c4.5} algorithm proposed by Quinlan in
-\cite{quinlan2014c4}.
+The actual implementation of the decision tree model in the scikit-learn library is an optimized version of the \textsc{cart} algorithm, similar to the \textsc{c4.5} algorithm proposed by Quinlan in~\cite{quinlan2014c4}.
 
 \subsubsection{Gini index}
-The original \textsc{cart} algorithm conceptualized by Breiman et al. in 1984
-\cite{breiman1984classification} used Gini index to compute the best splitting feature for every
-node. The Gini value of a dataset can be computed as shown in \Cref{eq:gini-value}
+The original \textsc{cart} algorithm conceptualized by Breiman et al. in
+1984~\cite{breiman1984classification} used Gini index to compute the best splitting feature for
+every node. The Gini value of a dataset can be computed as shown here below
 \begin{equation}
 	\label{eq:gini-value}
 	\textsc{Gini}(D) = \sum_{k = 1}^{|\outs|}\sum_{k' \neq k} p_kp_{k'} = 1 - \sum_{k =
-		1}^{|\outs|}p_k^2
+		1}^{|\outs|}p_k^2 \enspace.
 \end{equation}
-As explained in~\cite{ZhouZhi-Hua2021ML}, \Cref{eq:gini-value} can be interpreted as the
+As explained in~\cite{ZhouZhi-Hua2021ML}, Gini value can be interpreted as the
 likelihood of taking samples from two different classes by drawing them randomly from the
 dataset, the lower the $\textsc{Gini}(D)$, the higher the purity of a node. Gini index can be
-computed as the weighted sum of all the Gini values for the dataset after the split, as shown in
-\Cref{eq:gini-index}.
+computed as the weighted sum of all the Gini values associated to the datasets obtained by doing a
+split with respect to a specific value
 \begin{equation}
 	\label{eq:gini-index}
-	\textsc{GiniIdx}(D) = \sum_{v = 1}^V\frac{|D^v|}{|D|} \textsc{Gini}(D^v)
+	\textsc{GiniIdx}(D,a) = \sum_{v = 1}^V\frac{|D^v|}{|D|} \textsc{Gini}(D^v) \enspace.
 \end{equation}
 
 The best splitting feature is going to be the one with the smallest Gini index overall.
 
 \subsection{Avoiding overfitting through pre- and post- pruning}
-As was argued in the previous section decision trees have an extremely simple structure and the
-results are easy to interpret, since all we have to do is read the decision path for the samples of
-interest.
+As was argued in the beginning of the section (cfr. \Cref{sec:dt}), decision trees have an extremely simple structure and the results are easy to interpret.
 
-Overfitting is probably the biggest drawback of decision trees, as shown in
-\cite{overfitting-dt-erblin}, since the model tries to partition the space based on the purity of
-the nodes, it's important to make sure that the splitting rules utilized are not overly specific.
-Two techniques are commonly explored in the literature to prevent overfitting: \emph{pre-pruning}
-and \emph{post-pruning}.
+Overfitting is probably the biggest drawback of decision trees, as shown in~\cite{overfitting-dt-erblin}. Since the model tries to partition the space based on the purity of the nodes, it's important to make sure that the splitting rules utilized are not overly specific. Two techniques are commonly explored in the literature to prevent overfitting: \emph{pre-pruning} and \emph{post-pruning}.
 
-\medskip
+\smallskip
 
 Pre-pruning forces an early stop of the algorithm whenever a series of conditions allow it, in other
-words, pre-pruning is a group of techniques meant to keep the size of the decision tree in check
-\cite{ZhouZhi-Hua2021ML}~\cite{bramer2007principles}~\cite{fisher1996learning}. Even if the split
-produces a decrease in the impurity of the current node it might be detrimental to proceed greedily,
-a couple of examples could clarify this suggestion:
+words, pre-pruning is a group of techniques meant to keep the size of the decision tree in
+check~\cite{ZhouZhi-Hua2021ML, bramer2007principles, fisher1996learning}. Even if the split produces a decrease in the impurity of the current node it might be detrimental to proceed greedily, a couple of examples could clarify this suggestion:
 \begin{itemize}
 	\item It might happen that the node is labelled 'Class B', while containing a handful of
 		samples from 'Class A'. If the set of outcasts is small enough doing a split to
-		classify them correctly only introduces more complexity in the tree which might not
-		be beneficiary to the whole, we might be leading it to overfitting.
+		classify them correctly only introduces more complexity in the tree which usually is
+		not beneficial to the end result.
 
 	\item If we have a tree that is already deep, adding even more splits to make the nodes purer
 		only makes it both more complicated and more likely to overfit the training data.
 \end{itemize}
 
-The specific pre-pruning conditions that can be checked using the DecisionTreeClassifier class provided by
-scikit-learn are the following:
+The specific pre-pruning conditions that can be checked in scikit-learn are the following.
 \begin{itemize}
-	\item The tree \emph{depth}, avoiding a complex tree structure by cutting the depth is
+	\item The tree \emph{depth}, avoiding a complex tree structure by cutting the depth, which is
 	      probably one of the easiest forms of pre-pruning.
 	\item The \emph{impurity decrease} stops nodes from splitting when the decrease in impurity
-	      of the children is not higher than a certain threshold, if the threshold is too high
+	      of the children is not higher than a certain threshold. If the threshold is too high
 	      then the tree will probably underperform, if it's too low then the tree is likely going to
 	      overfit.
-	\item The \emph{number of elements to split}, is basically a check that can be done on the
-	      number of samples inside a node. An excellent way of avoiding overfitting is to not split a node containing few samples.
+	\item The \emph{number of elements to split}, which defines how many samples must be
+		contained in a node to make it an internal node for the tree.
 \end{itemize}
-
-\medskip
 
 Post-pruning is the alternative to pre-pruning, the essential difference between the two is that
 post-pruning is done after the tree has been fully constructed. In the a posteriori phase,
-a series of branches will be chosen to be pruned based on the impurity decrease that they provide.
+a subset of branches will be chosen to be pruned based on the impurity decrease that they provide.
 Scikit-learn is working with Cost Complexity Pruning (\textsc{ccp}), introduced in~\cite{breiman1984classification}.
 
 \section{Ensemble learning}
