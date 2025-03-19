@@ -387,47 +387,41 @@ Scikit-learn is working with Cost Complexity Pruning (\textsc{ccp}), introduced 
 \section{Ensemble learning}
 \label{sec:el}
 In the previous chapter we introduced decision trees, and we have talked about their
-strengths and weaknesses, providing some instruments to counter their shortcomings. Sometimes,
+strengths and weaknesses; providing some instruments to counter their shortcomings. Sometimes,
 despite our efforts, the decision tree model is simply not enough for the task at hand. If we don't
 want to give up the explainability, in favor of higher performance, we can construct an ensemble.
 
-\medskip
-
-An ensemble contains a group of weaker learners, grouping produces a series of effects, two of which are
+An ensemble contains a group of weaker learners: grouping produces a series of effects, two of which are
 very important (to clarify the concepts we will consider the dynamics of a basketball team during a
 game):
 \begin{itemize}
-	\item Different learners are able to grasp different sides of the problem, which would be
+	\item Different learners are able to grasp different aspects of the problem, which would be
 		either impossible or complicated for single models. If we consider our example, each
 		player covers different positions, which do not fit his teammates (this doesn't
 		entail that there is no player capable of, if needed, covering more than one
 		position; which is usually a characteristic of the best players in the team).
-	\item Using a group of models alleviates the shortcomings of the weaker learners. If we consider our example, the weaker players, and lesser role players, stay on the bench while the main rotation is playing; but can still contribute with some quality minutes when the main rotation is facing a difficulty.
+	\item Using a group of models alleviates the shortcomings of the weaker learners. If we consider our example: the weaker players, and lesser role players, stay on the bench while the main rotation is playing; but can still contribute with some quality minutes when the main rotation is facing a difficulty.
 \end{itemize}
 
 In~\cite{ZhouZhi-Hua2021ML} a proof was given to relate the error rate of an ensemble with its size,
-the proof will be shown here below.
+which we outline here below.
 
-\medskip
-
-Let us consider an ensemble containing $T$ different versions of the same base model, if the ground
-truth function is $f$, and we call the $i$th learner in the ensemble $h_i$, then \Cref{eq:error-rate}
-describes the probability of learner $h_i$ misclassifying $\vec{x} \in \ins$.
+Let us consider an ensemble of size $T$, we will refer to the $i$-th learner in the ensemble as
+$h_i$. Let us call the ground truth function $f$ and let the probability of learner $h_i$
+misclassifying $\vec{x} \in \ins$ be
 \begin{equation}
 	\label{eq:error-rate}
-	P(h_i(\vec{x}) \neq f(\vec{x})) = \epsilon
+	Pr(h_i(\vec{x}) \neq f(\vec{x})) = \epsilon \enspace.
 \end{equation}
-Assuming that the ensemble is supposed to solve a binary classification problem, then the class
-labels can be defined as $y \in \{-1, +1\}$. The ensemble will aggregate the predictions by using a simple majority algorithm (\Cref{eq:ensemble-aggregation}).
+Assuming that the ensemble is solving a binary classification problem, then the class labels can be defined as $y \in \{-1, +1\}$. The ensemble will aggregate the predictions by using a simple majority algorithm; 
 \begin{equation}
 	\label{eq:ensemble-aggregation}
-	F(\vec{x}) = sign\left(\sum_{i = 1}^{T}h_i(\vec{x})\right)
+	F(\vec{x}) = \sign\left(\sum_{i = 1}^{T}h_i(\vec{x})\right) \enspace.
 \end{equation}
 Since the probability of a base learner of being correct is $1 - \epsilon$, then the ensemble
 correctly classifies a sample only if more than half of the learners correctly identify the sample.
-As shown in \Cref{eq:succ-probability}, if we assume the learners to be independent of each other,
-then we can model the probability of the ensemble being correct as a Binomial, $Bin(k, 1 -
-\epsilon)$, with $k \in \{\lceil{T / 2}\rceil, T\}$.
+If we assume the learners to be independent of each other, then we can model the probability of the
+ensemble being correct using a Binomial distribution, $Bin(k, 1 - \epsilon)$:
 \begin{equation}
 	\label{eq:succ-probability}
 	\begin{aligned}
@@ -435,29 +429,29 @@ then we can model the probability of the ensemble being correct as a Binomial, $
 		the sample}\right)
 		\\
 			   & = \sum_{k = \lceil{T / 2}\rceil}^T \binom{T}{k} (1 - \epsilon)^k
-			   \epsilon^{T - k}
+			   \epsilon^{T - k} \enspace.
 	\end{aligned}
 \end{equation}
 Since we are interested in finding a bound for the ensemble error rate, we are interested in the
 complement of $Pr(\text{success})$, which is $Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq
-f(\vec{x}))$. The ensemble misclassifies a sample only if the number of learners that can correctly classify the model is less than half, therefore $Pr(\text{insuccess})$ can be defined, starting from \Cref{eq:succ-probability} as shown in \Cref{eq:insucc-probability}.
+f(\vec{x}))$. The ensemble misclassifies a sample only if the number of learners that can correctly
+classify the model is less than half, therefore $Pr(\text{insuccess})$ can be defined as
 \begin{equation}
 	\label{eq:insucc-probability}
-	Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq f(\vec{x})) = \sum_{k = 0}^{\lfloor{T / 2}\rfloor} \binom{T}{k} (1 - \epsilon)^k \epsilon^{T - k}
+	Pr(\text{insuccess}) = Pr(F(\vec{x}) \neq f(\vec{x})) = \sum_{k = 0}^{\lfloor{T / 2}\rfloor}
+	\binom{T}{k} (1 - \epsilon)^k \epsilon^{T - k} \enspace.
 \end{equation}
-Finally, we can exploit Hoeffding's inequality~\cite{ZhouZhi-Hua2021ML} on
-\Cref{eq:insucc-probability}, the result is an upper bound for the error rate of the ensemble.
+Finally, we can exploit Hoeffding's inequality~\cite{ZhouZhi-Hua2021ML}
+on~\ref{eq:insucc-probability}, obtaining an upper bound for the error rate of the ensemble.
 \begin{equation}
 	\label{eq:hoeffding}
 	\sum_{k = 0}^{\lfloor T / 2 \rfloor}\binom{T}{k} (1 - \epsilon)^k\epsilon^{T - k} \leq
-	exp\left(-\frac{1}{2}T(1 - 2\epsilon)^2\right)
+	\exp\left(-\frac{1}{2}T(1 - 2\epsilon)^2\right) \enspace.
 \end{equation}
-\Cref{eq:hoeffding} is telling us that the error rate of the ensemble falls exponentially with the
+The result is telling us that the error rate of the ensemble falls exponentially with the
 number of base learners $T$. This proof is based on the non-trivial assumption that the base
 learners are independent of each other, which is something that doesn't apply in the practical
 case, since the models are trained on the same dataset for the same problem $\problem$.
-
-\medskip
 
 In the next two sections I will introduce bagging and random forests, which are two very similar
 ensemble algorithms.
