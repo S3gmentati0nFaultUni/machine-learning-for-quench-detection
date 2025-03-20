@@ -1,0 +1,107 @@
+\documentclass[a4paper, notitlepage]{article}
+
+\usepackage{src/summary}
+
+\title{
+	\textsf{Supervised Machine Learning techniques for quench detection in superconductors} \\
+	\author{Alessandro Biagiotti -- 13903A}
+        \date{Febraury 20, 2025}
+}
+
+\begin{document}
+\maketitle
+\section{Hosting laboratory}
+This thesis originated as a cooperation between the departments of Computer Science and Physics of
+Milan University. Three were the advisors for the work:
+\begin{itemize}
+	\item Dario Malchiodi, associate professor of the Computer science department of Milan University;
+	\item Samuele Mariotto, researcher for \textsc{infn} and Physics department of Milan
+	      University;
+	\item Lucio Rossi;
+\end{itemize}
+\todo{Sistemare la parte dei ruoli (ammesso e non concesso che serva) -- Ale}
+\section{Initial context}
+Our work attempted to confirm the analytical method, originally found by \textsc{infn} and the
+University of Milan superconducting research group, for the localization of quench events in High
+Order Corrector superconducting magnets \cite{mariotto2022-hoc, mariotto2022-generic} that will be
+mounted in the \textsc{lhc} collider machine for the High Luminosity upgrade \cite{rossi2024-hllhc}
+(\textsc{hl-lhc}).
+
+The aim of the original work was, beginning from the harmonic decomposition of the magnetic
+field produced by the superconducting magnet after a \emph{quench} event, which is a transition of the
+material from the superconducting state to the normal conducting state, to find an analytical
+explanation for the reconstructed harmonic content and correlate the information with the
+localization of the quenched superconducting coil(s) in the magnet assembly. This is
+referred to as the Quench Localization Problem (\qlp\ for short).
+
+The magnetic field was measured at the center of the magnet, where the beam will pass during
+production, and is the result of the contribution of the magnetization of the different coils and of
+the iron yoke that locks the components in place and avoids their drift due to Lorentz forces.
+
+\section{Objectives of the work}
+Given the harmonic decomposition of magnetic field measured on the magnet during normal operation
+and after quench events, the aim of this thesis was to identify two models: one capable of reliably
+replying to the question 'Did the magnet quench?', and one capable of reliably replying to the
+question 'If quench happened during the test run, which coil(s) within the magnet did quench?'.
+
+Our objective was to find models with high performance levels and high explainability since the
+original idea was to use the results for different studies:
+\begin{itemize}
+	\item understand which magnetic field harmonics are more important for the analysis of
+	      quench events in superconducting magnets,
+	\item using the results of the analysis to do better instrument calibration for Quench
+	      Protection Systems and quench antennae.
+\end{itemize}
+
+\section{Description of the work done}
+Due to the nature of the problem and the explainability requirements we mainly focused on machine
+learning models that are inherently explainable.
+
+During the internship we solved three different problems:
+\begin{itemize}
+	\item Quench Recognition Problem (\qrp), centered on the process of detecting quench events in
+	      quadrupolar magnets;
+	\item Quench Localization Problem (\qlp), centered on the process of localizing a quench event;
+	\item Quench Recognition Problem for a specific coil (\qrpi), centered on the process of detecting
+	      quench events in specific coils.
+\end{itemize}
+
+\section{The technologies we used}
+Since the dataset available to us was already labelled by my co-advisor we mainly used supervised
+machine learning models that have a strong inherent explainability. The models we used were the
+following:
+\begin{itemize}
+	\item Decision Trees (\dts)~\cite{breiman1984-dt}, extremely explainable, versatile and simple models. We chose them as a
+	      starting point;
+	\item Random Forests (\rfs)~\cite{breiman2001-rf}, an ensemble based on trees, explainable by definition. We chose them
+	      as an upgrade over (\dts) thanks to the higher performance;
+	\item Tree aggregators (\tas), a custom ensemble based on \dts\ we chose specifically for
+	      their performance;
+	\item Support Vector Machines (\svms)~\cite{cortes1995-svm}, strong performers without the
+	      explainability property that we considered the model to beat.
+\end{itemize}
+We worked on the project using Python and scikit-learn.
+
+\section{Results}
+I approached the project as a challenge against myself, since the in the beginning my machine
+learning knowledge was very limited. At the end of the experience I can say that I learned how to
+approach a machine learning project, as well as some a bit of the field of superconductor physics.
+As an added bonus I trained soft-skills like: Designing presentations, exposing results to
+colleagues with minimal experience in the field of machine learning and computer science.
+
+At the moment of writing we obtained a model capable of finding a solution for \qrp\ with a very
+high level of performance, we also got some extremely promising initial results for \qlp. While
+developing the project we had various ideas to further explore the field:
+\begin{enumerate}
+	\item Have a physician study the decision rules to understand whether they have physical
+	      foundation,
+	\item fuzzification of the quench-event description; to explore other aspects of the event
+	      like the velocity of propagation or the violence of the strength of the precursor,
+	\item analysis of the voltage data to gain a different interpretation of the quench event,
+	\item high-performance quench localization through neural networks or \svcs,
+	\item clustering-based approaces as a secondary classification strategy for \qlp.
+\end{enumerate}
+
+\printbibliography
+
+\end{document}
