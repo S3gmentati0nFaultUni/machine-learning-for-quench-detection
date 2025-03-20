@@ -722,72 +722,74 @@ Until now the topic was treated under the important assumption that the points i
 linearly separable, but it's known that this condition rarely holds in practice. To address the issue the
 problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$, this is done in
 the hope that increasing the number of dimensions will make the data linearly separable.
-From~\cite{cover1965} we have the guarantee that given a set of $N$ points in Euclidean $d$
-dimensional space, then \Cref{eq:dichotomies} is the number of ways we can split the points in two
-non-intersecting sets.
+From~\cite{cover1965} we have the guarantee that given a set of $N$ points in Euclidean
+$d$-dimensional space, then the number of ways we can split the points in two non-intersecting sets
+is
 \begin{equation}
 	\label{eq:dichotomies}
-	C(N, d) = 2 \sum_{k = 0}^{d - 1}\binom{k}{N - 1}
+	C(N, d) = 2 \sum_{k = 0}^{d - 1}\binom{k}{N - 1} \enspace.
 \end{equation}
 
-If we call $\phi(\vec{x})$, the mapping of a data-point $\vec{x} \in \ins$ to the high
-dimensionality space, then \Cref{eq:hyperplane} can be rewritten to incorporate it.
+Given a data-point $\vec{x} \in \ins$, we call $\phi(\vec{x})$ its high-dimensionality image.
+Then~\ref{eq:hyperplane} can be rewritten as
 \begin{equation}
 	\label{ep:hd-hyperplane}
-	f(\vec{x}) = \vec{w}^\top \phi(\vec{x}) + b
+	f(\vec{x}) = \vec{w}^\top \phi(\vec{x}) + b \enspace.
 \end{equation}
-Using \Cref{ep:hd-hyperplane} and following the steps used in the beginning of the chapter,
-it's possible to redefine both the primal (\Cref{eq:primal}) and the dual (\Cref{eq:dual}) problems
-as shown in \Cref{eq:hd-primal} and \Cref{eq:hd-dual}.
+Using equation~\ref{ep:hd-hyperplane} and following the steps used in the beginning of \Cref{sec:svm},
+it's possible to redefine both the primal and the dual problems, respectively as
 \begin{equation}
 	\label{eq:hd-primal}
 	\begin{aligned}
 		 & \max_{\vec{w}, b}\frac{1}{2}||\vec{w}||^2                                                         \\
-		 & \text{s.t.}\hspace{10pt}y_i(\vec{w}^\top\phi(\vec{x}_i) + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
+		 & \text{s.t.}\hspace{10pt}y_i(\vec{w}^\top\phi(\vec{x}_i) + b) \geq 1 \hspace{10pt}i = 1, \ldots, n
 	\end{aligned}
 \end{equation}
 \begin{equation}
 	\label{eq:hd-dual}
 	\begin{aligned}
-		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right) \\
-		 & \text{s.t.} \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
+		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^n{\alpha_i} - \frac{1}{2}\sum_{i =
+		1}^n\sum_{j = 1}^n{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right) \\
+		 & \text{s.t.} \sum_{i = 1}^n{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, n
+		 \hspace{10pt}\alpha_i \geq 0 \hspace{3pt} \forall i \enspace.
 	\end{aligned}
 \end{equation}
 
-As was done in the beginning of the chapter, it would now be necessary to compute a solution for the
-dual problem, which means computing the internal product $\langle\phi(\vec{x}_i),
-\phi(\vec{x}_j)\rangle$. Since the problem was moved to a high dimensional space, it might be
-computationally expensive to handle, especially because the number of dimensions of the final space
-is not known.
+It would now be necessary to compute a solution for the dual problem, which means computing the
+internal product $\langle\phi(\vec{x}_i), \phi(\vec{x}_j)\rangle$. Since the problem was moved to a
+high dimensional space, it might be computationally expensive operation, especially because the
+number of dimensions of the final space is not known a-priori.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% THE KERNEL-TRICK DOESN'T PROVIDE AN APPROXIMATION OF THE INNER PRODUCT BUT IT COMPUTES THE ACTUAL
+% VALUE. THIS IS THANKS TO THE FACT THAT WE ARE DOING AN EXTENSION TO RKHS SPACE (REPLICATING KERNEL
+% HILBERT SPACE)
+%%%%%%%%%%%%%%%%%%%%%%%%%
 To avoid having to compute such a product, we define a function, known as \emph{kernel} function
-$\kappa(\cdot, \cdot)$,
-which is an approximation of the actual value of the inner product. We can rewrite \Cref{eq:hd-dual} to use the newly introduced function.
+$\kappa(\cdot, \cdot)$ which actually defines the inner-product. We can rewrite~\ref{eq:hd-dual} to use the newly introduced function. 
 \begin{equation}
 	\label{eq:hd-dual-kf}
 	\begin{aligned}
-		 & \text{since} \hspace{10pt} \kappa(\vec{x}_i, \vec{x}_j) = \langle\phi(\vec{x}_i),
-		\phi(\vec{x}_j)\rangle                                                                      \\
-		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \phi(\vec{x}_i)^\top\phi(\vec{x}_j})\right) \\
-		 & \text{s.t.} \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
+		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^n{\alpha_i} - \frac{1}{2}\sum_{i =
+		1}^n\sum_{j = 1}^n{\alpha_i\alpha_j y_i y_j \kappa(\vec{x}_i, \vec{x}_j)}\right) \\
+		 & \text{s.t.} \sum_{i = 1}^n{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, n
+		 \hspace{10pt} \alpha_i \geq 0 \hspace{3pt} \forall i
 	\end{aligned}
 \end{equation}
 
-If we solve the problem using the same procedure applied in the beginning of the chapter, we obtain
+If we solve the problem using the same procedure applied in the beginning of \Cref{sec:svm}, we obtain
 an expression of the hyperplane which is dependent from the kernel function $\kappa$.
 \begin{equation}
 	\label{eq:hd-of}
-	f(\vec{x}) = \sum_{i = 1}^m\alpha_iy_i\kappa(\vec{x}, \vec{x}) + b
+	f(\vec{x}) = \sum_{i = 1}^n\alpha_iy_i\kappa(\vec{x}_i, \vec{x}) + b
 \end{equation}
 
-An explanation of the kernel function was given, but no definition was provided, that is due to its
-dependence from the mapping $\phi$. Such mapping is unknown in most practical cases, however a
+Until now we have used the kernel function but without giving a definition for it; that is due to its
+dependence from the mapping $\phi$. Such mapping is unknown in most practical cases; however a
 theorem~\cite{learning-with-kernels} grants us that if we can find a symmetric function
 $\kappa(\cdot, \cdot): \ins \times \ins \rightarrow \ins$, then $\kappa$ is a kernel function if and
-only if, however chosen the dataset $D = \{\vec{x}_1, \ldots, \vec{x}_m\}$, the kernel matrix
-$\mathbf{K}$ (\Cref{eq:kernel-matrix}) is positive semidefinite.
+only if, however chosen the dataset $D = \{\vec{x}_1, \allowbreak\ldots\allowbreak, \vec{x}_m\}$,
+the following kernel matrix $\mathbf{K}$ is positive semidefinite:
 \begin{equation}
 	\label{eq:kernel-matrix}
 	\mathbf{K} =
@@ -799,10 +801,10 @@ $\mathbf{K}$ (\Cref{eq:kernel-matrix}) is positive semidefinite.
 		\ldots                       & \ldots                       & \ddots & \ldots \\
 		\kappa(\vec{x}_m, \vec{x}_1) & \kappa(\vec{x}_m, \vec{x}_2) & \ldots &
 		\kappa(\vec{x}_m, \vec{x}_m)                                                  \\
-	\end{bmatrix}
+	\end{bmatrix} \enspace.
 \end{equation}
 Now that a reliable technique to find kernel functions has been defined, it's important to find the
-best kernel function since the choice of the kernel determines how the points are mapped in
+best kernel function. Since the choice of the kernel determines how the points are mapped in
 high-dimensional space, and therefore how good the separating hyperplane is going to be.
 
 \section{Unsupervised models}
