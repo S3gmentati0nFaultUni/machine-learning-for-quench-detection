@@ -25,11 +25,7 @@ Given a problem $\problem$, a specific instance, $\problem_i$, is characterized 
 $(\vec{x}_i, y_i)$ where $\vec{x}_i \in \ins$ are vectors taken from an input space $\ins$, usually
 highly dimensional, and $y_i \in \outs$ are the expected solutions, which can be expressed using a scalar or vector\footnote{Outcomes will be considered scalars for the rest of this thesis unless explicitly stated}. The single components of every input vector, $\vec{x}_i$, are called \emph{features}, and are values representing a particular aspect of the domain.
 
-A \emph{dataset} is a set containing $n$ problem instances can be described as follows: \[\dset
-\enspace.\] A supervised machine learning model $\model$, trained on $D$, can be used to predict the
-outcome, $\hat{y}$, of any instance of the problem $\problem_i$. Note that a machine learning model
-is the result of a statistical process, therefore is susceptible to change unless randomness is kept
-under control. We will cover this concept in \Cref{chp:problem}
+A \emph{dataset} is a set containing $n$ problem instances $\dset$. A supervised machine learning model $\model$, trained on $D$, can be used to predict the outcome, $\hat{y}$, of any instance of the problem $\problem_i$. Note that a machine learning model is the result of a statistical process, therefore is susceptible to change unless randomness is kept under control. We will cover this concept in \Cref{chp:problem}
 
 To clarify the concepts just introduced, let us consider the following mock-problem: 'Is it going to rain
 tomorrow?'. The dataset $D$ contains $365$ instances of the problem, one per day, for a year. The
@@ -77,7 +73,7 @@ Most machine learning models have to go through the same steps, described here b
 
 There are many different approaches to splitting a dataset $D$ into a series of separate subsets
 for the various tasks involved in the machine learning problem resolution (e.g., model training,
-model testing, model selection, \ldots). In the following I will describe two non-trivial aspects of
+model testing, model selection, \ldots). In the following we will describe two non-trivial aspects of
 the basic procedure to split a dataset $D$ into a training set $T$ and a generalization set $G$; a
 more complex splitting procedure will be introduced in \Cref{sec:cv}.
 
@@ -134,7 +130,7 @@ reached, the class associated to the point is identified as the prediction made 
 
 \medskip
 
-Two are the theoretical concepts I wish to cover in this section: indices and node split
+Two are the theoretical concepts we wish to cover in this section: indices and node split
 computation, avoiding overfitting through pre- and post- pruning.
 \begin{figure}
 	\centering
@@ -453,14 +449,14 @@ number of base learners $T$. This proof is based on the non-trivial assumption t
 learners are independent of each other, which is something that doesn't apply in the practical
 case, since the models are trained on the same dataset for the same problem $\problem$.
 
-In the next two sections I will introduce bagging and random forests, which are two very similar
+In the next two sections we will introduce bagging and random forests, which are two very similar
 ensemble algorithms.
 
 \subsubsection{Bagging}
 
-Bagging, introduced by Leo Breiman in~\cite{Breiman1996}, is a method for generating multiple
-versions of a base predictor that are then aggregated in a single model, the simple algorithm is
-outlined in \Cref{algo:bagging} following~\cite{ZhouZhi-Hua2021ML} and~\cite{Bauer1999}.
+Bagging, introduced by Leo Breiman~\cite{Breiman1996}, is a method for generating multiple
+versions of a base predictor that are then aggregated in a single model, as outlined in
+\Cref{algo:bagging} following~\cite{ZhouZhi-Hua2021ML, Bauer1999}.
 \begin{algorithm}
 	\caption{The bagging algorithm, taken from~\cite{Bauer1999}}\label{algo:bagging}
 	\begin{algorithmic}[1]
@@ -478,256 +474,236 @@ outlined in \Cref{algo:bagging} following~\cite{ZhouZhi-Hua2021ML} and~\cite{Bau
 	\end{algorithmic}
 \end{algorithm}
 
-The algorithm can be described as follows: given a dataset $\dset$ of size $n$, we create a new
-dataset of size $n$ ($D_{bs}$ in \Cref{algo:bagging}) by randomly picking samples from $D$ without
-removing them from it\footnote{The technique is known as bootstrap sampling~\cite{ZhouZhi-Hua2021ML}}. If we repeat the procedure $T$ times we obtain $T$ different datasets of size $n$, which can be used to train different base learners. Once the training is over, predictions can be done on inputs and the results can be aggregated using different techniques (e.g., majority voting or averaging).
+\Cref{algo:bagging} can be described as follows: given a dataset $\dset$ of size $n$, we create a new
+dataset of size $n$ ($D_{bs}$ in \Cref{algo:bagging}) by randomly sampling with replacement from
+$D$~\footnote{The technique is known as bootstrap sampling~\cite{ZhouZhi-Hua2021ML}}. If we repeat
+the procedure $T$ times we obtain $T$ different datasets of size $n$, which can be used to train
+different base learners. Once the training is over, predictions can be done on inputs and the
+results can be aggregated using different techniques (e.g., majority voting or averaging).
 
-\medskip
-
-Since $D_{bs}$ is being built from $D$ without removal it's interesting to give an
-estimate of the number of samples that are not being used to build the $i$th dataset. Since the
+Since $D_{bs}$ is being built sampling from $D$ with replacement it's interesting to give an
+estimate of the number of samples that are not being used to build the $i$-th dataset. Since the
 probability of being picked is $1 / n$, and doesn't change with the iteration, then the probability of not being picked is $1 - 1 / n$.
 
-\Cref{eq:bagging-limit} is the result of considering the extreme case, $n \rightarrow \infty$, and
-then computing the probability of a sample not being picked for $n$ different draws. The result is
-that we expect the $36.8\%$ of the data in $D$ to remain unused every time a new dataset $D_{bs}$ is
-being built by bootstrapping.
-\begin{equation}
+Considering the extreme case, $n \rightarrow \infty$, and then computing the probability of a sample
+not being picked for $n$ different draws. \begin{equation}
 	\label{eq:bagging-limit}
 	\lim_{n \rightarrow \infty} \left(1 - \frac{1}{n}\right) = \frac{1}{e} \approx 0.368
+	\enspace,
 \end{equation}
-Since this data would be 'lost', we can implement different mechanisms to take advantage of this
-surplus, an example could be a variation of the train-test split seen in the beginning of the
-chapter: if we keep track of the data used for $D_{bs}$, what remains can be put in $V_{bs}$,
-which is called validation set, and can be used to understand how much the single learner is able to generalize after training.
+We expect the $36.8\%$ of the data in $D$ to remain unused every time a new dataset $D_{bs}$ is
+being built by bootstrapping. Since this data would be 'lost', we can implement different mechanisms
+to take advantage of the surplus; an example could be a variation of the train-test split seen in the beginning of the chapter: if we keep track of the data used for $D_{bs}$, what remains can be put in $V_{bs}$, which is called validation set, and can be used to understand how much the single learner is able to generalize after training.
 
 \subsubsection{Random Forests}
 
-Random forests are an extension of the Bagging model described above, they were introduced
-by Leo Breiman in~\cite{Breiman2001}. While decision trees perform the splitting procedure for every
-node by selecting the feature that yields the best impurity reduction, random forests pick the
-feature that yields the best impurity decrease from a random subset of features of size $k$. The
-value of $k$ controls how random the splitting procedure is going to be, if $k = d$, where $d$ is the size of the feature set, then the behavior of the random forest is the same as the decision tree introduced
-in the last section, if $k = 1$, then the splitting feature is chosen randomly.
-
-\medskip
+Random forests are an extension of the Bagging model described above, conceived by Leo Breiman~\cite{Breiman2001}. While decision trees perform the splitting procedure for every node by selecting the feature that yields the best impurity reduction, random forests pick the feature that yields the best impurity decrease from a random subset of features of size $k$. The value of $k$ controls how random the splitting procedure is going to be, if $k = d$, where $d$ is the size of the feature set, then the behavior of the random forest is the same as the decision tree introduced in the last section, if $k = 1$, then the splitting feature is chosen randomly.
 
 Despite the relative simplicity of the model, random forests provide a high level of performance,
 accompanied by the classic explainability of decision trees (with the added complexity of
-having to deal with more than one learner at the same time).
+having an ensemble of classifiers).
 
 \section{SVM}
 \label{sec:svm}
 With this section, we leave behind the tree-based models to talk about our benchmark. An
-\textsc{svm} is a model charactherized by very high performance but low explainability. In this
-chapter we will understand the theoretical foundations of this model, our main reference is going to be~\cite{ZhouZhi-Hua2021ML}.
+\svm\ is a model characterized by very high performance but low explainability: in this
+section we will understand its the theoretical foundations~\cite{ZhouZhi-Hua2021ML}.
 
-\medskip
+\smallskip
 
-Let's consider a binary classification problem on dataset $\dset$ with labels $y \in \{-1, +1\}$,
-handling the classification task means to find a hyperplane that is able to divide the points in the
-dataset 'reasonably well', since the number of such hyperplanes is infinite there are two
+Let us consider a binary classification problem on dataset $\dset$ with labels $y \in \{-1, +1\}$.
+Handling the classification task means finding a hyperplane that is able to divide the points in the
+dataset 'reasonably well'. Since the number of such hyperplanes is infinite there are two
 essential observations to be made:
 \begin{enumerate}
-	\item The space of the solutions cannot be checked thoroughly, therefore we will never know
-	      if the hyperplane chosen is the best, or if there is another one that yields better
-	      performance.
-	\item The chosen hyperplane will be fitted on the dataset used for training,
-	      but we can make sure that the generalization performance is good enough by making
-	      sure that there is enough \emph{margin} between the separator and the 'hardest'
-	      points in the dataset.
+	\item the space of the solutions cannot be checked thoroughly, therefore we will never know
+	      if the chosen hyperplane is the best, or if there is another one that yields better
+	      performance;
+	\item the chosen hyperplane will be fitted on the dataset used for training, but we can
+		ensure good generalization performance by choosing the hyperplane that maximizes the
+		\emph{margin}, which is the minimal distance between the decision surface and the
+		'hardest' points in the dataset.
 \end{enumerate}
-The 'hardest' points are the ones closest to the hyperplane, referred to as \emph{support
-	vectors}.
+The 'hardest' points are the ones closest to the hyperplane, referred to as \emph{support vectors}.
 
-\medskip
+\smallskip
 
-We can express any hyperplane in space as a function (\Cref{eq:hyperplane}) of a normal vector
-$\vec{w}$ controlling the direction of the hyperplane and a bias value $b$ controlling the distance
-of the hyperplane from the origin.
+We can express any hyperplane in space as a function of a normal vector $\vec{w}$ controlling the direction of the hyperplane and a bias value $b$ controlling the distance of the hyperplane from the origin:
 \begin{equation}
 	\label{eq:hyperplane}
-	\vec{w}^\top\vec{x} + b = 0
+	\vec{w}^\top\vec{x} + b = 0 \enspace.
 \end{equation}
-For any given point in space we can compute its distance from the hyperplane as shown in
-\Cref{eq:hyperdistance}.
+For any given point in space we can compute its distance from the hyperplane
 \begin{equation}
 	\label{eq:hyperdistance}
-	r = \frac{|\vec{w}^\top\vec{x} + b|}{||\vec{w}||}
+	r = \frac{|\vec{w}^\top\vec{x} + b|}{||\vec{w}||} \enspace.
 \end{equation}
-Let's suppose that the hyperplane can perfectly divide the points in the two classes, we can
-describe it as shown in \Cref{eq:system}.
+If the hyperplane can perfectly divide the points in the two classes, we have
 \begin{equation}
 	\label{eq:system}
 	\begin{cases}
-		 & \vec{w}^\top\vec{x}_i + b > 0, \hspace{10pt} y_i = +1 \\
-		 & \vec{w}^\top\vec{x}_i + b < 0, \hspace{10pt} y_i = -1
+		 & \vec{w}^\top\vec{x}_i + b > 0, \hspace{10pt} y_i = +1 \enspace, \\
+		 & \vec{w}^\top\vec{x}_i + b < 0, \hspace{10pt} y_i = -1 \enspace.
 	\end{cases}
 \end{equation}
-\Cref{eq:svm-system} is valid for every point in the dataset, but we can give a stronger condition
-which only works for the support vectors and is based on the distance defined in
-\Cref{eq:hyperdistance}. This new system is shown in \Cref{eq:svm-system}.
+We can give a stronger condition, which only works for the support vectors, and is based on the
+distance defined in~\ref{eq:hyperdistance}:
 \begin{equation}
 	\label{eq:svm-system}
 	\begin{cases}
-		 & \vec{w}^\top\vec{x}_i + b \geq +1, \hspace{10pt} y_i = +1 \\
-		 & \vec{w}^\top\vec{x}_i + b \leq -1, \hspace{10pt} y_i = -1
+		 & \vec{w}^\top\vec{x}_i + b \geq +1, \hspace{10pt} y_i = +1 \enspace, \\
+		 & \vec{w}^\top\vec{x}_i + b \leq -1, \hspace{10pt} y_i = -1 \enspace.
 	\end{cases}
 \end{equation}
-The margin, defined in \Cref{eq:margin}, is the total distance between two support vectors belonging to different classes.
+The margin, defined here below, is the total distance between two support vectors belonging to different classes:
 \begin{equation}
 	\label{eq:margin}
-	\gamma = \frac{2}{||\vec{w}||}
+	\gamma = \frac{2}{||\vec{w}||} \enspace.
 \end{equation}
 
-\medskip
-
 As was said in the beginning of this section, we want to find the best separating hyperplane,
-therefore the hyperplane that has a reasonable distance from the hardest points in the training set
-so that we can give some guarantees of the generalization performance. We can express this problem as a maximization problem:
-we want to maximize the margin in \Cref{eq:margin} subject to the constraints of
-\Cref{eq:svm-system}. Maximizing the margin means maximizing $||\vec{w}||^{-1}$ which is equivalent
-to minimizing $||\vec{w}||^2$, taken for simplicity purposes. The problem, as is formulated in
-\Cref{eq:primal}, is the primal form of \textsc{svm}.
+ensuring the best generalization performance, therefore it has to be at a reasonable distance from
+the hardest points in the training set. We can express this problem via a maximization problem: we
+want to maximize the margin in~\ref{eq:margin}, subject to the constraints of
+equation~\ref{eq:svm-system}. Maximizing the margin means maximizing $||\vec{w}||^{-1}$ which is
+equivalent to minimizing $||\vec{w}||^2$, taken for simplicity. The result is the primal form of
+\svm:
 \begin{equation}
 	\label{eq:primal}
 	\begin{aligned}
 		\max_{\vec{w}, b}        & \frac{1}{2}||\vec{w}||^2                                            \\
-		\text{s.t.}\hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1, \ldots, m
+		\text{s.t.}\hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 \hspace{10pt}i = 1,
+		\ldots, n \enspace.
 	\end{aligned}
 \end{equation}
-This is a quadratic programming problem, there are libraries that provide solvers for the problem,
-but there are other methods that allow us to compute a solution with a higher grade of efficiency.
-We can introduce \emph{Lagrange multipliers} ($\alpha_i$ in \Cref{eq:lagrangian}), the resulting
-Lagrangian is the one in \Cref{eq:lagrangian}.
+This is a quadratic programming problem, and there are libraries providing solvers for it, but there
+are other methods that allow us to compute a solution with a higher grade of efficiency. We can
+introduce \emph{Lagrange multipliers} $\alpha_i$ and the Lagrangian function.
 \begin{equation}
 	\label{eq:lagrangian}
-	\lag(\vec{w}, b, \vec{\alpha}) = \frac{1}{2} ||\vec{w}||^2 + \sum_{i = 1}^{m}{\alpha_i (1 - y_i(\vec{w}^\top\vec{x}_i + b))}
+	\lag(\vec{w}, b, \vec{\alpha}) = \frac{1}{2} ||\vec{w}||^2 + \sum_{i = 1}^{n}{\alpha_i (1 -
+	y_i(\vec{w}^\top\vec{x}_i + b))} \enspace.
 \end{equation}
-If we compute the partial derivatives of the Lagrangian with respect to $\vec{w}$ and the bias $b$
-we obtain the two equations shown in \Cref{eq:pd-lagrangian}.
+If we compute the partial derivatives of the Lagrangian with respect to $\vec{w}$ and $b$ we obtain:
 \begin{equation}
 	\label{eq:pd-lagrangian}
 	\begin{aligned}
-		 & \frac{\partial{\lag}}{\partial{\vec{w}}} = \vec{w} - \sum_{i = 1}^m
-		\alpha_iy_i\vec{x}_i                                                   \\
-		 & \frac{\partial{\lag}}{\partial{b}} = \sum_{i = 1}^m \alpha_iy_i
+		 & \frac{\partial{\lag}}{\partial{\vec{w}}} = \vec{w} - \sum_{i = 1}^n
+		\alpha_iy_i\vec{x}_i \enspace,                                                  \\
+		 & \frac{\partial{\lag}}{\partial{b}} = \sum_{i = 1}^n \alpha_iy_i \enspace.
 	\end{aligned}
 \end{equation}
-By setting the partial derivatives to zero, and substituting the first in
-\Cref{eq:lagrangian}, we can get rid of the normal vector dependency and the \emph{dual} problem can
-be defined as a function of $\vec{\alpha}$ and the bias $b$. The dual problem is shown in \Cref{eq:dual}.
+By setting the partial derivatives to zero, and substituting the first in~\ref{eq:lagrangian}, we
+can get rid of the normal vector dependency and the \emph{dual} problem can be defined as a function
+of the sole $\vec{\alpha}$. The dual problem is
 \begin{equation}
 	\label{eq:dual}
 	\begin{aligned}
-		\max_{\vec{\alpha}}       & \left(\sum_{i = 1}^{m}{\alpha_i} - \frac{1}{2}\sum_{i =
-		1}^{m}\sum_{j = 1}^{m}{\alpha_i\alpha_j y_i y_j \vec{x}_i^\top\vec{x}_j}\right)               \\
-		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^{m}{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, m
+		\max_{\vec{\alpha}}       & \left(\sum_{i = 1}^n{\alpha_i} - \frac{1}{2}\sum_{i =
+		1}^n\sum_{j = 1}^n{\alpha_i\alpha_j y_i y_j \vec{x}_i^\top\vec{x}_j}\right)               \\
+		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^n{\alpha_i y_i} = 0 \hspace{10pt}
+		\alpha_i \geq 0 \hspace{3pt} \forall i \enspace.
 	\end{aligned}
 \end{equation}
-The hyperplane that we are looking for can be modelled as shown in \Cref{eq:of}, the second
-formulation is virtue of the substitution found for $\vec{w}$ in \Cref{eq:pd-lagrangian}.
+The hyperplane can be modelled as follows, in virtue of the substitution found for $\vec{w}$
+in~\ref{eq:pd-lagrangian}:
 \begin{equation}
 	\label{eq:of}
-	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \sum_{i = 1}^m\alpha_iy_i\vec{x}_i\vec{x} + b
+	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \sum_{i = 1}^n\alpha_iy_i\vec{x}_i\vec{x} + b
 \end{equation}
-Since \Cref{eq:primal} is an optimization problem with inequality constraints, it must satisfy
-Karush-Kuhn-Tucker necessary conditions, first introduced in~\cite{kkt1951}\footnote{For a small
-ex-cursus on Karush-Kuhn-Tucker conditions, refer to \Cref{app:kkt}.}.
+Since~\ref{eq:primal} is an optimization problem with inequality constraints, it must satisfy
+Karush-Kuhn-Tucker necessary conditions~\cite{kkt1951}\footnote{For a small ex-cursus on
+\textsc{kkt} conditions, refer to \Cref{app:kkt}.}. Solving the primal is equivalent to solving the
+dual subject to the following constraints:
 \begin{equation}
 	\label{eq:kkt-constraints}
 	\begin{cases}
-		 & \alpha_i \geq 0                   \\
-		 & y_if(\vec{x}_i) - 1 \geq 0        \\
-		 & \alpha_i(y_if(\vec{x}_i) - 1) = 0
+		 & \alpha_i \geq 0 \enspace,                   \\
+		 & y_if(\vec{x}_i) - 1 \geq 0 \enspace,        \\
+		 & \alpha_i(y_if(\vec{x}_i) - 1) = 0 \enspace.
 	\end{cases}
 \end{equation}
 Constraints in \Cref{eq:kkt-constraints} reveal that, for every point in the training set $(\vec{x}_i, y_i)$, only two scenarios are possible:
 \begin{enumerate}
-	\item Lagrange multiplier $\alpha_i = 0$, Therefore the point $(\vec{x}_i, y_i)$ is not
-		influencing \Cref{eq:of}.
-	\item If the Lagrange multiplier $\alpha_i > 0$ then the third constraint in
-	      \Cref{eq:kkt-constraints} yields $y_if(\vec{x}_i) = 1$ which means that the point is
-	      laying on the maximum margin hyperplanes, therefore it's a support vector.
+	\item if $\alpha_i = 0$, then the point $(\vec{x}_i, y_i)$ is not influencing~\ref{eq:of}.
+	\item If $\alpha_i > 0$ then the third constraint in~\ref{eq:kkt-constraints} yields
+		$y_if(\vec{x}_i) = 1$ meaning that the point is laying on the maximum margin hyperplanes, therefore it's a support vector.
 \end{enumerate}
 Which leads us to a very important conclusion: once the training is completed, the model can be entirely
 described by using only support vectors, since they are the ones that yield a contribution in the
-calculation of \Cref{eq:of}.
+calculation of~\ref{eq:of}.
 
-There are different techniques to solve the problem defined in \Cref{eq:dual}: one of the possibilities is to use quadratic
-programming solvers, another possibility is to use the \textsc{smo} (Sequential Minimal Optimization) method; Proposed in
-\cite{platt1998} it consists of an iterative resolution of the problem, by successive
-identifications of local approximations of the Lagrange multipliers $\alpha_i$, while keeping all
-other parameters frozen as constants. Platt's algorithm, compared to the competition
-(Osuna's~\cite{osuna1997} and Chunking), spends much less time doing Lagrange multiplier
-optimization, during training. In the project we used Support Vector Classifiers (\svcs) and their implementation in
-scikit--learn relies upon \textsc{libsvm}, which is an open source library to work with \svms. The
-library was born in $2000$, initially written in C\+\+ is now used by most modern languages and, to decompose the dual problem, uses a variant of the \textsc{smo} method which was described in \cite{fang2005}.
+There are different techniques to solve the dual problem~\ref{eq:dual}: quadratic programming
+solvers or Sequential Minimal Optimization \textsc{smo} method.
 
-\medskip
+Proposed in \cite{platt1998} it consists of an iterative resolution of the problem, by successive
+identifications of local approximations of $\alpha_i$, while keeping all other parameters frozen as
+constants. Platt's algorithm, compared to the competition (Osuna's~\cite{osuna1997} and Chunking),
+spends less time doing Lagrange multiplier optimization during training. In the project we used
+Support Vector Classifiers (\svcs) and their implementation in scikit-learn relies upon
+\textsc{libsvm}, which is an open source library to work with \svms. The library was born in $2000$,
+initially written in C++ is now used by most modern languages and, to decompose the dual problem,
+uses a variant of the \textsc{smo} method~\cite{fang2005}.
 
-The method explained until now provides a solution to problem shown in \Cref{eq:primal} which is meant to
+\subsection{Soft-margin SVM}
+\label{sec:se-svm}
+The method explained until now provides a solution to the primal problem~\ref{eq:primal}, which is meant to
 have perfect accuracy, meaning that no classification errors are accepted. This is a solution that
-is neither advisable nor possible in most cases, due to the problem of linear separability addressed
-in \Cref{sssec:kernel-functions}.
+is neither advisable nor possible in most cases, due to the problem of linear separability, which we
+will address in \Cref{sec:kernel-functions}.
 
-For this reason the \emph{soft margin} \textsc{svm} model was defined, such formulation of the solution
+For this reason the \emph{soft margin} \textsc{svm} model was defined: its formulation of the solution
 allows a relaxation of the constraints, therefore, a certain number of classification errors.
-Since the number of errors needs to be minimized, we can rewrite the objective of \Cref{eq:primal} as
-shown in \Cref{eq:sm-primal}.
+Since the number of errors needs to be minimized, we can rewrite the objective of equation~\ref{eq:primal} as
 \begin{equation}
 	\label{eq:sm-primal}
-	\min_{\vec{w}, b} \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \ell_{0 / 1}(y_i (\vec{w}^\top \vec{x}_i + b) - 1)
+	\min_{\vec{w}, b} \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^n \ell_{0 / 1}(y_i (\vec{w}^\top
+	\vec{x}_i + b) - 1) \enspace,
 \end{equation}
-In \Cref{eq:sm-primal} $C > 0$ is a regularization constant and $\ell_{0 / 1}$ is the $0/1$
-loss. Solving directly the equation can be complicated, due to the poor mathematical properties of
-the $0/1$ loss function, even if there are approximate methods to minimize it~\cite{nguyen2013},
-usually a convex loss function is used to replace it.
+where $C > 0$ is a regularization constant and $\ell_{0 / 1}$ is the $0/1$ loss. Solving directly the equation can be complicated, due to the poor mathematical properties of the $0/1$ loss function, even if there are approximate methods to minimize it~\cite{nguyen2013}, usually a convex loss function is used to replace it.
 
-The soft margin \textsc{svm} is defined by substituting $0/1$ loss with hinge loss, a convex function for binary
-classifiers defined as $\ell(y) = \max(0, 1 - ty)$ where $y$ is the raw output of the classifier and
-$t$ is the label associated to the output, and then adding slack variables $\xi_i \geq 0$. The primal problem can be easily rewritten as shown in \Cref{eq:sm-primal-final}.
+Soft margin \textsc{svm} is defined by substituting $0/1$ loss with hinge loss, a convex function for binary classifiers defined as $\ell(y) = \max(0, 1 - ty)$ where $y$ is the raw output of the classifier and $t$ is the label associated to the output, and then adding slack variables $\xi_i \geq 0$. The primal problem can be easily rewritten as
 \begin{equation}
 	\label{eq:sm-primal-final}
 	\begin{aligned}
-		\min_{\vec{w}, b}         & \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i \\
-		\text{s.t.} \hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 - \xi_i    \\
-		                          & \xi_i \geq 0 \hspace{10pt}i = 1, \ldots, m
+		\min_{\vec{w}, b}         & \frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^n \xi_i
+		\enspace,\\
+		\text{s.t.} \hspace{10pt} & y_i(\vec{w}^\top\vec{x}_i + b) \geq 1 - \xi_i \enspace,    \\
+		                          & \xi_i \geq 0 \hspace{10pt}i = 1, \ldots, n \enspace.
 	\end{aligned}
 \end{equation}
-If we apply the Lagrange multipliers method to \Cref{eq:sm-primal-final} the Lagrangian will be
-dependent on the slack variables, the normal vector $\vec{w}$, the Lagrange multipliers
-$\vec{\alpha}$ and $\vec{\mu}$ and the bias $b$. The function can be expressed as shown in
-\Cref{eq:sm-lagrangian}.
+If we apply the Lagrange multipliers method the Lagrangian will be dependent on: the slack
+variables, normal vector $\vec{w}$, the Lagrange multipliers $\vec{\alpha}, \vec{\mu}$ and the bias $b$. Tre function can be expressed as
 \begin{equation}
 	\label{eq:sm-lagrangian}
 	\begin{aligned}
 		\mathcal{L}(\vec{w}, b, \vec{\alpha}, \vec{\xi}, \vec{\mu}) & =
-		\frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^m \xi_i                                                                                                               \\
-		                                                            & + \sum_{i = 1}^m \alpha_i(1 - \xi_i - y_i(\vec{w}^\top\vec{x}_i + b)) + \sum_{i = 1}^m\mu_i\xi_i
+		\frac{1}{2}||\vec{w}||^2 + C\sum_{i = 1}^n \xi_i                                                                                                               \\
+		& + \sum_{i = 1}^n \alpha_i(1 - \xi_i - y_i(\vec{w}^\top\vec{x}_i + b))
+		  + \sum_{i = 1}^n\mu_i\xi_i \enspace.
 	\end{aligned}
 \end{equation}
 By setting the partial derivatives to $0$, just as was done for the generic \textsc{svm}, and doing
-some substitutions we obtain the final form of the dual problem for the soft margin \textsc{svm}, shown in
-\Cref{eq:sm-dual-final}
+some substitutions we obtain the final form of the dual problem for the soft margin \textsc{svm};
 \begin{equation}
 	\label{eq:sm-dual-final}
 	\begin{aligned}
-		\max_{\vec{\alpha}}       & \sum_{i = 1}^m \alpha_i - \frac{1}{2}\sum_{i = 1}^m\sum_{j =
-		1}^m\alpha_i\alpha_jy_iy_j\vec{x}_i^\top\vec{x}_j                                        \\
-		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^m\alpha_iy_i = 0                                \\
-		                          & 0 \leq \alpha_i \leq C \hspace{10pt} i = 1, \ldots, m
+		\max_{\vec{\alpha}}       & \sum_{i = 1}^n \alpha_i - \frac{1}{2}\sum_{i = 1}^n\sum_{j =
+		1}^n\alpha_i\alpha_jy_iy_j\vec{x}_i^\top\vec{x}_j \enspace,                                        \\
+		\text{s.t.} \hspace{10pt} & \sum_{i = 1}^n\alpha_iy_i = 0 \enspace,                              \\
+		                          & 0 \leq \alpha_i \leq C \hspace{10pt} i = 1, \ldots, n
+					  \enspace.
 	\end{aligned}
 \end{equation}
-Since the dual problem has a similar structure to \Cref{eq:dual}, the same conclusions apply. We can
-also extract the \textsc{kkt} conditions, which are shown in \Cref{eq:sm-kkt}.
+Since the dual problem has a similar structure to equation~\ref{eq:dual}, the same conclusions
+apply. We can also extract the \textsc{kkt} conditions, which are:
 \begin{equation}
 	\label{eq:sm-kkt}
 	\begin{cases}
-		 & \alpha_i \geq 0, \hspace{10pt}\mu_i \geq 0 \\
-		 & y_if(\vec{x}_i) - 1 + \xi_i \geq 0         \\
-		 & \alpha_i(y_if(\vec{x}_i) - 1 + \xi_i) = 0  \\
-		 & \xi_i \geq 0, \hspace{10pt} \mu_i\xi_i = 0
+		 & \alpha_i \geq 0, \hspace{10pt}\mu_i \geq 0 \enspace, \\
+		 & y_if(\vec{x}_i) - 1 + \xi_i \geq 0 \enspace,         \\
+		 & \alpha_i(y_if(\vec{x}_i) - 1 + \xi_i) = 0 \enspace,  \\
+		 & \xi_i \geq 0, \hspace{10pt} \mu_i\xi_i = 0 \enspace.
 	\end{cases}
 \end{equation}
 As was done previously, we can draw conclusions by checking the \textsc{kkt} constraints:
@@ -737,11 +713,11 @@ As was done previously, we can draw conclusions by checking the \textsc{kkt} con
 		support vector.
 \end{itemize}
 
-In the following section we will address an important assumption that was made in the beginning of
-this chapter and then provide adjustments to the model.
+In the following section we will address the linear separability assumption we have implicitly made
+until this moment.
 
-\subsubsection{Kernel funtions}
-\label{sssec:kernel-functions}
+\subsection{Kernel funtions}
+\label{sec:kernel-functions}
 Until now the topic was treated under the important assumption that the points in the dataset are
 linearly separable, but it's known that this condition rarely holds in practice. To address the issue the
 problem is moved to a higher dimensionality space through a mapping $\phi(\cdot)$, this is done in
