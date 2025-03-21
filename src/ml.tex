@@ -810,46 +810,42 @@ high-dimensional space, and therefore how good the separating hyperplane is goin
 \section{Unsupervised models}
 \label{sec:uml}
 With \svms\ we leave supervised models behind, in this chapter we are going to consider unsupervised
-machine learning, which takes advantage of a series of tricks to extrapolate patterns from data that
-hasn't been previously classified.
+machine learning, capable of extrapolating patterns from unlabelled data.
 
 Unsupervised machine learning models, contrarily to the supervised case, are trained on datasets
-that do not contain an expected answer $y_i$ for the $i$th instance of problem $\problem$.
+that do not contain an expected answer $y_i$ for instance $\problem_i$.
 
 This section is going to be dedicated to explore the theory behind the $k$-means clustering
-algorithm, once again the main material used is~\cite{ZhouZhi-Hua2021ML}.
+algorithm: once again the main material used is~\cite{ZhouZhi-Hua2021ML}.
 
 \section{Clustering with k-means}
 \label{sec:kmeans}
 Given a dataset $\udset$ a clustering algorithm partitions the data into non-intersecting sets
-known as \emph{clusters}, the data is grouped based on how similar they are; ideally, the more two
-points are similar, the closer they are.
+known as \emph{clusters}: the data is grouped based on how similar they are; ideally, the more two
+points are similar, the closer they should be.
 
-If on the one hand these algorithms are capable of giving us an idea of the
+If, on the one hand, these algorithms are capable of giving us an idea of the
 meaning of the points, as well as a hint about the nature of the relations that have with each
-other, on the other hand understanding the results of a clustering procedure, is not as
-straightforward as it sounds; that is why it has to be found by experts working on the
-interpretation side of the problem.
-
-Clustering algorithms can be used to do supervised and unsupervised classification but they can also
-be used as a preprocessing step for other models.
-
-\medskip
+other; on the other one, understanding the results of a clustering procedure is not as
+straightforward as it sounds. An explanation to the partitioning has to be found by conferring with
+experts in the field of interest.
 
 Before introducing the $k$-means algorithm we are going to explore the two most important concepts
 in clustering: performance measures and distance calculation.
 
 \subsubsection{Performance measures}
 \label{ssec:performance-measures}
-Clustering algorithms have their own set of metrics, also known as \emph{validity indices}. Since
-common scores like \emph{accuracy} and \emph{recall}\footnote{These and more scores for supervised
-learning models will be explored in the chapters dedicated to the problem and its resolution: \Cref{chp:problem},
-\Cref{chp:qrp}, \Cref{chp:qlp}} lose meaning in the clustering
-environment there are indices that allow us to matematically express the fact that points belonging
-to the same cluster are similar (\emph{intra-cluster similarity}); while points that belong to
-different clusters cannot be too similar (\emph{inter-cluster similarity}).
+Clustering algorithms have their own set of metrics, also known as \emph{validity indices}. Common
+scores like \emph{accuracy} and \emph{recall} cannot be used because the dataset doesn't have an
+expected class to compare the prediction with~\footnote{
+	These and more scores for supervised learning models will be explored in
+	chapters~\ref{chp:qrp}--~\ref{chp:qlp}. The metrics used will be introduced in
+	chapter~\ref{chp:problem}.
+}. In the clustering environment there are indices that allow us to mathematically
+express the fact that points belonging to the same cluster are similar (\emph{intra-cluster
+similarity}); while points that belong to different clusters have to be different enough (\emph{inter-cluster similarity}).
 
-\medskip
+\smallskip
 
 Over the years many different indices have been defined, all of them using different aspects of the
 cluster structure and rating them on a different scale. All of this scoring methods can be divided
@@ -857,107 +853,108 @@ in two big families:
 \begin{itemize}
 	\item \emph{external indices}, which compare the clustering result against a reference model,
 	\item \emph{internal indices}, which evaluate clustering performance without using a
-		reference model, using a certain set of measures that can be performed on the
+		reference model; using a certain set of measures that can be performed on the
 		clustering instance itself.
 \end{itemize}
-We will begin by considering external indices.
-
-Given a dataset $\udset$ suppose that a clustering algorithm $\model$ has constructed a partition
-$\mathcal{C} = \{C_1, \ldots, C_k\}$ while a reference model $\model^*$ constructed partition
-$\mathcal{C}^*=\{C^*_1, \ldots, C^*_h\}$. Each cluster $C_i, C^*_i$ is labelled with a value
-$\lambda_i, \lambda^*_i$, grouping all of the labels together we obtain vectors $\vec{\lambda}$ and
-$\vec{\lambda}^*$. For each pair of samples $(\vec{x}_i, \vec{x}_j)$ we can define the terms shown in
-\Cref{eq:clustering-terms}.
+We will begin by considering external indices. Suppose that a clustering algorithm $\model$ has
+constructed a partition $\mathcal{C} = \{C_1, \ldots, C_k\}$ while a reference model $\model^*$
+constructed partition $\mathcal{C}^*=\{C^*_1, \ldots, C^*_h\}$. Each cluster $C_i$ and $C^*_i$ is
+labelled with a value $\lambda_i$ and $\lambda^*_i$. Grouping all labels together we obtain vectors
+$\vec{\lambda}$ and $\vec{\lambda}^*$. For each pair of samples $(\vec{x}_i, \vec{x}_j)$ we can
+define terms: 
 \begin{equation}
 	\label{eq:clustering-terms}
 	\begin{aligned}
 		a =|SS|, \hspace{10pt} &SS = \{(\vec{x}_i, \vec{x}_j) | \lambda_i = \lambda_j, \lambda^*_i =
-		\lambda^*_j, i < j\} \\
+		\lambda^*_j, i < j\} \enspace, \\
 		b =|SD|, \hspace{10pt} &SD = \{(\vec{x}_i, \vec{x}_j) | \lambda_i = \lambda_j, \lambda^*_i
-		\neq \lambda^*_j, i < j\} \\
+		\neq \lambda^*_j, i < j\} \enspace, \\
 		c =|DS|, \hspace{10pt} &DS = \{(\vec{x}_i, \vec{x}_j) | \lambda_i \neq \lambda_j, \lambda^*_i =
-		\lambda^*_j, i < j\} \\
-		d =|DD|, \hspace{10pt} &SS = \{(\vec{x}_i, \vec{x}_j) | \lambda_i \neq \lambda_j,
-		\lambda^*_i \neq \lambda^*_j, i < j\} \\
+		\lambda^*_j, i < j\} \enspace, \\
+		d =|DD|, \hspace{10pt} &DD = \{(\vec{x}_i, \vec{x}_j) | \lambda_i \neq \lambda_j,
+		\lambda^*_i \neq \lambda^*_j, i < j\} \enspace.
 	\end{aligned}
 \end{equation}
-The $i < j$ constraint is necessary to make sure that each pair is counted only once; \Cref{eq:clustering-terms} can be expressed in natural language as follows:
+The $i < j$ constraint is necessary to make sure that each pair is counted only once; equation~\ref{eq:clustering-terms} can be expressed in natural language as follows:
 \begin{itemize}
-	\item[$a$] is the set of all pairs in $D$ belonging to the same cluster for $\model$ and
+	\item[$a$] is the number of pairs in $D$ belonging to the same cluster for $\model$ and
 		$\model^*$,
-	\item[$b$] is the set of all pairs in $D$ belonging to the same cluster for $\model$ but not
+	\item[$b$] is the number of pairs in $D$ belonging to the same cluster for $\model$ but not
 		for $\model^*$,
-	\item[$c$] is the set of all pairs in $D$ belonging to the same cluster for $\model^*$ but
+	\item[$c$] is the number of pairs in $D$ belonging to the same cluster for $\model^*$ but
 		not for $\model$,
-	\item[$d$] is the set of all pairs in $D$ that do not belong to the same cluster for both
+	\item[$d$] is the number of pairs in $D$ that do not belong to the same cluster for both
 		$\model$ and $\model^*$.
 \end{itemize}
-In the project, we didn't have a reference model to compare the performance with, therefore, we only
-used external indices; for completeness's sake I will include some examples of internal indices taken from~\cite{ZhouZhi-Hua2021ML}.
+In our experiments, we didn't have a reference model to compare the clustering results with,
+therefore, we only used external indices; for completeness's sake we will include some examples of internal indices taken from~\cite{ZhouZhi-Hua2021ML}.
 
 \begin{itemize}
-	\item Fowlkes and Mallows Index (\textsc{fmi})\cite{Fowlkes1983}, which computes the square root of the
-		product between the True Positive Rate (\tpr) and the Precision (\textsc{ppr}).
+	\item Fowlkes and Mallows Index (\textsc{fmi})~\cite{Fowlkes1983}, which computes the
+		geometric mean of True Positive Rate (\tpr) and Precision (\textsc{ppr}).
 		\begin{equation*}
-			\textsc{fmi} = \sqrt{\tpr \cdot \textsc{ppr}} = \sqrt{\frac{a}{a + b} \cdot \frac{a}{a + c}}
+			\textsc{fmi} = \sqrt{\tpr \cdot \textsc{ppr}} = \sqrt{\frac{a}{a + b} \cdot
+			\frac{a}{a + c}} \enspace.
 		\end{equation*}
-	\item Rand Index (\textsc{ri})\cite{Rand1971}, since every point needs to be in one and
-		only one cluster, $a + b + c + d = \binom{n}{2}$, therefore $\textsc{ri}$ computes
-		the 'accuracy' of the model since we are considering the true positives and the true negatives ($a, d$) divided by all the possibilities.
+	\item Rand Index (\textsc{ri})~\cite{Rand1971}, computes the 'accuracy' of the clustering
+		procedure; since every point needs to be in one and only one cluster, $a + b + c + d
+		= \binom{n}{2}$, therefore $\textsc{ri}$ divides the number of true positives and
+		negatives $(a, d)$, by all the possibilities.
 		\begin{equation*}
-			\textsc{ri} = \frac{2(a + d)}{n(n - 1)}
+			\textsc{ri} = \frac{2(a + d)}{n(n - 1)} /enspace.
 		\end{equation*}
 \end{itemize}
 
 We will use the second part of this section to talk about internal indices. Given a partition
-$\mathcal{C} = \{C_1, \ldots, C_k\}$ of a dataset $\udset$, the indices that will
-be introduced shortly are based on the terms defined in: \Cref{eq:cluster-avg}, \Cref{eq:cluster-diam},
-\Cref{eq:inter-cluster-distance} and \Cref{eq:cluster-centroid-distance}.
-
-If we define the distance between two vectors as a function $dist(\cdot, \cdot)$ (distances will be
-introduced in the following section) then, \Cref{eq:cluster-avg} defines the average distance between samples within a cluster.
+$\mathcal{C} = \{C_1, \ldots, C_k\}$ of a dataset $D$, if we define the distance between two vectors
+as a function $dist(\cdot, \cdot)$ (distances will be introduced in the following section) then the
+average distance between samples within a cluster is:
 \begin{equation}
 	\label{eq:cluster-avg}
 	avg(C) = \frac{2}{|C|(|C| - 1)}\sum_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j)
+	\enspace.
 \end{equation}
 
-\Cref{eq:cluster-diam} defines the diameter of a cluster, which is the maximum distance between any
-two given points within the cluster.
+The diameter of a cluster is the maximum distance between any two given points within the cluster,
+it is defined as follows:
 \begin{equation}
 	\label{eq:cluster-diam}
-	diam(C) = \max_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j)
+	diam(C) = \max_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j) \enspace.
 \end{equation}
 
-\Cref{eq:inter-cluster-distance} is the minimum distance between the two nearest samples in two
-different clusters $C_i$ and $C_j$.
+We can define the minimum distance between the two nearest samples in two different clusters $C_i$
+and $C_j$ as
 \begin{equation}
 	\label{eq:inter-cluster-distance}
 	d_{min}(C_i, C_j) = \min_{\vec{x}_i \in C_i, \vec{x}_j \in C_j} dist(\vec{x}_i, \vec{x}_j)
+	\enspace.
 \end{equation}
-
-If we define $\vec{\mu} = \frac{1}{|C|} \sum_{1 \leq i \leq |C|} \vec{x}_i$ the \emph{centroid} of
-cluster $C$, \Cref{eq:cluster-centroid-distance} is a function that computes the distance between
-clusters by computing the distance between centroids.
+Finally, we can define the centroid of cluster $C$ as
+\begin{equation}
+	\label{eq:centroid}
+	\vec{\mu} = \frac{1}{|C|} \sum_{1 \leq i \leq |C|} \vec{x}_i
+	\enspace.
+\end{equation}
+The distance between centroids will be defined as follows:
 \begin{equation}
 	\label{eq:cluster-centroid-distance}
 	d_{cen}(C_i, C_j) = dist(\vec{\mu}_i, \vec{\mu}_j)
+	\enspace.
 \end{equation}
 
 By using the concepts defined above, we can introduce many different scores, the two following
 examples are the main clustering scores used within the project.
 
 \begin{itemize}
-	\item Davies-Bouldin Index (\textsc{dbi})\cite{bouldin1979}.
+	\item Davies-Bouldin Index (\textsc{dbi})~\cite{bouldin1979}.
 		\begin{equation*}
-			\textsc{dbi} = \frac{1}{k}\sum_{i = 1}^k\max_{j \neq i}\left(\frac{avg(C_i) + avg(C_j)}{d_{cen}(C_i, C_j)}\right)
+			\textsc{dbi} = \frac{1}{k}\sum_{i = 1}^k\max_{j \neq i}\left(\frac{avg(C_i)
+			+ avg(C_j)}{d_{cen}(C_i, C_j)}\right) \enspace.
 		\end{equation*}
-	\item The \emph{Silhouette Coefficient} built on a sample $i$ was defined in~\cite{rousseuw1987}
-		is built using two different metrics: $e(i)$\footnote{Compared to the literature I
-		chose different names for the metrics used to compute the Silhouette index just to
-		avoid confusion, since they would have to be called $a$ and $b$, which were already
-		used to define the metrics used for external clustering indices}, which is the mean
-		distance between a point and all other points in the same cluster, and $f(i)$, which is
-		the mean distance between a point and all other points in the next nearest cluster.
+	\item The \emph{Silhouette Coefficient} for sample $i$ defined in~\cite{rousseuw1987}
+		is based on two different metrics: $e(i)$\footnote{
+			Compared to the literature we chose different names to avoid confusion, since they would have to be called $a$ and $b$, which were already used to define the metrics used for external clustering indices.
+		}, which is the mean distance between a point and all other points in the same cluster, and $f(i)$, which is the mean distance between a point and all other points in the nearest cluster.
 
 		\begin{equation*}
 			s(i) = \frac{f(i) - e(i)}{\max(e(i), f(i))}
@@ -966,56 +963,52 @@ examples are the main clustering scores used within the project.
 
 \subsubsection{Distance calculation}
 \label{ssec:distance-calculation}
-Distances are a complicated topic, a lot could be said about them, but it would be beyond the scope
-of this thesis, the information contained in this section is what we considered necessary to breach
-the topic of $k$-means clustering.
+In this section we briefly recall the basic definitions involving distances. The interested reader
+can refer to~\cite{} for a deeper introduction to this topic. The information contained in this section is what we considered necessary to breach the topic of $k$-means clustering.
 
-Given a function $dist(\cdot, \cdot)$, it's a \emph{distance measure} if it follows $4$ fundamental
-axioms:
+A function $dist(\cdot, \cdot)$, is a \emph{distance measure} if it satisfies $4$ fundamental axioms
+for all $x_i, x_j$ and $x_k$:
 \begin{enumerate}
-	\item \emph{Non-negativity}: $dist(\vec{x}_i, \vec{x}_j) \geq 0$,
-	\item \emph{Identity of indiscernibles}: $dist(\vec{x}_i, \vec{x}_j) = 0$ if and only if
+	\item \emph{non-negativity}: $dist(\vec{x}_i, \vec{x}_j) \geq 0$,
+	\item \emph{identity of indiscernibles}: $dist(\vec{x}_i, \vec{x}_j) = 0$ if and only if
 		$\vec{x}_i = \vec{x}_j$,
-	\item \emph{Symmetry}: $dist(\vec{x}_i, \vec{x}_j) = dist(\vec{x}_j, \vec{x}_i)$,
-	\item \emph{Triangle inequality}: $dist(\vec{x}_i, \vec{x}_j) \leq dist(\vec{x}_i,
+	\item \emph{symmetry}: $dist(\vec{x}_i, \vec{x}_j) = dist(\vec{x}_j, \vec{x}_i)$,
+	\item \emph{triangle inequality}: $dist(\vec{x}_i, \vec{x}_j) \leq dist(\vec{x}_i,
 		\vec{x}_k) + dist(\vec{x}_k, \vec{x}_j)$.
 \end{enumerate}
 Given two samples $\vec{x}_i$ and $\vec{x}_j$, a commonly used measure is the \emph{Minkowski
-distance}, which is defined in \Cref{eq:mkd}.
+distance}, which is defined in \Cref{eq:mkd}.\todo{Togliere questa roba e aggiungere un riferimento
+bibliografico per la distanza di Minkowski -- Ale}
 \begin{equation}
 	\label{eq:mkd}
 	dist_{mk}(\vec{x}_i, \vec{x}_j) = \left(\sum_{u = 1}^n|x_{iu} - x_{ju}|^p\right)^\frac{1}{p}
 \end{equation}
-Different distance measures are associated to different values of the $p$ parameter, when $p = 2$
-the resulting function is the \emph{Euclidean distance}, when $p = \infty$ the resulting function is
-the \emph{Chebyshev distance}.
+Different distance measures are associated to different values of the $p$ parameter: when $p = 2$ the resulting function is the \emph{Euclidean distance}, when $p \rightarrow \infty$ the resulting function is the \emph{Chebyshev distance}.
 
-Usually techniques like clustering are coupled with \emph{dimensionality reduction} techniques
-(e.g., $\textsc{pca}$, $\textsc{svd}$, $\textsc{mdv}$), that is because distances lose their meaning
-when the number of dimensions is too high, this condition is known as the \emph{curse of
-dimensionality}~\cite{aggrawal2001}.
+Usually techniques like clustering are coupled with \emph{dimensionality reduction}
+techniques~\cite{tang2008-clustering, allaoui2020-clustering} (e.g., $\textsc{pca}$, $\textsc{svd}$,
+$\textsc{mdv}$), that is because distances lose their meaning when the number of dimensions is too
+high, this condition is known as the \emph{curse of dimensionality}~\cite{aggrawal2001-curseofdimensionality}.
 
 In the upcoming section we will be talking about the very well known $k$-means clustering algorithm.
 
-\subsection{K-means algorithm}
-The $k$-means algorithm~\cite{macqueen1967}~\cite{lloyd1982} is a very well known and studied
-\emph{prototype-based} clustering algorithm. The solution is computed by starting from a \emph{prototype},
-or a point in the dataset that represents what is going to be contained in the cluster, these
-prototypes are then updated and optimized. More formally, given a dataset $\udset$, the $k$-means
-algorithm minimizes the squared error (\Cref{eq:squared-error}) of clusters $\mathcal{C} = \{C_1,
-\ldots, C_k\}$.
-
+\subsection{k-means algorithm}
+The $k$-means algorithm~\cite{macqueen1967-kmeans, lloyd1982-kmeans} is a very well known and studied
+\emph{prototype-based} clustering algorithm. The algorithm identifies $k$ different clusters in the
+data; since the algorithm is unsupervised it starts by selecting $k$ different prototypes, which are
+points representing what is going to be contained in the cluster. These prototypes are then updated
+and optimized. More formally, given a dataset $D$, the $k$-means algorithm minimizes the following
+squared error:
 \begin{equation}
 	\label{eq:squared-error}
-	E = \sum_{i = 1}^k\sum_{\vec{x} \in C_i}||\vec{x} - \vec{\mu}_i||_2^2
+	E = \sum_{i = 1}^k\sum_{\vec{x} \in C_i}||\vec{x} - \vec{\mu}_i||_2^2 \enspace,
 \end{equation}
-
-thus the error is computed as the $L-2$ norm of the distance vector between every point in the
+thus the error is computed as the $L_2$ norm of the distance vector between every point in the
 cluster and the cluster's centroid, which we already encountered in the last section. A small error
-indicates a higher intra-cluster similarity. Since the process of minimizing
-\Cref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
+indicates a higher intra-cluster similarity. Since the process of minimizing the squared
+error~\ref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
 point for every possible cluster, the actual implementation of $k$-means takes a greedy approach
-(the algorithm is shown in \Cref{algo:kmeans}).
+(shown in \Cref{algo:kmeans}). This procedure starts with a prototype of the mean vectors and updates them iteratively with the definition of the clusters; the procedure stops once the partition structure doesn't change after one iteration.
 \begin{algorithm}
 	\caption{The $k$-means algorithm taken from~\cite{ZhouZhi-Hua2021ML}}\label{algo:kmeans}
 	\begin{algorithmic}[1]
@@ -1042,9 +1035,6 @@ point for every possible cluster, the actual implementation of $k$-means takes a
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
-This procedure starts with a prototype of the mean vectors and updates them iteratively with the
-definition of the clusters, the procedure stops once the partition structure doesn't change after one
-iteration.
 
 
 
