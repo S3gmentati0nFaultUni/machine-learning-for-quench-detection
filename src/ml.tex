@@ -242,35 +242,50 @@ covering only those relevant to the parameter grid used in the context of Nested
 (described in \Cref{sec:cv}): \emph{Entropy} and \emph{Gini index}.
 
 \subsubsection{Entropy}
-We will define \emph{entropy} following the approach in~\cite{gray2011entropy}. Let us consider a
-triple $(\Omega, \mathcal{B})$, the first is called \emph{sample space}, the second is a $\sigma$-algebra, which is a collection of elements of $\Omega$ having the following properties:
+Let us consider a pair $(\Omega, \mathcal{B})$; the first is called \emph{sample space}, the second is
+a $\sigma$-algebra, which is a collection of subsets of $\Omega$ having the following properties:
 \begin{itemize}
 	\item $\Omega \in \mathcal{B}$;
 	\item if $F \in \mathcal{B}$, then $F^C = \{\omega: \omega \notin F\} \in \mathcal{B}$;
 	\item if $F_i \in \mathcal{B}, i = 1, 2, \ldots;$ then $\bigcup_i{F_i} \in \mathcal{B}$.
 \end{itemize}
-We can define the probability space $(\Omega, \mathcal{B}, P)$ and if we consider a discrete random
-variable $f$, then we can compute entropy as follows: \[H(f) = - \sum_{a \in A}\].
+The smallest possible $\sigma$-algebra for $\Omega$ is $\emptyset$, the largest would be its power-set
+$\mathcal{P}(\Omega)$.
 
+A probability space is a triple $(\Omega, \mathcal{B}, Pr)$ where: $\Omega$ is a sample space,
+$\mathcal{B}$ is a $\sigma$-algebra as we just defined it and $Pr$ is a probability measure
+assigning a real value to every number $Pr: \mathcal{B} \rightarrow \R$.
 
+A probability measure abides to three axioms:
+\begin{itemize}
+	\item nonnegativity, $Pr(F) \geq 0 \hspace{10pt} \forall F \in \mathcal{B}$;
+	\item normalization, $Pr(\Omega) = 1$;
+	\item countable additivity, If $F_i \in \mathcal{B}, i = 1, 2, \ldots$ are disjoint, then:
+		\[Pr\left(\bigcup_{i = 1}^\infty{F_i}\right) = \sum_{i = 1}^\infty{Pr(F_i)} \enspace.\]
+\end{itemize}
 
-There are many different ways of defining information entropy, but a more general definition, compared
-to the one found in~\cite{ZhouZhi-Hua2021ML}, is found in. Let's consider a
-random variable $f$ built on the alphabet $B = \{b_1, \ldots, b_{|B|}\}$ we can define the
-partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |B|\}$ where $Q_i = \{\omega: f(\omega) = b_i\} =
-f^{-1}(b_i)$ therefore $\mathcal{Q}$ is a partition of the bigger probability space $\Omega$. Every
-partition is chosen based on the outcome of the measurement of the random variable $f$. In the case
-of a discrete random variable we can define the information entropy as follows
+Let $A$ be a set of symbols, which we call \emph{alphabet}. A measurable space is a space $(A,
+\mathcal{B}_A)$, and a measurable function for $(\Omega, \mathcal{B})$, taking values in $(A,
+\mathcal{B})$, is a mapping $f: \Omega \rightarrow A$ such that: if $F \in \mathcal{B}_A \implies f^
+{-1}(F) = \{\omega: f(\omega) \in F\} \in \mathcal{B}$. We rename a measurable function a random
+variable if $A$ is $\R$ and $\mathcal{B}$ is a Borel field~\footnote{
+	A Borel field is the smallest $\sigma$-algebra built on $\Omega$ containing every open subset of $\Omega$.
+}~\cite{gray2011entropy}.
+
+Let us now consider a random variable $f$ built on the alphabet $A = \{a_1, \ldots, a_{|A|}\}$ we
+can define the partition $\mathcal{Q} = \{Q_i: i = 1, \ldots, |A|\}$ where $Q_i = \{\omega:
+f(\omega) = a_i\} = f^{-1}(a_i)$ therefore $\mathcal{Q}$ partitions the sample space $\Omega$ based
+on the output of the measurement function $f$. In the case of a discrete random variable we can define the information entropy as follows
 \begin{equation}
 	\label{eq:information-entropy}
-	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|B|}{P(Q_i)\log{P(Q_i)}} \enspace;
+	H_p(\mathcal{Q}) = - \sum_{i = 1}^{|A|}{P(Q_i)\log{P(Q_i)}} \enspace;
 \end{equation}
-this definition of entropy can be easily extended to the dataset case since:
+this definition of entropy can be easily extended to our specific use-case since:
 \begin{itemize}
 	\item the partition set $\mathcal{Q}$ can be mapped to the dataset $D$,
 	\item every partition $Q_i$ can be mapped to the single class of the machine learning
 	      problem that is being considered,
-	\item the alphabet $B$ can be mapped to the set of possible outcomes of the machine learning
+	\item the alphabet $A$ can be mapped to the set of possible outcomes of the machine learning
 	      problem.
 \end{itemize}
 Therefore, we can rewrite \Cref{eq:information-entropy} as:
