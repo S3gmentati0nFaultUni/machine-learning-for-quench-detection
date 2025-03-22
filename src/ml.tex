@@ -780,13 +780,18 @@ internal product $\langle\phi(\vec{x}_i), \phi(\vec{x}_j)\rangle$. Since the pro
 high dimensional space, it might be computationally expensive operation, especially because the
 number of dimensions of the final space is not known a-priori.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-% THE KERNEL-TRICK DOESN'T PROVIDE AN APPROXIMATION OF THE INNER PRODUCT BUT IT COMPUTES THE ACTUAL
-% VALUE. THIS IS THANKS TO THE FACT THAT WE ARE DOING AN EXTENSION TO RKHS SPACE (REPLICATING KERNEL
-% HILBERT SPACE)
-%%%%%%%%%%%%%%%%%%%%%%%%%
 To avoid having to compute such a product, we define a function, known as \emph{kernel} function
-$\kappa(\cdot, \cdot)$ which actually defines the inner-product. We can rewrite~\ref{eq:hd-dual} to use the newly introduced function. 
+$\kappa(\cdot, \cdot)$ which actually defines the inner-product~\footnote{
+	This is true since the \svm\ is working in a \emph{Reproducing Kernel Hilbert Space}
+	(\textsc{rkhs}), such spaces are a variation of simpler spaces with the reproducing kernel
+	property
+	\[\langle{f, \kappa(x, \cdot)}\rangle = f(x) \hspace{10pt} \forall\hspace{3pt}f \in
+	\mathcal{H} \enspace.\]
+	It's common to prefer Hilbert to normal dot product spaces (also known as
+	\emph{pre-Hilbert} spaces), since they have some mathematical advantages, for instance, it's
+	always possible to define a projection in a Hilbert space~\cite{learning-with-kernels}.
+}.
+We can rewrite~\ref{eq:hd-dual} to use the newly introduced function. 
 \begin{equation}
 	\label{eq:hd-dual-kf}
 	\begin{aligned}
