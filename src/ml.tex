@@ -242,19 +242,20 @@ covering only those relevant to the parameter grid used in the context of Nested
 (described in \Cref{sec:cv}): \emph{Entropy} and \emph{Gini index}.
 
 \subsubsection{Entropy}
-Let us consider a pair $(\Omega, \mathcal{B})$; the first is called \emph{sample space}, the second is
-a $\sigma$-algebra, which is a collection of subsets of $\Omega$ having the following properties:
+Let us consider a \emph{sample space} $\Omega$, a $\sigma$-algebra $\mathcal{B} = \sigma(\Omega)$,
+is a collection of subsets of $\Omega$ having the following properties:
 \begin{itemize}
 	\item $\Omega \in \mathcal{B}$;
-	\item if $F \in \mathcal{B}$, then $F^C = \{\omega: \omega \notin F\} \in \mathcal{B}$;
-	\item if $F_i \in \mathcal{B}, i = 1, 2, \ldots;$ then $\bigcup_i{F_i} \in \mathcal{B}$.
+	\item if $F \in \mathcal{B}$, then \[F^C = \{\omega: \omega \notin F\} \in \mathcal{B}
+		\enspace;\]
+	\item if $F_i \in \mathcal{B}, i = 1, 2, \ldots;$ then \[\bigcup_i{F_i} \in \mathcal{B}
+		\enspace.\]
 \end{itemize}
-The smallest possible $\sigma$-algebra for $\Omega$ is $\emptyset$, the largest would be its power-set
+The smallest possible $\sigma$-algebra for $\Omega$ is $\emptyset$, while the largest is its power-set
 $\mathcal{P}(\Omega)$.
 
-A probability space is a triple $(\Omega, \mathcal{B}, Pr)$ where: $\Omega$ is a sample space,
-$\mathcal{B}$ is a $\sigma$-algebra as we just defined it and $Pr$ is a probability measure
-assigning a real value to every number $Pr: \mathcal{B} \rightarrow \R$.
+A \emph{probability space} is a triple $(\Omega, \mathcal{B}, Pr)$ where: $\mathcal{B}$ is a
+$\sigma$-algebra as we just defined it, and $Pr$ is a \emph{probability measure} assigning a real value to every number $Pr: \mathcal{B} \rightarrow \R$.
 
 A probability measure abides to three axioms:
 \begin{itemize}
@@ -265,11 +266,15 @@ A probability measure abides to three axioms:
 \end{itemize}
 
 Let $A$ be a set of symbols, which we call \emph{alphabet}. A measurable space is a space $(A,
-\mathcal{B}_A)$, and a measurable function for $(\Omega, \mathcal{B})$, taking values in $(A,
-\mathcal{B})$, is a mapping $f: \Omega \rightarrow A$ such that: if $F \in \mathcal{B}_A \implies f^
-{-1}(F) = \{\omega: f(\omega) \in F\} \in \mathcal{B}$. We rename a measurable function a random
-variable if $A$ is $\R$ and $\mathcal{B}$ is a Borel field~\footnote{
-	A Borel field is the smallest $\sigma$-algebra built on $\Omega$ containing every open subset of $\Omega$.
+\mathcal{B}_A)$ (where $\mathcal{B}_A = \sigma(A)$), and a \emph{measurable function} for $(\Omega,
+\mathcal{B})$, taking values in $(A, \mathcal{B}_A)$, is a mapping $f: \Omega \rightarrow A$ such
+that: 
+\[\text{if } F \in \mathcal{B}_A \implies f^ {-1}(F) = \{\omega: f(\omega) \in F\} \in \mathcal{B}
+\enspace.\] 
+We usually call \emph{random variable} any measurable function defined on $(\R, \mathcal{B})$ where
+$\mathcal{B}$ is a Borel field~\footnote{
+	A Borel field $\mathcal{B} = \sigma(A)$ is the smallest $\sigma$-algebra built on $A$
+	containing every open subset of $A$.
 }~\cite{gray2011entropy}.
 
 Let us now consider a random variable $f$ built on the alphabet $A = \{a_1, \ldots, a_{|A|}\}$ we
