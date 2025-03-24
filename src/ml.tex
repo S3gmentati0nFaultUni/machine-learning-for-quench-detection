@@ -915,16 +915,17 @@ In our experiments, we didn't have a reference model to compare the clustering r
 therefore, we only used external indices; for completeness's sake we will include some examples of internal indices taken from~\cite{ZhouZhi-Hua2021ML}.
 
 \begin{itemize}
-	\item Fowlkes and Mallows Index (\textsc{fmi})~\cite{Fowlkes1983}, which computes the
-		geometric mean of True Positive Rate (\tpr) and Precision (\textsc{ppr}).
+	\item Fowlkes and Mallows Index (\textsc{fmi})~\cite{Fowlkes1983}; which computes the
+		geometric mean of True Positive Rate (\tpr) and Precision (\textsc{ppr}), each
+		measured with respect to the reference model:
 		\begin{equation*}
 			\textsc{fmi} = \sqrt{\tpr \cdot \textsc{ppr}} = \sqrt{\frac{a}{a + b} \cdot
 			\frac{a}{a + c}} \enspace.
 		\end{equation*}
-	\item Rand Index (\textsc{ri})~\cite{Rand1971}, computes the 'accuracy' of the clustering
-		procedure; since every point needs to be in one and only one cluster, $a + b + c + d
-		= \binom{n}{2}$, therefore $\textsc{ri}$ divides the number of true positives and
-		negatives $(a, d)$, by all the possibilities.
+	\item Rand Index (\textsc{ri})~\cite{Rand1971}; can be interpreted as a form of accuracy
+		measure for clustering. Since every point needs to be in one and only one cluster,
+		$a + b + c + d = \binom{n}{2}$, therefore $\textsc{ri}$ divides the number of true
+		positives and negatives $(a, d)$, by all the possibilities.
 		\begin{equation*}
 			\textsc{ri} = \frac{2(a + d)}{n(n - 1)} /enspace.
 		\end{equation*}
@@ -940,8 +941,8 @@ average distance between samples within a cluster is:
 	\enspace.
 \end{equation}
 
-The diameter of a cluster is the maximum distance between any two given points within the cluster,
-it is defined as follows:
+The diameter of a cluster is the maximum distance between any two given points within the cluster
+(which we will also refer to as \emph{scatter}), it is defined as follows:
 \begin{equation}
 	\label{eq:cluster-diam}
 	diam(C) = \max_{1 \leq i < j \leq |C|} dist(\vec{x}_i, \vec{x}_j) \enspace.
@@ -960,7 +961,7 @@ Finally, we can define the centroid of cluster $C$ as
 	\vec{\mu} = \frac{1}{|C|} \sum_{1 \leq i \leq |C|} \vec{x}_i
 	\enspace.
 \end{equation}
-The distance between centroids will be defined as follows:
+The distance between centroids (which we will also refer to as \emph{inter-cluster} distance) will be defined as follows:
 \begin{equation}
 	\label{eq:cluster-centroid-distance}
 	d_{cen}(C_i, C_j) = dist(\vec{\mu}_i, \vec{\mu}_j)
@@ -971,11 +972,29 @@ By using the concepts defined above, we can introduce many different scores, the
 examples are the main clustering scores used within the project.
 
 \begin{itemize}
-	\item Davies-Bouldin Index (\textsc{dbi})~\cite{bouldin1979}.
+	\item Davies-Bouldin Index (\textsc{dbi})~\cite{bouldin1979}; which is a metric based on
+		the scatter for cluster $i$ ($S_i$) and the inter-cluster distance ($M_{ij}$). The index is based on a measurement of cluster goodness $R_{ij}$ abiding to the following properties:
+		\begin{enumerate}
+			\item $R_{ij} \geq 0$;
+			\item $R_{ij} = R_{ji}$;
+			\item if $S_j \geq S_k$ and $M_{ij} = M_{ik}$ then $R_{ij} > R_{ik}$;
+			\item if $S_j = S_k$ and $M_{ij} \leq M_{ik}$ then $R_{ij} > R_{ik}$
+		\end{enumerate}
+		A function with such characteristics is $\frac{S_i + S_j}{M_{ij}}$, for our
+		pourposes we want to find the maximum value for $R_{ij}$. If we substitute $S_i$ with
+		\ref{eq:cluster-avg} and $M_{ij}$ with \ref{eq:cluster-centroid-distance} then we
+		obtain:
 		\begin{equation*}
 			\textsc{dbi} = \frac{1}{k}\sum_{i = 1}^k\max_{j \neq i}\left(\frac{avg(C_i)
 			+ avg(C_j)}{d_{cen}(C_i, C_j)}\right) \enspace.
 		\end{equation*}
+		The lower the index the better the clustering result, that is because it means that
+		the clusters:
+		\begin{itemize}
+			\item are further apart, improving separation,
+			\item they have less scattering, meaning that similar vectors are closer
+				together.
+		\end{itemize}.
 	\item The \emph{Silhouette Coefficient} for sample $i$ defined in~\cite{rousseuw1987}
 		is based on two different metrics: $e(i)$\footnote{
 			Compared to the literature we chose different names to avoid confusion, since they would have to be called $a$ and $b$, which were already used to define the metrics used for external clustering indices.
@@ -989,7 +1008,7 @@ examples are the main clustering scores used within the project.
 \subsubsection{Distance calculation}
 \label{ssec:distance-calculation}
 In this section we briefly recall the basic definitions involving distances. The interested reader
-can refer to~\cite{} for a deeper introduction to this topic. The information contained in this section is what we considered necessary to breach the topic of $k$-means clustering.
+can refer to~\cite{metcalf2016-distances, kelley2017-topology} for a deeper introduction to this topic. The information contained in this section is what we considered necessary to breach the topic of $k$-means clustering.
 
 A function $dist(\cdot, \cdot)$, is a \emph{distance measure} if it satisfies $4$ fundamental axioms
 for all $x_i, x_j$ and $x_k$:
@@ -1002,8 +1021,7 @@ for all $x_i, x_j$ and $x_k$:
 		\vec{x}_k) + dist(\vec{x}_k, \vec{x}_j)$.
 \end{enumerate}
 Given two samples $\vec{x}_i$ and $\vec{x}_j$, a commonly used measure is the \emph{Minkowski
-distance}, which is defined in \Cref{eq:mkd}.\todo{Togliere questa roba e aggiungere un riferimento
-bibliografico per la distanza di Minkowski -- Ale}
+distance}~\cite{metcalf2016-distances}
 \begin{equation}
 	\label{eq:mkd}
 	dist_{mk}(\vec{x}_i, \vec{x}_j) = \left(\sum_{u = 1}^n|x_{iu} - x_{ju}|^p\right)^\frac{1}{p}
