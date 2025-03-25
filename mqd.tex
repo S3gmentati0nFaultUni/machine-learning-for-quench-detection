@@ -2,17 +2,102 @@
 
 \usepackage[parts]{classicthesis}
 
-\title{\textsf{Supervised Machine Learning techniques for quench detection in superconductors}}
+\title{\textsf{}}
 \author{Alessandro Biagiotti}
 \date{Academic Year 2023/2024}
 
+\PassOptionsToPackage{hidelinks,pdfencoding=unicode}{hyperref}
+\PassOptionsToPackage{a-1b,mathxmp}{pdfx}
+\PassOptionsToPackage{a4paper}{geometry}
+
 \usepackage{mqd}
+\usepackage{tesi}
+
+\university{Milan University}
+\unilogo{img/logos/unimi}
+\faculty{Department of science and technologies}
+\department{Department of Computer Science\\Giovanni Degli Antoni}
+\cdl{Master degree in\\Computer Science}
+
+%   TITOLO TESI:
+\title{Supervised Machine Learning techniques for quench detection in superconductors}
+% Questo comando (opzionale) sovrascrive \title per quanto riguarda la copertina
+% Può essere usato per stampare caratteri speciali, tenendo i metadati puliti
+%\printedtitle{Un Template \LaTeX{} per Elaborati\\Triennali o Tesi Magistrali}
+
+%   AUTORE:
+\author{Alessandro Biagiotti}
+\matricola{13903A}
+% "Elaborato Finale" per i CdL triennali
+% "Tesi di Laurea" per i CdL magistrali
+\typeofthesis{Tesi di Laurea}
+
+%   RELATORE E CORRELATORE:
+\relatore{Prof. Dario Malchiodi}
+\correlatore{Doc. Samuele Mariotto}
+\correlatore{Prof. Lucio Rossi}
+
+%   LABORATORIO:
+% Questa sezione crea una pagina di chiusura della tesi con
+% il logo dell'ente/laboratorio presso cui si è svolto il tirocinio.
+% Più afferenze/url/loghi sono supportate,
+% e la frase può essere personalizzata.
+% Qui trovate alcuni predefiniti del nostro dipartimento
+% \adaptlab
+% \aislab
+% \anacletolab
+% \bisplab
+% \connetslab
+% \everywarelab
+% \falselab
+% \iebilab
+% \islab
+% \lailalab
+% \lalalab
+% \lawlab
+% \laserlab
+% \limlab
+% \mipslab
+% \optlab
+% \phuselab
+% \ponglab
+% \sesarlab
+% \spdplab
+
+% Esempio di personalizzazione della pagina di chiusura
+% (non consegnate con questo esempio!)
+% (da commentare in caso sia sufficiente una delle macro precedenti)
+%\lab{Laboratorio di Algoritmica per il Web}
+\lab[In collaboration with ]{INFN LASA Milano}
+\laburl{https://homelasa.mi.infn.it/it/}
+\lablogo{img/logos/law}
+
+% Con questo comando si può cambiare la dimensione (massima
+% altezza e larghezza consentite) dei loghi
+% \setlength\lablogosize{25mm}
+
+%   ANNO ACCADEMICO
+% \the\year inserisce l'anno corrente
+% per specificare manualmente un anno accademico
+% NON inserire nel formato 1970-1971, ma
+% inserire solo 1970
+\academicyear{\the\year} 
+
+%   INDICI:
+% elenco delle figure (facoltativo)
+% \figurespagetrue
+% elenco delle tabelle (facoltativo)
+% \tablespagetrue
+% prefazioni nell'indice (facoltativo)
+%\prefaceintoctrue
+% indice nell'indice (facoltativo)
+%\tocintoctrue
 
 \begin{document}
 
-\frontmatter
+\makefrontpage
 
-\maketitle
+\frontmatter
 
 \tableofcontents
 
@@ -34,5 +119,7 @@
 %\include{src/ack}
 
 \printbibliography
+
+\closingpage
 
 \end{document}
