@@ -1,7 +1,31 @@
-\chapter{Overview of the experiment and development environment}
+\chapter{Overview of the experiment and testing environment}
 \label{chp:problem}
-\todo{Modificare tutta questa sezione per fare in modo che non scimmiotti l'articolo originale}
-Following~\cite{mariotto2022}, the HO corrector magnets have been designed to produce five different multipolar field orders (quadrupole, sextupole, octapole, decapole, and dodecapole). Tested at cryogenic temperature, the magnets are powered to evaluate their performances and thermal stability up to the nominal operating condition. During magnet powering, spontaneous quench transitions in the superconducting coil volume can occur due to mechanical instability of the winding or stress induced by the electromagnetic Lorentz forces acting on the conductors. Each magnet is protected using a classical resistive voltage detection system and discharged on an external dumping resistance to extract most of the stored magnetic energy from the magnet to prevent any material damage. Limited to analyzing only two separate voltage signals connected in parallel to the coils, the quench detection system can only evaluate if a quench development occurred in half of the magnet coils without the possibility to localize precisely which superconducting winding started the transition to the normal conducting state. To retrieve this information and evaluate if a possible degradation of the coil has occurred, a magnetic field measurement-based model has been proposed analyzing the residual magnetic field quality produced by the non-quenched superconducting coils in the magnet after the quench event. The original work proposed a study specific to quadrupoles, since they gave the majority of the positives (quench events), which have been used as the subject of this analysis, therefore ignoring all other configurations focusing only on the five quadrupoles of the series production from MQSXF1 to MQSXF6.
+The data for the project was extrapolated from a testing campaign to analyze the behavior of the
+High Order corrector superconducting magnets. These magnets have been designed to produce five
+different multipolar field orders (quadrupole, sextupole, octapole, decapole, and dodecapole) to
+correct the magnetic field irregularities introduced by the focusing quadrupoles, which reduce the
+cross-section of the two counter-rotating protonic beams, in the proximity of interaction regions
+(sections of the LHC ring in which the particles encounter during high-energy experiments). The irregularities introduced by the focusing quadrupoles need to be corrected since they cause instaibility in the beam, which leads to deviations in the beam trajectory provoking degradation of the beam.
+
+Tested at cryogenic temperature at the \textsc{infn} Laboratorio Acceleratori e Superconduttività
+Applicata in Milan, the magnets are powered to evaluate their performances and thermal stability up
+to the nominal operating condition. During magnet powering, spontaneous transitions to the
+normal-conducting state can occur due to mechanical instability of the winding or stress induced by
+the Lorentz forces acting on the conductors. Each magnet is protected using a classical resistive
+voltage detection system and discharged on an external dumping resistance to extract the magnetic
+energy and prevent material damage. Due to the amount of different magnets tested we chose to have
+two different voltage taps to collect the voltage data, the quench detection system can only
+localize quench developing in one half of the magnet or the other, without the possibility to
+localize precisely which superconducting winding started the transition to the normal conducting
+state. To retrieve this information we chose to use an approach based on the analysis of the
+residual magnetic field quality produced by the non-quenched superconducting coils in the magnet
+(after a quench event).
+
+The original work~\cite{mariotto2022}, which consisted in a testing campaign aimed at finding an
+analytical description of quench localization based on the analysis of the residual magnetic field
+after a quench event, focused on quadrupoles. Magnets MQSXF1 to MQSXF6 were mounted
+\emph{skewed}\todo{Cosa vuol dire che due magneti sono montati skewed? -- Bigi} and registered the majority
+of the quench events, due to their high operating current, all other configurations have been ignored.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/FieldProcedure.pdf}
@@ -10,14 +34,26 @@ Following~\cite{mariotto2022}, the HO corrector magnets have been designed to pr
 \end{figure}
 As a result of the magnets test campaign, $279$ events, after the magnet discharge (quench event) or equivalent at zero operating current (non-quench event), were analyzed sampling the magnetic field in the magnet bore volume using a magnetic field rotating shaft.
 
-For each event, 60 samples of measured harmonic coefficients have been measured and averaged to obtain a single set of $15$ different magnetic field harmonics coefficients which contain all the information of the produced magnetic field quality (see Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex numbers, the information have been organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
+In the original work the condition of a superconducting coil was recognized based on the analysis of
+the residual magnetic field. If the magnet was in working order, the residual magnetic field was
+expected to be $\neq 0$. If one of the coils in the magnet assembly quenched, all the energy therein
+contained would have been dumped on the resistance (thanks to the Quench Protection System),
+therefore its residual magnetic field would be $\approx 0$, leading to an unexpected geometry of the
+superposition of the coil contributions.\todo{Non so se ho scritto delle cazzate -- Bigi}
+
+For each event, 60 samples of harmonic coefficients have been measured and averaged to obtain a single set of $15$ different magnetic field harmonics coefficients which contain all the information of the produced magnetic field quality (see Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex numbers, the information have been organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
 \begin{itemize}
 	\item the imaginary part \an, of the $n^\text{th}$ field harmonic coefficient;
 	\item the real part \bn, of the $n^\text{th}$ field harmonic coefficient;
 	\item the absolute value \cnmod, of the $n^\text{th}$ field harmonic coefficient;
 	\item the phase \phin, of the $n^\text{th}$ field harmonic coefficient.
 \end{itemize}
-In the experiment generating data, the magnets were mounted skewed: as a consequence, the $A_n$ feature was supposed to be highly informative since they are directly correlated with the rotational position of the quenched coil in the magnet assembly. The absolute values $|C_n|$ would be a valuable feature for \qrp{} and not for \qlp{} since two different configurations with the same number of quenched coils but different angular positions would give the same harmonic content and different phases. Each measurement was coupled with a \emph{label} encoded as follows:
+Since the magnets in the original testing campaign were mounted skewed: the $A_n$
+feature was supposed to be highly informative since they are directly correlated with the rotational
+position of the quenched coil in the magnet assembly. The absolute values $|C_n|$ would be a
+valuable feature for \qrp{} and not for \qlp{} since two different configurations with the same
+number of quenched coils but different angular positions would give the same harmonic content and
+different phases.\todo{Riguardare con Samuele questa parte riguardo a Cnmod -- Bigi} Each measurement was coupled with a \emph{label} encoded as follows:
 \begin{itemize}
 	\item a simple binary flag for \qrp, where $1$ means that a quench has happened, while $0$ characterizes the normal working conditions of the superconductor;
 	\item four binary flags for \qlp, each describing a  coil and stating whether or not a quench happened within it, using the same encoding as in previous point.
