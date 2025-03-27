@@ -6,21 +6,19 @@ quench events in High Order Corrector superconducting magnets \cite{mariotto2022
 	mariotto2022-generic} that will be mounted in the LHC collider machine for the High
 Luminosity upgrade \cite{rossi2024} (\textsc{hl-lhc}).
 
-The aim of the original work was, beginning from the harmonic decomposition of the magnetic
-field produced by the superconducting magnet after a \emph{quench} event, which is a transition of the
-material from the superconducting state to the normal conducting state, to find an analytical
-explanation for the reconstructed harmonic content and correlate the information with the
-localization of the quenched superconducting coil(s) in the magnet assembly. This problem will be
-referred to, in this thesis, as the Quench Localization Problem (\qlp\ for short).
+The aim of the original work was to use the harmonic decomposition of the residual magnetic field of
+a superconducting magnet, after a quench event; to find an analytical explanation for the
+reconstructed harmonic content, and to correlate it with the localization of the quenched
+superconducting coil(s) in the magnet assembly. A quench event is a situation in which a
+superconductor transitions from the superconducting to the normal-conducting state; generating a
+buildup of resistance that can lead to material damage due to Joule heating.
 
-The aim of this thesis is to identify a model that can reliably reply to the question 'If quench
-happened during the test run, which coil within the magnet did quench?' knowing the harmonic
+The aim of this thesis is to identify a machine learning model capable of answering the question: 'If quench
+happened during the test run, which coil within the magnet did quench?'; knowing the harmonic
 decomposition of the magnetic field measured at the center of the magnet, where the beam will pass
-in production, this magnetic field is the result of the contribution of the magnetization of the
+during production. This magnetic field is the result of the contribution of the magnetization of the
 superconducting coils and the iron yoke that locks the coils in place. The analyses have been
-conducted after the quench event manifested itself, to avoid damaging the material the magnet was
-tested in a protected environment, connected to a Quench Protection System, (the experiment will be
-explained further in \Cref{chp:problem}).
+conducted after a quench event; to avoid damaging the material the magnet was tested in a protected environment, connected to a Quench Protection System, (the experiment will be explained further in \Cref{chp:problem}).
 
 In the following, we will be explaining some of the studies and results obtained in the field of
 quench event recognition and quench event localization, using machine learning models to abstract
