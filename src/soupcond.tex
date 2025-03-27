@@ -8,14 +8,13 @@ Electronic motion in metallic or insulating materials is a very well studied and
 phenomenon. Electrons passing through any material, endure a varying amount of disturbance based on
 the type and structure of the material, this disturbance is known as electrical resistivity $\rho$. Given a
 sample of a material of length $l$, cross-section $A$ and electrical resistance $R$, which is a
-measure of its opposition to the flow of electric current; \Cref{eq:resistivity-cable} defines the
-resistivity of the material.
+measure of its opposition to the flow of electric current, electrical resistivity can be computed
+as:
 \begin{equation}
 	\label{eq:resistivity-cable}
 	\rho = \frac{RA}{l} = \frac{m}{ne^2\tau}
 \end{equation}
-As highlighted in the second part of \cref{eq:resistivity-cable}, the resistivity of a
-material can be seen as a function of:
+As highlighted in the second part of the equation, the resistivity of a material can be seen as a function of:
 \begin{itemize}
 	\item The mass of the electron $m$,
 	\item The charge density $n$ of the material lattice,
@@ -50,18 +49,19 @@ is air), if the temperature is too high the insulator breaks down and behaves li
 
 Superconductors are metals that follow classical thermodynamic properties when the temperature is
 kept around ambient temperature. Their properties change drastically once the temperature gets
-extremely close to $0$\K~\footnote{There are many different materials nowadays, known as High Temperature
+extremely close to $0$\K~\footnote{
+	There are many different materials nowadays, known as High Temperature
 	Superconductors, which have a critical temperature well above $0$\K, in this thesis though we will
 	only be considering classic superconductors like $NbTi$.
 }.
 
-In 1911 \cite{invention-superconductivity} Kammerligh Onnes discovered that if a sample of mercury was cooled
+In 1911~\cite{invention-superconductivity} Kammerligh Onnes discovered that if a sample of mercury was cooled
 until it reached the temperature of $4.2$\K, electrical resistance shown by the sample disappeared
 sharply from a finite, measurable, value, as can be seen in \Cref{img:mercury-resistance}, reaching
 a new state of matter called \emph{superconducting state}.
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
-	\includegraphics[width=0.5\textwidth]{./img/mercury-resistance.png}
+	\input{img/tikz/mercury.tikz}
 	\caption{The resistance of Mercury in function of the temperature of the sample, taken from~\cite{tsukerman2020compendium}}
 	\label{img:mercury-resistance}
 \end{figure}
@@ -85,7 +85,8 @@ penetration depth~\cite{london1935}. This property of superconductors was actual
 physicist Geertruida de Haas-Lorentz, who published some preliminary research in~\cite{fokker1925physica}.
 
 The diamagnetic properties of superconductors depend heavily on the material microscopic properties. Two different Types of superconductors have been
-identified and studied~\footnote{In general superconductor behavior can be explained through
+identified and studied~\footnote{
+	In general superconductor behavior can be explained through
 	Ginzburg-Landau theory~\cite{Cyrot1973} but very recent research has proven that not every
 	superconductor can be described using the \textsc{gl} equation as shown
 	in~\cite{diamantini2023typeiiisuperconductivity}, this lead to the preliminary definition of
@@ -99,12 +100,11 @@ identified and studied~\footnote{In general superconductor behavior can be expla
 permanent magnetic dipole moment of a magnet per unit volume~\cite{polarization-magnetization},
 against external magnetic field $B$, applied on the sample. Once the magnetic field reaches $\bc$ the
 magnetization of Type I superconductors drops to $0$.
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
-	\includegraphics[width=0.75\textwidth]{./img/type1.png}
+	\input{img/tikz/soup1.tikz}
 	\caption{Magnetization of a superconducting coil plotted against the external magnetic
-		field~\cite{slimani2022superconducting}}
-	\label{img:type1-transition}
+		field, reproduction of the original plot taken from~\cite{slimani2022superconducting}}
 \end{figure}
 As long as the applied magnetic field is less than $\bc$, Type I superconductors exhibit perfect
 diamagnetism, but once the material undergoes a transition to the normal-conducting
@@ -120,9 +120,9 @@ over Type I, for high-field applications, due to the graceful degradation of mag
 field. A plot similar to \Cref{img:type1-transition} can be seen in \Cref{img:type2-transition}.
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=0.75\textwidth]{./img/type2.png}
+	\input{img/tikz/soup2.tikz}
 	\caption{Magnetization of a type II superconducting coil plotted against the external
-		magnetic field~\cite{slimani2022superconducting}}
+		magnetic field, reproduction of the original plot taken from~\cite{slimani2022superconducting}}
 	\label{img:type2-transition}
 \end{figure}
 
@@ -141,9 +141,9 @@ fluxons are pinned in place, the material remains locally superconductive. Vorti
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=0.5\textwidth]{./img/Abrikosov_vortices.png}
+	\input{img/tikz/abrikosov.tikz}
 	\caption{Schematization of a lattice of vortices, each surrounded by a
-		supercurrent~\cite{huebener2019}.}
+		supercurrent.}
 	\label{fig:abrikosov-lattice}
 \end{figure}
 

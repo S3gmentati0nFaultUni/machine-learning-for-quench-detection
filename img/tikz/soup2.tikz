@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+	% Axes
+	\draw[->] (0,0) -- (7,0) node[right] {Applied Magnetic Fields, $B$};
+	\draw[->] (0,0) -- (0,4) node[above] {Magnetization, $-M$};
+
+	% Critical field labels
+	\node[below] at (2,0) {$B_{c1}$};
+	\node[below] at (4,0) {$B_c$};
+	\node[below] at (6,0) {$B_{c2}$};
+
+	% Dashed lines for critical fields
+	\draw[dashed] (2,0) -- (2,3);
+	\draw[dashed] (4,0) -- (4,3);
+	\draw[dashed] (6,0) -- (6,3);
+
+	% Magnetization curve
+	\draw[thick] (0,0) -- (3,3);
+	\draw[thick, domain=2:6, samples=50] plot (\x, {2*exp(-(\x-2))});
+
+	% State labels with rectangles
+	\node[draw, fill=white] at (1,2.5) {Superconducting State};
+	\node[draw, fill=white] at (4.5,1.5) {Vortex State};
+	\node[draw, fill=white] at (6.5,2) {Normal State};
+
+\end{tikzpicture}
