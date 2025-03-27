@@ -326,7 +326,7 @@ labels were more than one, we used a multi-class stratification technique, detai
 Experiments were conducted on three different computers running different architectures and
 different operating systems, but the results did not change due to the standard-oriented approach.
 See \Cref{tbl:computers} for a summary of the computers we used.
-\begin{table}[t]
+\begin{table}[!ht]
 	\caption{System configuration used for our experiments. Core count values are detailed as number
 		of CPU cores and threads, while frequency is expressed in the base and boost specifications.
 		Finally, the CPU cache size is shown for the L1, L2 and L3 levels, where
@@ -358,7 +358,7 @@ Experiments were dispatched on different systems based on the expected computati
 Model selection was handled by doing a partial exploration of the parameter space (as mentioned in
 \Cref{sec:cv}) via a grid search algorithm (GridSearchCV in scikit-learn), in which each model we defined a custom parameter grid (shown in \Cref{tbl:params}).
 
-\begin{table}[t]
+\begin{table}[!ht]
 	\caption{Hyperparameters which we have tuned during the model training phase.} \label{tbl:params}
 
 	\bigskip
