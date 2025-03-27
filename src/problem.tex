@@ -1,45 +1,48 @@
 \chapter{Overview of the experiment and testing environment}
 \label{chp:problem}
-The data for the project was extrapolated from a testing campaign to analyze the behavior of the
+The data for the project was extrapolated from a test campaign realized to analyze the behavior of
 High Order corrector superconducting magnets. These magnets have been designed to produce five
 different multipolar field orders (quadrupole, sextupole, octapole, decapole, and dodecapole) to
-correct the magnetic field irregularities introduced by the focusing quadrupoles; which reduce the
-cross-section of the two counter-rotating protonic beams in the proximity of interaction regions
+correct the magnetic field irregularities introduced by the focusing quadrupoles; which reduce beam
+emittance\footnote{
+	Beam emittance corresponds to the area occupied by the beam in the position--momentum space,
+	the higher the emittance the higher the risk of beam loss.
+} of the two counter-rotating protonic beams in proximity of interaction regions
 (sections of the LHC ring in which the particles encounter during high-energy experiments). Such
 irregularities need correction since they might lead to:
 \begin{inparaenum}[(i)]
 	\item instability,
 	\item beam degradation,
-	\item increase in the emittance of the beam, which is the area occupied by the beam in the
-	position--momentum space.
+	\item increase in the beam emittance.
 \end{inparaenum}
 
-The original work~\cite{mariotto2022}, consisted in a test campaign in which the HO correctos
-marngets, kept at cryogenic temperature at the \textsc{infn} Laboratorio Acceleratori e Superconduttività
+The original work~\cite{mariotto2022}, consisted in a test campaign in which the HO corrector
+magnets, kept at cryogenic temperature at the \textsc{infn} Laboratorio Acceleratori e Superconduttività
 Applicata in Milan, were powered to evaluate their performances and thermal stability up to the
 nominal operating condition. During magnet powering, spontaneous transitions to the
 normal-conducting state can occur due to mechanical instability of the winding or stress induced by
 the Lorentz forces acting on the conductors. Each magnet is protected using a classical resistive
 voltage detection system and discharged on an external dumping resistance to extract the magnetic
-energy and prevent material damage. Since different classes of magnets were tested we chose to use
-two voltage taps to collect the voltage data, this means that the quench detection system can only
+energy and prevent material damage. Two voltage taps were used to collect the voltage data, this means that the quench detection system can only
 localize quench developing in one half of the magnet or the other, without the possibility of
 localizing precisely which superconducting winding started the transition to the normal conducting
-state\todo{Capire perché non si sono usati più voltage taps diversi}.\begin{figure}[h!]
+state.\todo{Capire perché non si sono usati più voltage taps diversi}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/FieldProcedure.pdf}
 	\caption{Sketch of the magnetic field measurements after a quench event for the quadrupole magnet and dataset obtained for each quench event measurement.}
 	\label{fig:FieldMeasurement}
 \end{figure}
-In the original work the condition of a superconducting coil was recognized based on the analysis of
+In the original work, the condition of a superconducting coil was recognized based on the analysis of
 the residual magnetic field. If the magnet was in working order, the residual magnetic field was
 expected to be $\neq 0$. If one of the coils in the magnet assembly quenched, all the energy therein
 contained would have been dumped on the resistance (due to the Quench Protection System activation),
-therefore its residual magnetic field would be $\approx 0$, leading to an unexpected geometry of the
-superposition of the coil contributions.\todo{Non so se ho scritto delle cazzate -- Bigi} Since the
+therefore its residual magnetic field would be $\approx 0$. The asymmetrical behavior of the coils
+changes the geometry of the residual magnetic field of the magnet at $0$ current, change that can be
+detected using a quench antenna.\todo{Non so se ho scritto delle cazzate -- Bigi} Since the
 quadrupoles, magnets MQSXF1 to MQSXF6, registered the majority of the quench events, due to their
-high operating current, the original work focused on them and our work follows the same logic. The
-results of the test campaign were $279$ different measurements only on quadrupoles, including those
+high operating current, the original work focused on them and our work follows the same line. The
+results of the test campaign were $279$ different measurements, only on quadrupoles, including those
 identifying the magnet in good working condition, and quenches.
 
 Harmonic decomposition of magnetic field, or multipolar expansion, is a classic technique used to
@@ -51,7 +54,8 @@ $I$ flowing along the third axis $z$; the magnetic field $B(z_0)$ can be express
 	|B(z_0)| = \frac{\mu_0I}{2\pi d}
 \end{equation}
 where $d$ is the distance between our point $z_0$ and the $z$ axis. The magnetic field can be
-expressed as a complex number
+expressed as a complex number with the contribution along the $x$ axis and the contribution along
+the $y$ axis
 \begin{equation}
 	\label{eq:bcomplex}
 	\begin{aligned}
@@ -70,29 +74,26 @@ rewrite~\ref{eq:bz} as the product of the modulus $|B(z_0)|$ and the versor norm
 	\end{aligned}
 \end{equation}
 Where $z^*$ and $z_0^*$ are, respectively, the conjugates of $z$ and $z_0$. Instead of using $B$ we
-compute the value of the complex conjugate $B^*$
+compute the its complex conjugate $B^*$
 \begin{equation}
 	\label{eq:bconj}
 	\begin{aligned}
-		 & B^* = B_x - iB_y = \frac{\mu_0I}{2\pi}\frac{i}{z - z_0}                     \\
+		 & B^* = B_x - iB_y = \frac{\mu_0I}{2\pi}\frac{i}{z - z_0} \enspace;           \\
 		 & \text{since} \hspace{10pt} \left(\frac{i}{a + ib}\right)^* = \frac{i}{-(a +
 			ib)^*} \enspace.
 	\end{aligned}
 \end{equation}
-This because the conjugate is an analytic function\footnote{
+This because $B^*$ is an analytic function\footnote{
 	An analytic function is a function that is locally given by a convergent power series. In
-	general, a function is analytic if it respects the Cauchy Theorem which is stating that: Let
-	$D$ be a finite, simply connected domain and $C$ any closed, rectifiable curve contained in
-	$D$. If the function $f(z)$ is differentiable in the domain $D$, then the integral of $f(z)$
-	along $C$ is equal to $0$. Which means that the function is analytic~\cite{evgrafov2019analytic}.
+	general, a function is analytic if it respects the Cauchy Theorem which states the
+	following: Let $D$ be a finite, simply connected domain and $C$ any closed, rectifiable curve contained in $D$. If the function $f(z)$ is differentiable in the domain $D$, then the integral of $f(z)$ along $C$ is equal to $0$. Which means that the function is analytic~\cite{evgrafov2019analytic}.
 } which makes it more useful for two reasons:
 \begin{itemize}
-	\item We can expand it in power series, leading us to multipolar expansion,
-	\item for a given region, the maximum value of the modulus is on the boundary. This is
-	      identifies the maximum field point within the magnet (even though $B^*$ is not
-	      analytic within the magnet we can use equivalent functions for it).
+	\item We can expand it in power series, leading us to multipolar expansion (as we will see
+	      in the following),
+	\item for a given region, the maximum value of the modulus is on the boundary. This identifies the maximum field point within the magnet (even though $B^*$ is not analytic within the magnet we can use equivalent functions for it).
 \end{itemize}
-Since~\ref{eq:bconj} is analytic then we can do a power series expansion on $z$, and we can rewrite:
+Since~\ref{eq:bconj} is analytic then we can do a power series expansion on $z$
 \begin{equation}
 	\label{eq:pexp}
 	\frac{1}{z - z_0} = \frac{1}{z} \sum_{n = 1}^\infty \left(\frac{z_0}{z}\right)^n = \sum_{n =
@@ -119,21 +120,23 @@ The $C_n$ are non-normalized multipolar coefficients:
 	\item $C_3$ is the \emph{sestupolar} field harmonic;
 \end{itemize}
 and so on and so forth. These multipolar coefficients highlight the fact that any magnet generating
-a certain magnetic field (e.g., a quadrupolar magnet generates quadrupolar field), contians
-multipolar harmonics that disturb the main component. In the context of our example, a quadrupolar
-magnetic field generates a main quadrupolar component but introduces sestupolar, ottupolar, \ldots
-harmonics that disturb the main field.
+a certain magnetic field, for instance a quadrupole, contain multipolar harmonics that disturb the
+main component. In the context of our example, a quadrupole generates a main quadrupolar component but introduces sestupolar, ottupolar, \ldots harmonics that disturb the main field.
 
 Since the multipolar coefficient is a complex number it can be expressed as $C_n = A_n - iB_n$, the components
 \begin{inparaenum}[(i)]
 	\item $A_n$s generate the horizontal fields and are known as \emph{skew} components,
-	\item $B_n$s enerate the vertical fields and are called \emph{right} components.
+	\item $B_n$s generate the vertical fields and are called \emph{right} components.
 \end{inparaenum}
 
-For each event, 60 samples of harmonic coefficients have been measured and averaged to obtain a single set of $15$ different magnetic field harmonics coefficients which contain all the information of the produced magnetic field quality (see Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex numbers, the information have been organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
+During the test campaign, for each of the $279$ events, 60 samples of harmonic coefficients have
+been measured and averaged to obtain a single set of $15$ different magnetic field harmonics
+coefficients which contain all the information of the produced magnetic field quality (see
+Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex
+numbers, the information was organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
 \begin{itemize}
-	\item the imaginary part \an, of the $n^\text{th}$ field harmonic coefficient;
-	\item the real part \bn, of the $n^\text{th}$ field harmonic coefficient;
+	\item the skew component \an, of the $n^\text{th}$ field harmonic coefficient;
+	\item the right component \bn, of the $n^\text{th}$ field harmonic coefficient;
 	\item the absolute value \cnmod, of the $n^\text{th}$ field harmonic coefficient;
 	\item the phase \phin, of the $n^\text{th}$ field harmonic coefficient.
 \end{itemize}
@@ -202,7 +205,7 @@ for later reuse, an overview of the datasets is given here below.
 Model selection and testing were carried out using Nested Cross Validation (\ncv). \ncv\ is suitable
 for situations in which the data is not abundant~\cite{Larracy2021} due to its heavy reuse, enabling
 model selection and testing; while also giving less biased performance estimates by averaging the
-results on $k$ different folds. In the following section we will do a rapid excursus on how the
+results on $k$ different folds. In the following section we will do a rapid ex-cursus on how the
 cross-validation procedure works.
 
 \subsubsection{Cross Validation}
@@ -210,19 +213,20 @@ cross-validation procedure works.
 In \Cref{chp:ml} we outlined the simple train-test splitting procedure, now we will introduce an
 alternative technique that gives us a powerful tool to prevent overfitting and get less biased performance measures while also doing hyperparameter selection.
 
-$k$-fold \cv~\cite{ZhouZhi-Hua2021ML} is a splitting technique that divides a dataset $D$ in $k$
-different folds $\fold{i}, i \in \{1, \ldots, k\}$; the folds are non-overlapping and about the same
-size, therefore
+$k$-fold \cv~\cite{ZhouZhi-Hua2021ML} is a splitting technique that divides a dataset $D$ in $k$ different folds $\fold{i}, i \in \{1, \ldots, k\}$; the folds are non-overlapping and about the same size, therefore
 \[\fold{i} \cap \fold{j} = \emptyset \hspace{5pt} \forall i, j \in \{1, \ldots, k\}, i \neq j \enspace,\]
 and the union of all the folds is the original dataset
 \[\bigcup_{i \in \{1, \ldots, k\}} \fold{i} = D \enspace.\]
 
 In the framework of train-test splitting, if we used the procedure outlined in \Cref{sec:sml}, we
-would split the original dataset into the training set $T$ and the generalization set $G$, train a
-model $\model$ on $T$ and then test the performance on $G$. While this is a perfectly acceptable procedure
-to gather performance metrics for a model, it gives us reliable performance metrics only if the
-dataset contains many samples. The bigger the dataset $D$ the more samples can go in both $T$ and
-$G$ making sure that many different cases are covered.
+would:
+\begin{inparaenum}[(i)]
+	\item split the original dataset into the training set $T$ and the generalization set $G$,
+	\item train a model $\model$ on $T$
+	\item and then test the performance on $G$.
+\end{inparaenum} While this is a perfectly acceptable procedure to gather performance metrics for a
+model, it gives us reliable performance metrics only if the dataset is very large. The larger the
+dataset $D$, the more samples can go in both $T$ and $G$; making sure that many different cases are covered.
 
 By measuring performance on different folds (each one is a self-contained train-test procedure), we
 get a more complete vision of the model performance: each sample in the dataset has been used
@@ -244,15 +248,15 @@ approach to the technique is discussed); too small a value of $k$ makes the \cv\
 Let us now move to a more complicated environment in which we need, given a base model, to fine tune
 it, train it and test it. We can na\"ively tripartition dataset $D$:
 \begin{itemize}
-	\item \emph{training set} $T$, which is the same set we defined in \Cref{sec:sml} but is now
+	\item \emph{training set} $T$, which is the same set we defined in \Cref{sec:sml}, but is now
 	      used to fine tune the hyperparameters of the model,
-	\item \emph{validation set} $V$, this set of samples will be used to test the performance of the
-	      model found after the training step,
+	\item \emph{validation set} $V$, this set will be used to test the performance of the model
+	      found after hyperparameter selection,
 	\item \emph{generalization set} $G$, after the model is retrained on $T \cup V$ the performance are
 	      tested on $G$ to see if the model is capable of generalizing effectively.
 \end{itemize}
 
-Once again we cannot guarantee that:
+Once again, we cannot guarantee that:
 \begin{inparaenum}[(i)]
 	\item the chosen model is the best one,
 	\item the performance metrics obtained from the single generalization fold are actually reliable.
@@ -264,21 +268,33 @@ for the model just generated. To get a better understanding of the Nested cross-
 samples (an outline of the \ncv\ procedure is shown in \Cref{fig:nested-cv}).
 \begin{enumerate}
 	\item The data is first split into $5$ folds of $50$ samples. One fold of $50$ samples will
-	      be kept on the side for the generalization test, the remaining $200$ samples will be used to do both training and model selection;
+	      be kept on the side for the generalization test, the remaining $200$ samples will be
+	      used to do both training and model selection. This is highlighted in
+	      \Cref{fig:nested-cv} by the $5$ larger bars pointed by the arrows. The bright green
+	      partitions are the ones used for training, while the red one is the one used for final
+	      testing.
 	\item The training set is now split again in $5$ folds, $160$ samples will be used to do
 	      model selection, $40$ samples will be used to validate the performance that has been
-	      found. In practice, as was anticipated in \Cref{sec:sml}, when we do model selection
+	      found. This is highlighted in \Cref{fig:nested-cv} by the $5$ smaller bars below each bar indicated in step 1.
+	      The dark green partitions will be used to do training, while the bright green one
+	      will be used to validate the performance metrics obtained.
+	      In practice, as was anticipated in \Cref{sec:sml}, when we do model selection
 	      (or hyperparameter fine-tuning) we explore only a very limited portion of the
-	      hyperparameter space to find the combination that in yields the best performance
-	      during validation. \emph{De facto}, we used a hyperparameter grid (cfr. \Cref{tbl:params}), for all the
-	      possible combinations we trained a model and validated its performance
-	\item Step 2 until all folds have been used for validation (therefore every sample in
-	      the training set has been used once to test the performance of the model).
-	\item The model found at the previous step is retrained on the whole $200$ training samples, then the performance is tested on the fold that was kept aside in the first step.
+	      hyperparameter space, and we select the combination that yields the best performance
+	      during validation. \emph{De facto}, we used a hyperparameter grid (cfr.
+	      \Cref{tbl:params}), each combination yielded a different model that was later validated.
+	\item Step 2 is repeated until all folds have been used for validation; in
+	      \Cref{fig:nested-cv} we can see that each of the available partitions in the smaller
+	      bars becomes bright green once before moving to the next iteration of the outer loop.
+	\item The model found at the previous step is retrained on the whole $200$ training samples
+	      (the green partitions in the larger bars in \Cref{fig:nested-cv}), and the
+	      performance is tested on the fold that was kept aside in the first step (the red one
+	      in \Cref{fig:nested-cv}).
 	\item Steps 1, 2, 3, 4 are repeated until every sample in the original dataset has been used
-	      only one time for the final testing run.
+	      only onj time for the final testing run. This is indicated in \Cref{fig:nested-cv}
+	      by the fact that all the available partitions in the longer bars become red just
+	      once.
 \end{enumerate}
-\todo{Rivedere la sezione sulla Cross validation perché è abbastanza astrusa -- Ale}
 \begin{figure}[!t]
 	\centering
 	\includegraphics[scale=.3]{./img/nested-cv.png}
