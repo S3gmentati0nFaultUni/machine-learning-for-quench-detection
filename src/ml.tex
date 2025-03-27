@@ -1052,7 +1052,7 @@ indicates a higher intra-cluster similarity. Since the process of minimizing the
 error~\ref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
 point for every possible cluster, the actual implementation of $k$-means takes a greedy approach
 (shown in \Cref{algo:kmeans}). This procedure starts with a prototype of the mean vectors and updates them iteratively with the definition of the clusters; the procedure stops once the partition structure doesn't change after one iteration.
-\begin{algorithm}
+\begin{algorithm}[!hb]
 	\caption{The $k$-means algorithm taken from~\cite{ZhouZhi-Hua2021ML}}\label{algo:kmeans}
 	\begin{algorithmic}[1]
 		\Require Dataset $\udset$ and Number of clusters $k$.
