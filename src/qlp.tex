@@ -273,8 +273,16 @@ We remark that the clustering algorithm is always working by using distance betw
 therefore the pattern that it's capable of identifying is unknown to us. We need to give a meaning
 to the cluster structure identified by the algorithm. We tried $k$-means clustering on all
 attributes but we will only show relevant results. Data was plotted using \pca, but we also explored
-other dimensionality reduction techniques, namely FastICA and Metric multiDimensional Scaling (MDS),
-generally yielding inferior results.
+other dimensionality reduction techniques, namely FastICA~\footnote{
+	ICA is a technique that tries to find a linear representation of non-Gaussian data so that
+	the components are statistically independent, or as independent as possible~\cite{hyvarinen2000-fastICA}.
+} and metric MultiDimensional Scaling (MDS)~\footnote{
+	MultiDimensional Scaling is a technique used to define similarity or dissimilarity within a
+	set of objects, and it does so by defining a distance among poiints in geometric space.
+	There are many different types of MultiDimensional Scaling techniques, the main difference
+	between them is the type of space that is being considered (e.g., Metric
+	MDS)~\cite{Borg2005-metricMDS}.
+}, generally yielding inferior results.
 
 \Cref{fig:4-means-results} shows results of a $4$-means clustering run on both attributes, we chose
 to label the samples based on the number of quenched coils $\{0, 1, \text{many}\}$. The orange lines
