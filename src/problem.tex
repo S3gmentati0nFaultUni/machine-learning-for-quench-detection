@@ -3,43 +3,132 @@
 The data for the project was extrapolated from a testing campaign to analyze the behavior of the
 High Order corrector superconducting magnets. These magnets have been designed to produce five
 different multipolar field orders (quadrupole, sextupole, octapole, decapole, and dodecapole) to
-correct the magnetic field irregularities introduced by the focusing quadrupoles, which reduce the
-cross-section of the two counter-rotating protonic beams, in the proximity of interaction regions
-(sections of the LHC ring in which the particles encounter during high-energy experiments). The irregularities introduced by the focusing quadrupoles need to be corrected since they cause instaibility in the beam, which leads to deviations in the beam trajectory provoking degradation of the beam.
+correct the magnetic field irregularities introduced by the focusing quadrupoles; which reduce the
+cross-section of the two counter-rotating protonic beams in the proximity of interaction regions
+(sections of the LHC ring in which the particles encounter during high-energy experiments). Such
+irregularities need correction since they might lead to:
+\begin{inparaenum}[(i)]
+	\item instability,
+	\item beam degradation,
+	\item increase in the emittance of the beam, which is the area occupied by the beam in the
+	position--momentum space.
+\end{inparaenum}
 
-Tested at cryogenic temperature at the \textsc{infn} Laboratorio Acceleratori e Superconduttività
-Applicata in Milan, the magnets are powered to evaluate their performances and thermal stability up
-to the nominal operating condition. During magnet powering, spontaneous transitions to the
+The original work~\cite{mariotto2022}, consisted in a test campaign in which the HO correctos
+marngets, kept at cryogenic temperature at the \textsc{infn} Laboratorio Acceleratori e Superconduttività
+Applicata in Milan, were powered to evaluate their performances and thermal stability up to the
+nominal operating condition. During magnet powering, spontaneous transitions to the
 normal-conducting state can occur due to mechanical instability of the winding or stress induced by
 the Lorentz forces acting on the conductors. Each magnet is protected using a classical resistive
 voltage detection system and discharged on an external dumping resistance to extract the magnetic
-energy and prevent material damage. Due to the amount of different magnets tested we chose to have
-two different voltage taps to collect the voltage data, the quench detection system can only
-localize quench developing in one half of the magnet or the other, without the possibility to
-localize precisely which superconducting winding started the transition to the normal conducting
-state. To retrieve this information we chose to use an approach based on the analysis of the
-residual magnetic field quality produced by the non-quenched superconducting coils in the magnet
-(after a quench event).
-
-The original work~\cite{mariotto2022}, which consisted in a testing campaign aimed at finding an
-analytical description of quench localization based on the analysis of the residual magnetic field
-after a quench event, focused on quadrupoles. Magnets MQSXF1 to MQSXF6 were mounted
-\emph{skewed}\todo{Cosa vuol dire che due magneti sono montati skewed? -- Bigi} and registered the majority
-of the quench events, due to their high operating current, all other configurations have been ignored.
-\begin{figure}[h!]
+energy and prevent material damage. Since different classes of magnets were tested we chose to use
+two voltage taps to collect the voltage data, this means that the quench detection system can only
+localize quench developing in one half of the magnet or the other, without the possibility of
+localizing precisely which superconducting winding started the transition to the normal conducting
+state\todo{Capire perché non si sono usati più voltage taps diversi}.\begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{img/FieldProcedure.pdf}
 	\caption{Sketch of the magnetic field measurements after a quench event for the quadrupole magnet and dataset obtained for each quench event measurement.}
 	\label{fig:FieldMeasurement}
 \end{figure}
-As a result of the magnets test campaign, $279$ events, after the magnet discharge (quench event) or equivalent at zero operating current (non-quench event), were analyzed sampling the magnetic field in the magnet bore volume using a magnetic field rotating shaft.
-
 In the original work the condition of a superconducting coil was recognized based on the analysis of
 the residual magnetic field. If the magnet was in working order, the residual magnetic field was
 expected to be $\neq 0$. If one of the coils in the magnet assembly quenched, all the energy therein
-contained would have been dumped on the resistance (thanks to the Quench Protection System),
+contained would have been dumped on the resistance (due to the Quench Protection System activation),
 therefore its residual magnetic field would be $\approx 0$, leading to an unexpected geometry of the
-superposition of the coil contributions.\todo{Non so se ho scritto delle cazzate -- Bigi}
+superposition of the coil contributions.\todo{Non so se ho scritto delle cazzate -- Bigi} Since the
+quadrupoles, magnets MQSXF1 to MQSXF6, registered the majority of the quench events, due to their
+high operating current, the original work focused on them and our work follows the same logic. The
+results of the test campaign were $279$ different measurements only on quadrupoles, including those
+identifying the magnet in good working condition, and quenches.
+
+Harmonic decomposition of magnetic field, or multipolar expansion, is a classic technique used to
+analyze magnetic field quality and is detailed in~\cite{ambrosio1996-mexpansion}. If we consider a
+$2$D approximation of the magnet on the $X-Y$ plane, a point $z_0$ in the $X-Y$ plane and a current
+$I$ flowing along the third axis $z$; the magnetic field $B(z_0)$ can be expressed as
+\begin{equation}
+	\label{eq:bz}
+	|B(z_0)| = \frac{\mu_0I}{2\pi d}
+\end{equation}
+where $d$ is the distance between our point $z_0$ and the $z$ axis. The magnetic field can be
+expressed as a complex number
+\begin{equation}
+	\label{eq:bcomplex}
+	\begin{aligned}
+		 & B_z = 0 \enspace,         \\
+		 & B  = B_x + iB_y \enspace.
+	\end{aligned}
+\end{equation}
+Since we can express $z_0$ as a point in complex bidimensional space: $z_0 = x_0 + iy_0$, we can
+rewrite~\ref{eq:bz} as the product of the modulus $|B(z_0)|$ and the versor normal to the segment $\overline{zz_0}$:
+\begin{equation}
+	\label{eq:bzcomplex}
+	\begin{aligned}
+		B & = B_x + iB_y                                              \\
+		  & = \frac{mu_0I}{2\pi|z_0 - z|}\frac{i(z_0 - z)}{|z_0 - z|} \\
+		  & = \frac{mu_0I}{2\pi}\frac{i}{z_0^* - z^*} \enspace.
+	\end{aligned}
+\end{equation}
+Where $z^*$ and $z_0^*$ are, respectively, the conjugates of $z$ and $z_0$. Instead of using $B$ we
+compute the value of the complex conjugate $B^*$
+\begin{equation}
+	\label{eq:bconj}
+	\begin{aligned}
+		 & B^* = B_x - iB_y = \frac{\mu_0I}{2\pi}\frac{i}{z - z_0}                     \\
+		 & \text{since} \hspace{10pt} \left(\frac{i}{a + ib}\right)^* = \frac{i}{-(a +
+			ib)^*} \enspace.
+	\end{aligned}
+\end{equation}
+This because the conjugate is an analytic function\footnote{
+	An analytic function is a function that is locally given by a convergent power series. In
+	general, a function is analytic if it respects the Cauchy Theorem which is stating that: Let
+	$D$ be a finite, simply connected domain and $C$ any closed, rectifiable curve contained in
+	$D$. If the function $f(z)$ is differentiable in the domain $D$, then the integral of $f(z)$
+	along $C$ is equal to $0$. Which means that the function is analytic~\cite{evgrafov2019analytic}.
+} which makes it more useful for two reasons:
+\begin{itemize}
+	\item We can expand it in power series, leading us to multipolar expansion,
+	\item for a given region, the maximum value of the modulus is on the boundary. This is
+	      identifies the maximum field point within the magnet (even though $B^*$ is not
+	      analytic within the magnet we can use equivalent functions for it).
+\end{itemize}
+Since~\ref{eq:bconj} is analytic then we can do a power series expansion on $z$, and we can rewrite:
+\begin{equation}
+	\label{eq:pexp}
+	\frac{1}{z - z_0} = \frac{1}{z} \sum_{n = 1}^\infty \left(\frac{z_0}{z}\right)^n = \sum_{n =
+		1}^\infty \frac{z_0^{n - 1}}{z^n} \enspace.
+\end{equation}
+We can rewrite~\ref{eq:bconj} for a uniformly distributed current density $J$ on an arbitrary
+cross-section $\sigma$ as
+\begin{equation}
+	\label{eq:bconj-generic}
+	B^* = i \frac{\mu_0J}{2\pi}\int_{\sigma}\frac{1}{z - z_0}da \enspace.
+\end{equation}
+If we apply the power-series expansion to the equation we just found:
+\begin{equation}
+	\begin{aligned}
+		 & B^*(z_0) = \sum_{n = 1}^\infty C_n z_0^{n - 1} \enspace,                        \\
+		 & \text{with}\hspace{10pt}C_n = i \frac{\mu_0J}{2\pi}\int_{\sigma}\frac{1}{z^n}da
+		\enspace .
+	\end{aligned}
+\end{equation}
+The $C_n$ are non-normalized multipolar coefficients:
+\begin{itemize}
+	\item $C_1$ is the \emph{dipolar} field harmonic,
+	\item $C_2$ is the \emph{quadrupolar} field harmonic,
+	\item $C_3$ is the \emph{sestupolar} field harmonic;
+\end{itemize}
+and so on and so forth. These multipolar coefficients highlight the fact that any magnet generating
+a certain magnetic field (e.g., a quadrupolar magnet generates quadrupolar field), contians
+multipolar harmonics that disturb the main component. In the context of our example, a quadrupolar
+magnetic field generates a main quadrupolar component but introduces sestupolar, ottupolar, \ldots
+harmonics that disturb the main field.
+
+Since the multipolar coefficient is a complex number it can be expressed as $C_n = A_n - iB_n$, the components
+\begin{inparaenum}[(i)]
+	\item $A_n$s generate the horizontal fields and are known as \emph{skew} components,
+	\item $B_n$s enerate the vertical fields and are called \emph{right} components.
+\end{inparaenum}
 
 For each event, 60 samples of harmonic coefficients have been measured and averaged to obtain a single set of $15$ different magnetic field harmonics coefficients which contain all the information of the produced magnetic field quality (see Fig.~\ref{fig:FieldMeasurement}). Recalling that these coefficients are expressed as complex numbers, the information have been organized in terms of the following four attributes, in which the suffix $n \in \{1, \dots,  15\}$ is related to a specific harmonic:
 \begin{itemize}
