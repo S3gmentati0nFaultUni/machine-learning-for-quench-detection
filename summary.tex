@@ -1,0 +1,115 @@
+\documentclass[a4paper, notitlepage]{article}
+
+\usepackage{src/summary}
+
+\title{
+	\textsf{Supervised Machine Learning techniques for quench detection in superconductors} \\
+	\author{Alessandro Biagiotti -- 13903A}
+        \date{Febraury 20, 2025}
+}
+
+\begin{document}
+\maketitle
+\section{Hosting laboratory}
+This thesis originated as a cooperation between the departments of Computer Science and Physics of
+Milan University. We worked essentially at: 'Laboratorio Acceleratori e Superconduttività Applicata'
+(\textsc{lasa}) and 'Laboratorio di Algoritmica per il Web' (\textsc{law}); my advisors for the
+thesis have been:
+\begin{itemize}
+	\item Dario Malchiodi, associate professor of the Computer science department of Milan University;
+	\item Samuele Mariotto, researcher for \textsc{infn} and Physics department of Milan
+	      University;
+	\item Lucio Rossi, associate professor of the Physics department of Milan University and
+	      researcher for \textsc{infn}.
+\end{itemize}
+\section{Initial context}
+Our work attempted to confirm the analytical method, originally found by \textsc{infn} and
+University of Milan superconducting research group, for the localization of quench events in High
+Order Corrector superconducting magnets~\cite{mariotto2022-hoc, mariotto2022-generic} that will be
+mounted in the Large Hadron Collider particle accelerator for the High Luminosity upgrade~\cite{rossi2024-hllhc} (\textsc{hl-lhc}).
+
+A quench event is a transition of a superconducting material from the superconducting state to the
+normal-conducting state. This transition is accompanied by a rise in resistive voltage which can
+lead to material damage due to Joule-heating.
+
+Given the harmonic decomposition of magnetic field produced by a superconducting magnet after a quench event, the goal of the original
+work was to find an analytical description of the reconstructed harmonic content and to correlate
+the information with the localization of the quenched superconducting coil(s) in the magnet
+assembly. This analysis aimed at predicting degradation of the superconducting material and
+providing feedback on the quality and performances of the superconducting magnet. The magnetic field
+was measured at the center of the magnet, where the beam will pass during acceleration and
+collision, and is the result of the contribution of the magnetization of the different coils and of
+the iron yoke which is used in the magnet assembly to enhance the coil produced magnetic field and
+shield the electromagnetic field out of the accelerator envelope.
+
+\section{Objectives of the work}
+As was said in the previous section, the data available to us consisted in the harmonic
+decomposition of magnetic field measured on the magnet during normal operation or after quench
+events, the aim of this thesis was to identify two models: one capable of reliably
+replying to the question 'Did the magnet quench?' (we referred to this problem as \textsc{qrp}), and
+one capable of reliably replying to the question 'If quench happened during the test run, which
+coil(s) within the magnet did quench?' (we referred to this problem as \textsc{qlp}).
+
+It was of strong interest to find models capable of both yielding good performance while also being
+easily explainable. Ideally we would expect to be able to:
+\begin{itemize}
+	\item understand which magnetic field harmonics are more important for the analysis of
+	      quench events in superconducting magnets,
+	\item use the results of the analysis to develop better instrumentation and detection
+	      systems, able to protect the magnet in real time and more reliably compared to
+	      present quench protection methods used for superconducting magnets in particle
+	      accelerators for high energy physics.
+\end{itemize}
+
+\section{Description of the work done}
+Since the measurements had already been made the thesis consisted mostly of analyzing different
+aspects of the data and evaluating the performance of various supervised machine learning models. Our analysis
+focused mainly on one type (quadrupole) of superconducting magnet developed in the High Order
+Corrector magnet project. These magnets were designed to correct different types of multipolar
+anomalies (quadrupole, sextupole, octupole, decapole, dodecapole) introduced in the beam dynamics by
+the focusing quadrupoles in proximity of the interaction regions.
+
+\section{The technologies we used}
+The machine learning models we chose, shown below, for the task were characterized by a strong
+interpretability, which made them suitable for later analyses.
+\begin{itemize}
+	\item Decision trees (\dts)~\cite{breiman1984-dt}, extremely explainable, versatile and
+	      simple models. Chosen as our main starting point.
+	\item Random forests (\rfs)~\cite{breiman2001-rf}, an ensemble based on trees, explainable
+	      by definition. We chose them as an upgrade over (\dts) thanks to the higher
+	      performance.
+	\item Tree aggregators (\tas), a custom ensemble based on \dts; we designed them with
+	      performance and simplicity in mind. Our objective with them was to reach performance
+	      comparable to \rfs\ while having a simpler structure at the same time.
+\end{itemize}
+Our benchmark was the Support Vector Machine (\svm)~\cite{cortes1995-svm}, chosen because the model
+yields very high performance, and represents the ideal results if we decided to rule-out the explainability constraint.
+
+For our study we chose python and the classic data science libraries, namely: pandas,
+scikit-learn and numpy.
+
+\section{Results}
+At the end of February we also sent our paper 'Quench detection and localization via
+interpretable machine learning' to the 'Engineering Applications and Advances of Artificial
+Intelligence' conference and was recently accepted.
+
+At the time of writing we obtained a model capable of finding a solution for \qrp\ with a very
+high level of performance, we also got some extremely promising initial results for \qlp. During
+development, we had various ideas to further explore the field:
+\begin{enumerate}
+	\item have a physicist study the decision rules of our models, to correlate the model
+	      results with a physical explanation of the produced magnetic field harmonic content.
+	      Like performed in the analytical model aforementioned~\cite{mariotto2022-generic}.
+	\item fuzzification of the quench event description; to explore other aspects of quench
+	      events like the velocity of propagation or the precursor strength related to the Quench Protection System activation,
+	\item analysis of the voltage data to explore a different interpretation of the quench event,
+	\item high-performance quench localization through neural networks or \svcs, these models
+	      would yield better performance and could be possibly used in a context of online
+	      quench detection. But they would lack the explainability of the models identified in
+	      the work here presented.
+	\item clustering-based approaches as a secondary classification strategy for \qlp.
+\end{enumerate}
+
+\printbibliography
+
+\end{document}
