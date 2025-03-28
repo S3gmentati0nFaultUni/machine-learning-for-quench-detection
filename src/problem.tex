@@ -26,20 +26,50 @@ voltage detection system and discharged on an external dumping resistance to ext
 energy and prevent material damage. Two voltage taps were used to collect the voltage data, this means that the quench detection system can only
 localize quench developing in one half of the magnet or the other, without the possibility of
 localizing precisely which superconducting winding started the transition to the normal conducting
-state.\todo{Capire perché non si sono usati più voltage taps diversi}
-\begin{figure}[h!]
+state.
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/FieldProcedure.pdf}
 	\caption{Sketch of the magnetic field measurements after a quench event for the quadrupole magnet and dataset obtained for each quench event measurement.}
 	\label{fig:FieldMeasurement}
 \end{figure}
+Since the voltage of a superconducting coil can be approximated as the sum of an inductive
+voltage and a resistive voltage:
+\[\Delta V_C = \Delta V_L + \Delta V_R \enspace.\]
+We are interested in the resistive voltage buildup, that is why we use a voltage tap to split the
+coil into two sub coils of the same size, the voltage of the coil can now be expressed as
+\begin{equation}
+	\label{eq:coil-voltage}
+	\begin{aligned}
+		 & \Delta V_T = \Delta V_1 + \Delta V_2 \enspace;       \\
+		 & \text{where}                                         \\
+		 & \Delta V_1 = \Delta V_{L1} + \Delta V_{R1} \enspace, \\
+		 & \Delta V_2 = \Delta V_{L2} + \Delta V_{R2} \enspace.
+	\end{aligned}
+\end{equation}
+The inductive voltage depends on the inductance $L$ (which is depends on the length, cross section
+and number of turns of the equivalent solenoid) and the derivative of current intensity in time $I$,
+which is negative because the current is lowered with time due to the requisite of having constant
+total voltage~\footnote{
+	During a quench we have a buildup of resistive voltage, which means that, since the voltage
+	is kept constant by the power supply, the inductive decreases. The inductive voltage is
+	computed as:
+	\[\Delta V_L = L\dot{I} \enspace.\]
+	Since the intensity of current decreases over time then the derivative $\frac{dI}{dt}$ must be negative.
+}. In the ideal case we have that
+\[\Delta V_{L1} + \Delta V_{R1} + \Delta V_{L2} + \Delta V_{R2} = - \Delta V_{L1} + \Delta V_{R1} -
+	\Delta V_{L1} + \Delta V_{R2} = \Delta V_{R1} + \Delta V_{R2} \enspace.\]
+This operation needs to be done for every pair of voltage taps in the magnet assmebly, leading to an
+exponential complexity explosion. A more thorough analysis of the voltage measurement system can be
+found in~\cite{mariotto2022-generic}.
+
 In the original work, the condition of a superconducting coil was recognized based on the analysis of
 the residual magnetic field. If the magnet was in working order, the residual magnetic field was
 expected to be $\neq 0$. If one of the coils in the magnet assembly quenched, all the energy therein
 contained would have been dumped on the resistance (due to the Quench Protection System activation),
 therefore its residual magnetic field would be $\approx 0$. The asymmetrical behavior of the coils
 changes the geometry of the residual magnetic field of the magnet at $0$ current, change that can be
-detected using a quench antenna.\todo{Non so se ho scritto delle cazzate -- Bigi} Since the
+detected using a quench antenna. Since the
 quadrupoles, magnets MQSXF1 to MQSXF6, registered the majority of the quench events, due to their
 high operating current, the original work focused on them and our work follows the same line. The
 results of the test campaign were $279$ different measurements, only on quadrupoles, including those
@@ -107,6 +137,7 @@ cross-section $\sigma$ as
 \end{equation}
 If we apply the power-series expansion to the equation we just found:
 \begin{equation}
+	\label{eq:cn}
 	\begin{aligned}
 		 & B^*(z_0) = \sum_{n = 1}^\infty C_n z_0^{n - 1} \enspace,                        \\
 		 & \text{with}\hspace{10pt}C_n = i \frac{\mu_0J}{2\pi}\int_{\sigma}\frac{1}{z^n}da
@@ -140,12 +171,24 @@ numbers, the information was organized in terms of the following four attributes
 	\item the absolute value \cnmod, of the $n^\text{th}$ field harmonic coefficient;
 	\item the phase \phin, of the $n^\text{th}$ field harmonic coefficient.
 \end{itemize}
-Since the magnets in the original testing campaign were mounted skewed: the $A_n$
+Since the magnets in the original testing campaign were mounted skew: the $A_n$
 feature was supposed to be highly informative since they are directly correlated with the rotational
-position of the quenched coil in the magnet assembly. The absolute values $|C_n|$ would be a
-valuable feature for \qrp{} and not for \qlp{} since two different configurations with the same
-number of quenched coils but different angular positions would give the same harmonic content and
-different phases.\todo{Riguardare con Samuele questa parte riguardo a Cnmod -- Bigi} Each measurement was coupled with a \emph{label} encoded as follows:
+position of the quenched coil in the magnet assembly.
+
+If we compute the modulus of~\ref{eq:cn}
+\begin{equation}
+	\label{eq:cnmod}
+	\begin{aligned}
+		|C_n| & = \frac{\mu_0J}{2\pi} \sqrt{i \cdot i^*}\int_{\sigma}\frac{1}{|z^n|}da \\
+		      & = \frac{\mu_0J}{2\pi} \int_{\sigma}\frac{1}{|z|^n}da
+	\end{aligned}
+\end{equation}
+If the coils are all positioned at the same distance from the origin and the only thing that
+distinguishes them is the angular position, this information cannot be obtained starting from the
+modulus of a complex number. For instance there is no way of distinguishing $i$ which corresponds to
+$\pi / 2$ from $-i$, which corresponds to $3\pi / 3$.
+
+Each measurement was coupled with a \emph{label} encoded as follows:
 \begin{itemize}
 	\item a simple binary flag for \qrp, where $1$ means that a quench has happened, while $0$ characterizes the normal working conditions of the superconductor;
 	\item four binary flags for \qlp, each describing a  coil and stating whether or not a quench happened within it, using the same encoding as in previous point.
