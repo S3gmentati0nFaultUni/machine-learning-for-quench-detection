@@ -241,7 +241,7 @@
 		\relax}}
 
 % Titolo
-\newcommand\makeprintedtitle{\@title}
+\newcommand\makeprintedtitle{\textsc{\@title}}
 \newcommand\printedtitle[1]{\renewcommand\makeprintedtitle{#1}}
 \title{}
 
@@ -372,6 +372,7 @@
 	\pagenumbering{gobble}%
 	\begin{center}%
 		\makeuniversity\relax
+		\smallskip
 		\makefaculty\relax
 		\vskip 0.0135\paperheight
 		\makedepartment\relax

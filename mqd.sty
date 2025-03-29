@@ -50,6 +50,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Redefinition of the clear page routine to make sure that the page stays empty and doesn't have a
+% title at the top.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+	\clearpage
+	{\pagestyle{empty}\if@twoside
+			\ifodd\c@page\else
+				\hbox{}%
+				\newpage
+			\fi
+		\fi}
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Machine learning stuff
