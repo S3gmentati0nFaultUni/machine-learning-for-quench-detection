@@ -150,15 +150,37 @@ The $C_n$ are non-normalized multipolar coefficients:
 	\item $C_2$ is the \emph{quadrupolar} field harmonic,
 	\item $C_3$ is the \emph{sestupolar} field harmonic;
 \end{itemize}
-and so on and so forth. These multipolar coefficients highlight the fact that any magnet generating
-a certain magnetic field, for instance a quadrupole, contain multipolar harmonics that disturb the
-main component. In the context of our example, a quadrupole generates a main quadrupolar component but introduces sestupolar, ottupolar, \ldots harmonics that disturb the main field.
+and so on and so forth. The magnetic field can be described via an infinite amount of these
+multipolar coefficients, any magnet aims at generating only one, but the resulting magnetic field is
+never perfect. For instance: we would expect that a quadrupole only emits quadrupolar magnetic
+field, but it introduces sestupolar, ottupolar, \ldots disturbances.
 
 Since the multipolar coefficient is a complex number it can be expressed as $C_n = A_n - iB_n$, the components
 \begin{inparaenum}[(i)]
 	\item $A_n$s generate the horizontal fields and are known as \emph{skew} components,
 	\item $B_n$s generate the vertical fields and are called \emph{right} components.
 \end{inparaenum}
+
+Another formulation of field harmonics, which is still an analytic function, and is widely used, is
+\begin{equation}
+	\label{eq:ibz}
+	iB^* = i (B_x - iB_y) = B_y - iB_x = i \left(\sum_{n = 1}^\infty{C_n z_0^{n - 1}}\right)
+\end{equation}
+If we proceed to substitute the value for $C_n$ we identified above, we get the following
+expression:
+\begin{equation}
+	\label{eq:fh}
+	\begin{aligned}
+		B_y - iB_x & = \sum_{n = 1}^\infty{(B_n + iA_n) z_0^{n - 1}} \\
+		           & = B_0 \sum_{n = 1}^\infty({b_n + ia_n})
+		\left(\frac{z_0}{R_{\text{ref}}}\right)^{n - 1}
+	\end{aligned}
+\end{equation}
+Where: $a_n$ and $b_n$ are the normalized multipoles, $B_0$ is the main \emph{right} multipolar
+field (e.g., for a dipole $B_0 = b_1$, while for a quadrupole $B_0 = R_{\text{ref}}b_2$), and the $R_{\text{ref}}$ is the \emph{reference radius},
+which renders the coefficients dimensionless and is usually taken as $2/3$ of the magnet aperture.
+
+\medskip
 
 During the test campaign, for each of the $279$ events, 60 samples of harmonic coefficients have
 been measured and averaged to obtain a single set of $15$ different magnetic field harmonics
