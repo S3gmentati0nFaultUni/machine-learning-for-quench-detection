@@ -81,9 +81,9 @@ $2$D approximation of the magnet on the $X-Y$ plane, a point $z_0$ in the $X-Y$ 
 $I$ flowing along the third axis $z$; the magnetic field $B(z_0)$ can be expressed as
 \begin{equation}
 	\label{eq:bz}
-	|B(z_0)| = \frac{\mu_0I}{2\pi d}
+	|B(z_0)| = \frac{\mu_0I}{2\pi d} \enspace.
 \end{equation}
-where $d$ is the distance between our point $z_0$ and the $z$ axis. The magnetic field can be
+Where $d$ is the distance between our point $z_0$ and the $z$ axis. The magnetic field can be
 expressed as a complex number with the contribution along the $x$ axis and the contribution along
 the $y$ axis
 \begin{equation}
@@ -165,6 +165,7 @@ Another formulation of field harmonics, which is still an analytic function, and
 \begin{equation}
 	\label{eq:ibz}
 	iB^* = i (B_x - iB_y) = B_y - iB_x = i \left(\sum_{n = 1}^\infty{C_n z_0^{n - 1}}\right)
+	\enspace.
 \end{equation}
 If we proceed to substitute the value for $C_n$ we identified above, we get the following
 expression:
@@ -173,7 +174,7 @@ expression:
 	\begin{aligned}
 		B_y - iB_x & = \sum_{n = 1}^\infty{(B_n + iA_n) z_0^{n - 1}} \\
 		           & = B_0 \sum_{n = 1}^\infty({b_n + ia_n})
-		\left(\frac{z_0}{R_{\text{ref}}}\right)^{n - 1}
+		\left(\frac{z_0}{R_{\text{ref}}}\right)^{n - 1} \enspace.
 	\end{aligned}
 \end{equation}
 Where: $a_n$ and $b_n$ are the normalized multipoles, $B_0$ is the main \emph{right} multipolar
@@ -202,7 +203,7 @@ If we compute the modulus of~\ref{eq:cn}
 	\label{eq:cnmod}
 	\begin{aligned}
 		|C_n| & = \frac{\mu_0J}{2\pi} \sqrt{i \cdot i^*}\int_{\sigma}\frac{1}{|z^n|}da \\
-		      & = \frac{\mu_0J}{2\pi} \int_{\sigma}\frac{1}{|z|^n}da
+		      & = \frac{\mu_0J}{2\pi} \int_{\sigma}\frac{1}{|z|^n}da \enspace.
 	\end{aligned}
 \end{equation}
 If the coils are all positioned at the same distance from the origin and the only thing that
