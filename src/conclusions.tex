@@ -2,13 +2,9 @@
 \label{chp:conclusion}
 In this thesis we have proposed a solution to the problem of identifying quench events and
 localizing them within the magnet structure using the harmonic decomposition of magnetic field. We
-have provided a very strong solution for the first, and we have provided a good starting point for
-the second. During the project, we had different ideas to branch out and further explore the
-fascinating realm of machine learning applied to superconductor physics.
-
-We remark that, while the analysis we have done has been thorough, the performance achieved and the
-identified models only work on the specific case of the High order corrector quadrupolar magnets.
-We have serious doubts that this analysis could be extended to any other quadrupole; and extending it to magnets with a different number of poles would yield unusable results.
+have provided a very strong solution for the first, and we obtained very promising initial results
+for the second. During the project, we had different ideas to branch out and further explore the
+fascinating realm of machine learning applied to superconducting magnet physics.
 
 To achieve higher performance on \dts\ for \qlp, we can do further analysis on the models we
 identified so far; or we can opt for a more powerful model and opt for \emph{post-hoc}
@@ -16,13 +12,19 @@ explainability~\cite{retzlaff2024}. While in the first case it's only a matter o
 in the second case we would need more data, but the result of such an analysis wouldn't necessarily
 yield highly explainable results.
 
+This work sets a path in the field of explainable automatic recognition of quench events, but we
+explored one facet of the field, by doing \emph{post-mortem} analysis of the quadrupolar HO magnet.
+During development, we came up with many different declinations, of the problem at hand, that we
+could tackle.
+
 \subsubsection{Analysis of the decision rules and general detection model}
 In the project we have identified highly explainable models, capable of solving \qrp\ and \qlp\
-maintaining high performance. The obvious next step, is to open the models and abstract
-useful rules, capable of explaining quench and localizing events in certain coils. These rules could
-be used:
+effectively. The obvious next step, is to analyze the models and abstract useful rules, capable of
+explaining quench events and which harmonics are more important to do localization. These rules could be used:
 \begin{itemize}
-	\item In the field of sensor calibration, to isolate the harmonics that we truly need; simplifying sensor design, while also making the Quench Protection System more efficient,
+	\item To create new quench antennae or quench protection systems capable of efficiently
+	      detecting quenches within magnets. This can only be done if we know which are the
+	      harmonics that best describe the event.
 	\item Support in the magnet design process.
 \end{itemize}
 
@@ -32,22 +34,24 @@ remained in the superconducting state, if $1$, then the material transitioned to
 normal-conducting state. An interesting option would be to change the description of quenches,
 moving to a representation of the label as a real number in the interval $[0, 1]$.
 
-By moving to this new description we could leverage a higher expressivity, highlighting different
-behaviors: characterizing the rapidity of a transition to the normal-conducting state, or measuring
-the violence of the quench transition (how high is the spike of resistive voltage for the quench
-precursor). The ones above are just examples, we could use this new labelling system do explain
-different aspects of the magnet. The different descriptions would have to be inspected by a
-Physicist to understand which correlation is more interesting to investigate.
+By fuzzifying the labels we could leverage a higher expressivity, highlighting different
+behaviors: characterizing the rapidity of a transition to the normal-conducting state, or correlate
+the quench event with the strength of the precursor (which is an instantaneous rise in the measured
+voltage which might also pass undetected). The ones above are just examples, we could use this new labelling system to explain
+different aspects of the magnet. All these descriptions would have to be inspected by a
+superconducting magnet design expert to identify the correlations which are more interesting to be
+investigated.
 
 \subsubsection{Analysis of Voltage data}
-In the original experiment two different measures were taken on the magnets: magnetic measures (the
+In the original experiment two different measures were taken on the magnets: magnetic field measures (the
 ones we used throughout this thesis) and voltage taps. Voltage taps are used to measure the voltage
 in different positions inside the magnet, these taps are then connected to the electronics of the
-\textsc{qps}.
+\textsc{qps} (for more information about the voltage measurement system see \Cref{chp:problem}).
 
 The magnetic measurement system is much slower compared to the voltage measurement system; this
 means that we have much more data at our disposal that has not yet been used. At the time of writing
-we are starting a cooperation with Naples University to build high-performance models on such data.
+we are starting a cooperation between Milan University, INFN LASA and Naples University to build
+high-performance models trained on such data.
 
 \subsubsection{High performance quench localization}
 High-performance models for online quench detection and localization, are a different area of
@@ -59,8 +63,8 @@ granted throughout the project, unless explainable-ai models were used.
 
 \subsubsection{Clustering-based preprocessing for classification}
 Another technique that could be worth exploring is Clustering. We saw in the last chapter how the
-points were very nicely distributed in bidimensional space, specifically for attribute \an, but also
-for attribute \cnmod.
+samples were very nicely distributed in bidimensional space, specifically for attributes \an\ and
+\cnmod.
 
 As we said in \Cref{sec:qlp-cluster} we could likely use clustering as a preprocessing step and then
 extrapolate the results using highly explainable models like \dts\ and \rfs. We could also do a
