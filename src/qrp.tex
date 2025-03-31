@@ -35,7 +35,8 @@ Where $X$ is a sample in the vector that is being scaled.
 We will be covering the results of preprocessing in four different sections, each dedicated to a
 specific attribute.
 
-\subsubsection{\an}
+\subsection{\an}
+\label{sec:an}
 \Cref{fig:an-corr} highlights the correlation among the harmonics of attribute \an. Independently of
 the sign, the matrix evidently contains a pattern, hinting to the fact that many harmonics contain
 repeated information, (e.g., \an[1] provides the same information as \an[3], \an[5], \an[7]), \ldots
@@ -98,7 +99,8 @@ from the one for \cnmod). Having such a good distribution lead us to think that 
 models built on \an\ and \cnmod\ (at least for \qrp) perform better than the ones built on \bn\ and
 \phin.
 
-\subsubsection{\bn}
+\subsection{\bn}
+\label{sec:bn}
 We can use a similar procedure on the \bn\ attribute, which in most tests proved to be the
 least-performing attribute. This is probably due to the very poor distribution of the data, as we can see in
 \Cref{fig:bn-dist}, the central cluster has a very high level of homogeneity.
@@ -132,7 +134,8 @@ gathering more information from the data, like \rfs (see \Cref{sec:qrp-rf}).
 	\caption{Correlation between the harmonics and the labels for \bn.} \label{fig:bn-lcorr}
 \end{figure}
 
-\subsubsection{\cnmod}
+\subsection{\cnmod}
+\label{sec:cnmod}
 The \cnmod\ attribute combines the information present in \an\ and \bn. \cnmod\ was expected to be one
 of the best attributes to solve \qrp, as we highlighted in \Cref{chp:problem}; as we will see in
 future sections, while models trained on \cnmod\ cannot reach the same level of performance obtained
@@ -185,7 +188,8 @@ doesn't have a distribution quite as good as \an\ did, but comparing it to \Cref
 		space. In the plot we highlight quench and non-quench events.} \label{fig:cnmod-dist}
 \end{figure}
 
-\subsubsection{\phin}
+\subsection{\phin}
+\label{sec:phi}
 As we will see in further sections the \phin-based models consistently outperformed the ones based
 on \bn. \phin, as in the case of \bn, has a very homogeneous bidimensional visualization, as shown in
 \Cref{fig:phi-dist}, containing a series of high-impurity clusters, where samples of the two classes are mixed together.
