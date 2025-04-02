@@ -1,6 +1,6 @@
 \chapter{Quench Localization Problem (QLP)}
 \label{chp:qlp}
-This chapter is dedicated to some initial results for the Quench Localization Problem (\qlp), we will discuss:
+This chapter is dedicated to some initial results for the Quench Localization Problem (\qlp). We will discuss:
 \begin{inparaenum}[(i)]
 	\item some of the preprocessing we have done, specific for the labels,
 	\item some preliminary analysis done on clustering, and finally,
@@ -44,10 +44,10 @@ coils $0$ and $2$, but is less suited to explain the behavior of coils $1$ and $
 
 \noindent If we remind ourselves of the correlation existing among the harmonics (cfr. \Cref{fig:an-corr}), we can see that:
 \begin{itemize}
-	\item contrarily to what we discovered in \Cref{sec:qrp-preprocessing}, \an[2]\ is not
+	\item Contrarily to what we discovered in \Cref{sec:qrp-preprocessing}, \an[2]\ is not
 	      fundamental to explain the expected results;
 	\item the harmonics containing more information are the odd ones (\an[1], \an[3], \an[5],
-	      \ldots). This means that we will be able to only take one from the bunch, due to the
+	      \ldots); this means that we will be able to only take one from the bunch, due to the
 	      strong correlation originally identified among odd-numbered harmonics (see
 		\Cref{fig:an-corr} and \Cref{sec:an}).
 \end{itemize}
@@ -75,10 +75,10 @@ look for an alternative to explain the behavior of coils $1$ and $3$.
 		samples based on the specific coil quenched $\{\text{None}, 0, 1, 2, 3\}$.}\label{fig:an-coilq-dist}
 \end{figure}
 
-In figure \Cref{fig:an-coilq-dist} we visualized the distribution of samples for \an\ in
+In \Cref{fig:an-coilq-dist} we visualized the distribution of samples for \an\ in
 bidimensional space, after a round of \pca\ dimensionality reduction (moving from $15$ to $2$
 dimensions). Sub-figure (a) labels data based on the number of quenched coils associated to the
-sample. We can evidently identify a series of clusters, characterized by a high degree of purity
+sample. We can evidently identify a series of clusters, characterized by a high degree of purity;
 (and we had already noticed this behavior in \Cref{sec:an} on different labels). In
 \Cref{sec:qlp-cluster} we are going to discuss the clustering approach on this specific attribute.
 In sub-figure (b), we labelled the data based on which coil was quenched. The division of the labels
@@ -192,9 +192,9 @@ important to explain the value associated with the labels.
 \end{figure}
 
 If we look back at the correlation matrix computed for \cnmod\ during the preprocessing for \qrp\
-(see \Cref{fig:cnmod-corr} and \Cref{sec:cnmod}) a sub-view of \cnmod\ could be built as follows:
+(see \Cref{fig:cnmod-corr} and \Cref{sec:cnmod}) a sub-view of \cnmod\ could be built as follows.
 \begin{itemize}
-	\item For coil $0$, \cnmod[2] and adding a high-order candidate. While this would
+	\item For coil $0$, \cnmod[2] and a high-order candidate. While this would
 		technically maximize the total correlation with the label, we have seen in \qrp\
 		that choosing \cnmod[2]\ was a choice that didn't pay. That is why we might select
 		\cnmod[3] or \cnmod[6] in the end, accompanied by another high order harmonic like
@@ -408,7 +408,7 @@ In the following sections we will retrace our steps in \Cref{chp:qrp} and discus
 
 \subsection{Decision trees}
 To keep the discussion concise, we will be describing the structure of the best models and
-concentrate on the performance of the aggregate. \Cref{eq:hamming} shows the metric we used to
+concentrate on the performance of the aggregate. Equation~\ref{eq:hamming} shows the metric we used to
 compute the performance for the aggregate model, which contains one classifier per coil. We
 denominated the metric 'Hamming score' ($\hs$ in the following), and it computes the Hamming
 distance between the expected and the predicted label vectors, and then normalizes it.
@@ -417,12 +417,12 @@ distance between the expected and the predicted label vectors, and then normaliz
 	\hs = 1 - \frac{d_h(\hat{y}, y)}{4}
 \end{equation}
 
-\Cref{fig:bdts-qlp} visualizes the performance metrics obtained in the outer loop of \ncv\ for the best single
-tree trained on each coil. The metrics are quite close to each other, with the only clear outlier
-being the model trained on coil $3$. Interestingly, while \bn was supposed to be the better
-performer on coils $1$ and $3$, the best model was trained on a sub-view of \cnmod, which was
-supposed to be the worst coil to use to gather any information about whether a coil quenched or not
-in the magnet assembly (see \Cref{chp:problem} for more details).
+\Cref{fig:bdts-qlp} visualizes the performance metrics obtained in the outer loop of a $5\times5$
+fold \ncv\ for the best single tree trained on each coil. The metrics are quite close to each other,
+with the only clear outlier being the model trained on coil $3$. Interestingly, while \bn was
+supposed to be the better performer on coils $1$ and $3$, the best model was trained on a sub-view
+of \cnmod, which was supposed to be the worst coil to use to gather any information about whether a
+coil quenched or not in the magnet assembly (see \Cref{chp:problem} for more details).
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/best_dts_qlp.png}
@@ -525,17 +525,19 @@ Similarly to what we just did for \dts\ we also evaluated the performance of a m
 (each taken in its entirety). Performance metrics are better, but we are not far off from the
 numbers obtained with \dts\ (see \Cref{fig:bdts-qlp}). The weakest learner, in this case as well, was the one built on coil $3$.
 
-\Cref{tbl:forest-description} describes the four best forests. The depth, Number of internal nodes and number of leaves has been
+\Cref{tbl:forest-description} describes the four best forests. The depth, number of internal nodes and number of leaves has been
 averaged on all the trees to give an idea of what the average tree would look like. We also included
 the $5$ most important harmonics for each forest, to have a sense of which features counted the
-most in the estimator. A couple of aspects stood up to us:
+most in the estimator. A couple of aspects stood up to us, as explained here below:
 \begin{itemize}
 	\item The forests are very complicated, contain many trees which can be quite deep. The
-		most complicated of them all is the one constructed on coil $3$, which reaches an
-		average number of nodes of $15$ for $10$ trees.
+		most complicated of them is the one constructed on coil $3$, which reaches an
+		average number of $15$ nodes for $10$ trees.
 	\item The model dedicated to coil $0$ is trained on a dataset using attributes \an, \cnmod\ and
 		\phin. Despite this, the $5$ most important harmonics are all taken from \an.
 \end{itemize}
+The excessive complexity of these models lead us to abandon the model early because the slight
+performance increase over \dts\ wasn't really worth the extreme complexity jump.
 \begin{table}[!ht]
 	\caption{Description of the best \rf\ for every coil.}\label{tbl:forest-description}
 
@@ -563,8 +565,6 @@ most in the estimator. A couple of aspects stood up to us:
 		\bottomrule
 	\end{tabular}
 \end{table}
-The excessive complexity of these models lead us to abandon the model early because the slight
-performance increase over \dts\ wasn't really worth the extreme complexity jump.
 
 \subsubsection{Support Vector Classifiers}
 We used \svcs\ as our benchmark model for \qlp\ as well. In \Cref{fig:bsvcs-qlp} we plotted the
@@ -575,19 +575,19 @@ performance metrics for the best \svc\ trained on every coil.
 	\caption{Performance metrics for the best \svcs\ trained on every coil, all attributes
 		have been taken with their full harmonic content.} \label{fig:bsvcs-qlp}
 \end{figure}
-There are a couple of very interesting takeaways:
+There are a couple of very interesting takeaways.
 \begin{itemize}
 	\item The best \svc\ trained on coil $0$ is based on attribute \an. This is exactly what we
 	      expected since the very beginning of this chapter.
 	\item The best models for coils $1$ and $3$, were trained on \bn\ and another dataset (\cnmod\ for $1$ and \phin\ for $3$). This is interesting for two reasons:
 	      \begin{inparaenum}[(i)]
-	      \item The correlation between \bn\ and the labels of coils $1$ and $3$ is very strong,
+	      \item the correlation between \bn\ and the labels of coils $1$ and $3$ is very strong,
 		      (see \Cref{fig:bn-lcorr-qlp}), and we expected to see it put to use in these
 		      cases,
 	      \item the \svc\ trained on the sole \bn\ performed worse than the alternatives. This
 		      lead us to believe that, like in the case of \qrp, \bn\ alone doesn't contain
-		      enough information
-	      \end{inparaenum}.
+		      enough information.
+	      \end{inparaenum}
 	\item Interestingly, while \cnmod\ didn't perform well enough in our tests on \dts\ for coil
 	      $2$; the \svc\ trained on it was chosen over alternative trained on \an.
 \end{itemize}
