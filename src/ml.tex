@@ -835,18 +835,16 @@ high-dimensional space, and therefore how good the separating hyperplane is goin
 \section{Unsupervised models}
 \label{sec:uml}
 With \svms\ we leave supervised models behind, in this chapter we are going to consider unsupervised
-machine learning, capable of extrapolating patterns from unlabelled data.
-
-Unsupervised machine learning models, contrarily to the supervised case, are trained on datasets
-that do not contain an expected answer $y_i$ for instance $\problem_i$.
-
-This section is going to be dedicated to explore the theory behind the $k$-means clustering
-algorithm: once again the main material used is~\cite{ZhouZhi-Hua2021ML}.
+machine learning, capable of extrapolating patterns from unlabelled data. Unsupervised machine
+learning models, contrarily to the supervised case, are trained on datasets that do not contain an
+expected answer $y_i$ for instance $\problem_i$. This section is going to be dedicated to explore
+the theory behind the $k$-means clustering algorithm: once again the main material used
+is~\cite{ZhouZhi-Hua2021ML}.
 
 \section{Clustering with k-means}
 \label{sec:kmeans}
-Given a dataset $\udset$ a clustering algorithm partitions the data into non-intersecting sets
-known as \emph{clusters}: the data is grouped based on how similar they are; ideally, the more two
+Given a dataset $\udset$, a clustering algorithm partitions the data into non-intersecting sets
+known as \emph{clusters}. Samples are grouped based on how similar they are; ideally, the more two
 points are similar, the closer they should be.
 
 If, on the one hand, these algorithms are capable of giving us an idea of the
@@ -863,7 +861,7 @@ in clustering: performance measures and distance calculation.
 Clustering algorithms have their own set of metrics, also known as \emph{validity indices}. Common
 scores like \emph{accuracy} and \emph{recall} cannot be used because the dataset doesn't have an
 expected class to compare the prediction with~\footnote{
-	These and more scores for supervised learning models will be explored in
+	These and more scores for supervised learning models will be used in
 	chapters~\ref{chp:qrp}--~\ref{chp:qlp}. The metrics used will be introduced in
 	chapter~\ref{chp:problem}.
 }. In the clustering environment there are indices that allow us to mathematically
@@ -925,7 +923,7 @@ therefore, we only used external indices; for completeness's sake we will includ
 	\item Rand Index (\textsc{ri})~\cite{Rand1971}; can be interpreted as a form of accuracy
 		measure for clustering. Since every point needs to be in one and only one cluster,
 		$a + b + c + d = \binom{n}{2}$, therefore $\textsc{ri}$ divides the number of true
-		positives and negatives $(a, d)$, by all the possibilities.
+		positives and negatives $(a, d)$, by all the possibilities:
 		\begin{equation*}
 			\textsc{ri} = \frac{2(a + d)}{n(n - 1)} /enspace.
 		\end{equation*}
@@ -994,14 +992,15 @@ examples are the main clustering scores used within the project.
 			\item are further apart, improving separation,
 			\item they have less scattering, meaning that similar vectors are closer
 				together.
-		\end{itemize}.
+		\end{itemize}
 	\item The \emph{Silhouette Coefficient} for sample $i$ defined in~\cite{rousseuw1987}
 		is based on two different metrics: $e(i)$\footnote{
 			Compared to the literature we chose different names to avoid confusion, since they would have to be called $a$ and $b$, which were already used to define the metrics used for external clustering indices.
-		}, which is the mean distance between a point and all other points in the same cluster, and $f(i)$, which is the mean distance between a point and all other points in the nearest cluster.
+		}, which is the mean distance between the sample and all other data-points in the
+		same cluster, and $f(i)$, which is the mean distance between the sample and all other points in the nearest cluster:
 
 		\begin{equation*}
-			s(i) = \frac{f(i) - e(i)}{\max(e(i), f(i))}
+			s(i) = \frac{f(i) - e(i)}{\max(e(i), f(i))} \enspace.
 		\end{equation*}
 \end{itemize}
 
@@ -1025,6 +1024,7 @@ distance}~\cite{metcalf2016-distances}
 \begin{equation}
 	\label{eq:mkd}
 	dist_{mk}(\vec{x}_i, \vec{x}_j) = \left(\sum_{u = 1}^n|x_{iu} - x_{ju}|^p\right)^\frac{1}{p}
+	\enspace.
 \end{equation}
 Different distance measures are associated to different values of the $p$ parameter: when $p = 2$ the resulting function is the \emph{Euclidean distance}, when $p \rightarrow \infty$ the resulting function is the \emph{Chebyshev distance}.
 
@@ -1044,9 +1044,9 @@ and optimized. More formally, given a dataset $D$, the $k$-means algorithm minim
 squared error:
 \begin{equation}
 	\label{eq:squared-error}
-	E = \sum_{i = 1}^k\sum_{\vec{x} \in C_i}||\vec{x} - \vec{\mu}_i||_2^2 \enspace,
+	E = \sum_{i = 1}^k\sum_{\vec{x} \in C_i}||\vec{x} - \vec{\mu}_i||_2^2 \enspace.
 \end{equation}
-thus the error is computed as the $L_2$ norm of the distance vector between every point in the
+The error is computed as the $L_2$ norm of the distance vector between every point in the
 cluster and the cluster's centroid, which we already encountered in the last section. A small error
 indicates a higher intra-cluster similarity. Since the process of minimizing the squared
 error~\ref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
