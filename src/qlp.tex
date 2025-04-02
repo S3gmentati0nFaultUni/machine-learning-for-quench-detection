@@ -78,7 +78,7 @@ look for an alternative to explain the behavior of coils $1$ and $3$.
 In \Cref{fig:an-coilq-dist} we visualized the distribution of samples for \an\ in
 bidimensional space, after a round of \pca\ dimensionality reduction (moving from $15$ to $2$
 dimensions). Sub-figure (a) labels data based on the number of quenched coils associated to the
-sample. We can evidently identify a series of clusters, characterized by a high degree of purity;
+sample. We can evidently identify a series of clusters, characterized by a high degree of purity
 (and we had already noticed this behavior in \Cref{sec:an} on different labels). In
 \Cref{sec:qlp-cluster} we are going to discuss the clustering approach on this specific attribute.
 In sub-figure (b), we labelled the data based on which coil was quenched. The division of the labels
@@ -414,11 +414,10 @@ denominated the metric 'Hamming score' ($\hs$ in the following), and it computes
 distance between the expected and the predicted label vectors, and then normalizes it.
 \begin{equation}
 	\label{eq:hamming}
-	\hs = 1 - \frac{d_h(\hat{y}, y)}{4}
+	\hs = 1 - \frac{d_h(\hat{y}, y)}{4} \enspace.
 \end{equation}
 
-\Cref{fig:bdts-qlp} visualizes the performance metrics obtained in the outer loop of a $5\times5$
-fold \ncv\ for the best single tree trained on each coil. The metrics are quite close to each other,
+\Cref{fig:bdts-qlp} visualizes the performance metrics obtained in the outer loop of a $5\times5$ \ncv\ for the best single tree trained on each coil. The metrics are quite close to each other,
 with the only clear outlier being the model trained on coil $3$. Interestingly, while \bn was
 supposed to be the better performer on coils $1$ and $3$, the best model was trained on a sub-view
 of \cnmod, which was supposed to be the worst coil to use to gather any information about whether a

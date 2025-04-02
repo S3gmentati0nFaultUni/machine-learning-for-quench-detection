@@ -132,7 +132,7 @@ reached, the class associated to the point is identified as the prediction made 
 
 Two are the theoretical concepts we wish to cover in this section: indices and node split
 computation, avoiding overfitting through pre- and post- pruning.
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
 	\begin{tikzpicture}[
 			% Define styles for nodes
@@ -160,7 +160,7 @@ computation, avoiding overfitting through pre- and post- pruning.
 In \Cref{fig:simple-dt} a simple structure for a decision tree was shown, an excellent question in
 its regard could be: 'Why this structure and not another one?'. Other than it being a simple
 example, nothing is really preventing us from describing the 'rain' event based on different threshold values or different feature sets altogether.
-\begin{figure}
+\begin{figure}[!ht]
 	\centering
 	\begin{tikzpicture}[
 			% Define styles for nodes
@@ -198,7 +198,7 @@ This variability is due to the stochastic nature of the construction process, as
 \Cref{chp:problem}, there are many things to keep in mind, as well as precautions that can be taken
 to make sure that the results do not change with every run.
 
-\begin{algorithm}
+\begin{algorithm}[!hb]
 	\caption{The decision tree base algorithm taken from
 		\cite{ZhouZhi-Hua2021ML}}\label{algo:decision-tree}
 	\begin{algorithmic}[1]
@@ -1036,23 +1036,7 @@ high, this condition is known as the \emph{curse of dimensionality}~\cite{aggraw
 In the upcoming section we will be talking about the very well known $k$-means clustering algorithm.
 
 \subsection{k-means algorithm}
-The $k$-means algorithm~\cite{macqueen1967-kmeans, lloyd1982-kmeans} is a very well known and studied
-\emph{prototype-based} clustering algorithm. The algorithm identifies $k$ different clusters in the
-data; since the algorithm is unsupervised it starts by selecting $k$ different prototypes, which are
-points representing what is going to be contained in the cluster. These prototypes are then updated
-and optimized. More formally, given a dataset $D$, the $k$-means algorithm minimizes the following
-squared error:
-\begin{equation}
-	\label{eq:squared-error}
-	E = \sum_{i = 1}^k\sum_{\vec{x} \in C_i}||\vec{x} - \vec{\mu}_i||_2^2 \enspace.
-\end{equation}
-The error is computed as the $L_2$ norm of the distance vector between every point in the
-cluster and the cluster's centroid, which we already encountered in the last section. A small error
-indicates a higher intra-cluster similarity. Since the process of minimizing the squared
-error~\ref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
-point for every possible cluster, the actual implementation of $k$-means takes a greedy approach
-(shown in \Cref{algo:kmeans}). This procedure starts with a prototype of the mean vectors and updates them iteratively with the definition of the clusters; the procedure stops once the partition structure doesn't change after one iteration.
-\begin{algorithm}[!hb]
+\begin{algorithm}[!ht]
 	\caption{The $k$-means algorithm taken from~\cite{ZhouZhi-Hua2021ML}}\label{algo:kmeans}
 	\begin{algorithmic}[1]
 		\Require Dataset $\udset$ and Number of clusters $k$.
@@ -1078,6 +1062,24 @@ point for every possible cluster, the actual implementation of $k$-means takes a
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
+The algorithm shown in~\ref{algo:kmeans} is $k$-means~\cite{macqueen1967-kmeans, lloyd1982-kmeans},
+it's a very well known and studied \emph{prototype-based} clustering algorithm. It's an unsupervised
+technique that starts by selecting $k$ different prototypes, which are
+points representing what is going to be contained in the cluster. These prototypes are then updated
+and optimized until the cluster centroids do not change anymore. More formally, given a dataset $D$,
+the $k$-means algorithm takes an integer $k$ as input and returns $k$ different clusters.
+
+$k$-means minimizes the following squared error:
+\begin{equation}
+	\label{eq:squared-error}
+	E = \sum_{i = 1}^k\sum_{\vec{x} \in C_i}||\vec{x} - \vec{\mu}_i||_2^2 \enspace.
+\end{equation}
+The error is computed as the $L_2$ norm of the distance vector between every point in the
+cluster and the cluster's centroid, which we already encountered in the last section. A small error
+indicates a higher intra-cluster similarity. Since the process of minimizing squared
+error~\ref{eq:squared-error} is \textsc{np}-complete, due to the necessity of checking every possible
+point for every possible cluster, the actual implementation of $k$-means takes a greedy approach
+(shown in \Cref{algo:kmeans}). This procedure starts with a prototype of the mean vectors and updates them iteratively with the definition of the clusters; the procedure stops once the partition structure doesn't change after one iteration.
 
 
 
