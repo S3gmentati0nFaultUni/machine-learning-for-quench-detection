@@ -5,8 +5,8 @@ High Order corrector superconducting magnets. These magnets have been designed t
 different multipolar field orders (quadrupole, sextupole, octapole, decapole, and dodecapole) to
 correct the magnetic field irregularities introduced by the focusing quadrupoles; which reduce beam
 emittance\footnote{
-	Beam emittance corresponds to the area occupied by the beam in the position--momentum space,
-	the higher the emittance the higher the risk of beam loss.
+	Beam emittance corresponds to the area occupied by the beam in the position--momentum space:
+	the higher the emittance, the higher the risk of beam loss.
 } of the two counter-rotating protonic beams in proximity of interaction regions
 (sections of the LHC ring in which the particles encounter during high-energy experiments). Such
 irregularities need correction since they might lead to:
@@ -16,7 +16,7 @@ irregularities need correction since they might lead to:
 	\item increase in the beam emittance.
 \end{inparaenum}
 
-The original work~\cite{mariotto2022}, consisted in a test campaign in which the HO corrector
+The original work~\cite{mariotto2022} consisted in a test campaign in which the HO corrector
 magnets, kept at cryogenic temperature at the \textsc{infn} Laboratorio Acceleratori e Superconduttività
 Applicata in Milan, were powered to evaluate their performances and thermal stability up to the
 nominal operating condition. During magnet powering, spontaneous transitions to the
@@ -26,16 +26,15 @@ voltage detection system and discharged on an external dumping resistance to ext
 energy and prevent material damage. Two voltage taps were used to collect the voltage data, this means that the quench detection system can only
 localize quench developing in one half of the magnet or the other, without the possibility of
 localizing precisely which superconducting winding started the transition to the normal conducting
-state.
+state. Since the voltage of a superconducting coil can be approximated as the sum of an inductive
+voltage and a resistive voltage:
+\[\Delta V_C = \Delta V_L + \Delta V_R \enspace.\]
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=\linewidth]{img/FieldProcedure.pdf}
 	\caption{Sketch of the magnetic field measurements after a quench event for the quadrupole magnet and dataset obtained for each quench event measurement.}
 	\label{fig:FieldMeasurement}
 \end{figure}
-Since the voltage of a superconducting coil can be approximated as the sum of an inductive
-voltage and a resistive voltage:
-\[\Delta V_C = \Delta V_L + \Delta V_R \enspace.\]
 We are interested in the resistive voltage buildup, that is why we use a voltage tap to split the
 coil into two sub coils of the same size, the voltage of the coil can now be expressed as
 \begin{equation}
@@ -119,17 +118,17 @@ This because $B^*$ is an analytic function\footnote{
 	following: Let $D$ be a finite, simply connected domain and $C$ any closed, rectifiable curve contained in $D$. If the function $f(z)$ is differentiable in the domain $D$, then the integral of $f(z)$ along $C$ is equal to $0$. Which means that the function is analytic~\cite{evgrafov2019analytic}.
 } which makes it more useful for two reasons:
 \begin{itemize}
-	\item We can expand it in power series, leading us to multipolar expansion (as we will see
+	\item we can expand it in power series, leading us to multipolar expansion (as we will see
 	      in the following),
 	\item for a given region, the maximum value of the modulus is on the boundary. This identifies the maximum field point within the magnet (even though $B^*$ is not analytic within the magnet we can use equivalent functions for it).
 \end{itemize}
-Since~\ref{eq:bconj} is analytic then we can do a power series expansion on $z$
+Since~(\ref{eq:bconj}) is analytic then we can do a power series expansion on $z$
 \begin{equation}
 	\label{eq:pexp}
 	\frac{1}{z - z_0} = \frac{1}{z} \sum_{n = 1}^\infty \left(\frac{z_0}{z}\right)^n = \sum_{n =
 		1}^\infty \frac{z_0^{n - 1}}{z^n} \enspace.
 \end{equation}
-We can rewrite~\ref{eq:bconj} for a uniformly distributed current density $J$ on an arbitrary
+We can rewrite~(\ref{eq:bconj} for a uniformly distributed current density $J$ on an arbitrary
 cross-section $\sigma$ as
 \begin{equation}
 	\label{eq:bconj-generic}
@@ -148,12 +147,12 @@ The $C_n$ are non-normalized multipolar coefficients:
 \begin{itemize}
 	\item $C_1$ is the \emph{dipolar} field harmonic,
 	\item $C_2$ is the \emph{quadrupolar} field harmonic,
-	\item $C_3$ is the \emph{sestupolar} field harmonic;
+	\item $C_3$ is the \emph{sextupolar} field harmonic;
 \end{itemize}
 and so on and so forth. The magnetic field can be described via an infinite amount of these
 multipolar coefficients, any magnet aims at generating only one, but the resulting magnetic field is
 never perfect. For instance: we would expect that a quadrupole only emits quadrupolar magnetic
-field, but it introduces sestupolar, ottupolar, \ldots disturbances.
+field, but it introduces sextupolar, octupolar, \ldots disturbances.
 
 Since the multipolar coefficient is a complex number it can be expressed as $C_n = A_n - iB_n$, the components
 \begin{inparaenum}[(i)]
@@ -194,11 +193,9 @@ numbers, the information was organized in terms of the following four attributes
 	\item the absolute value \cnmod, of the $n^\text{th}$ field harmonic coefficient;
 	\item the phase \phin, of the $n^\text{th}$ field harmonic coefficient.
 \end{itemize}
-Since the magnets in the original testing campaign were mounted skew: the $A_n$
+Since the magnets in the original testing campaign were mounted skew; the $A_n$
 feature was supposed to be highly informative since they are directly correlated with the rotational
-position of the quenched coil in the magnet assembly.
-
-If we compute the modulus of~\ref{eq:cn}
+position of the quenched coil in the magnet assembly. The modulus of~(\ref{eq:cn}) is
 \begin{equation}
 	\label{eq:cnmod}
 	\begin{aligned}
@@ -239,12 +236,12 @@ We remark here that the labels for \qrp\ were reasonably balanced: namely, the n
 In each of our experiments we did not use all attributes, in most cases the datasets aggregated the
 best harmonics for a certain attribute (e.g., \an[2] and \an[12]). We will refer to these as sub-views of an attribute.
 
-The objective of the thesis was to find machine learning models capable of:
+The objective of the thesis was to find machine learning models capable of recognizing:
 \begin{enumerate}
-	\item recognizing whether the magnet underwent a quench event during operation, which we will refer
+	\item whether or not the magnet underwent a quench event during operation, which we will refer
 	      to as Quench Recognition Problem (\qrp) from now on, and will be treated in \Cref{chp:qrp};
-	\item recognize, if the superconductor quenched, which coil(s) transitioned; we will refer to
-	      it as Quench Localization Problem (\qlp) from now on, and it will be treated in
+	\item which coil(s) transitioned, if the superconductor quenched; which we will refer to
+	      as Quench Localization Problem (\qlp) from now on, and it will be treated in
 	      \Cref{chp:qlp}.
 \end{enumerate}
 The models chosen to solve \qrp\ and \qlp\ had to be both reliable and highly explainable to favour
@@ -261,7 +258,7 @@ for later reuse, an overview of the datasets is given here below.
 	      measurements done on the attribute(s) for the different magnets. Before serialization, the
 	      data is standardized.
 	\item The \emph{blind-test} dataset, \db, contains a small part of the overall data available to us
-	      ($29$ samples), these samples were kept locked until the experiments were considered
+	      ($29$ samples): these samples were kept locked until the experiments were considered
 	      complete. Using the blind-test set we performed a final test on the best models to see
 	      how well the performance generalized on unseen data.
 	\item The \emph{reduced} dataset, \dr, contains the rest of the samples, $250$ in total,
@@ -292,7 +289,10 @@ would:
 	\item and then test the performance on $G$.
 \end{inparaenum} While this is a perfectly acceptable procedure to gather performance metrics for a
 model, it gives us reliable performance metrics only if the dataset is very large. The larger the
-dataset $D$, the more samples can go in both $T$ and $G$; making sure that many different cases are covered.
+dataset $D$, the more samples can go in both $T$ and $G$; making sure that many different cases are
+covered. If the dataset is small, like in our case, then it introduces a higher uncertainty on
+performance metrics; meaning that it might be more likely that the generalization performance are
+high due to a statistical anomaly.
 
 By measuring performance on different folds (each one is a self-contained train-test procedure), we
 get a more complete vision of the model performance: each sample in the dataset has been used
@@ -302,7 +302,7 @@ performance is very wide. To understand how the folds are constructed, let's con
 
 \smallskip
 
-The number of folds to be used for \cv\ becomes another hyperparameter of the problem, since it
+The number of folds to be used for \cv\ becomes a very important aspect of the problem, since it
 depends on many factors like the amount of available data or the required reliability of performance
 reads. A large value of $k$ will increase the number of folds the model is trained and tested on,
 increasing the robustness of the performance estimation at the expense of computational complexity
@@ -339,6 +339,13 @@ samples (an outline of the \ncv\ procedure is shown in \Cref{fig:nested-cv}).
 	      \Cref{fig:nested-cv} by the $5$ larger bars pointed by the arrows. The bright green
 	      partitions are the ones used for training, while the red one is the one used for final
 	      testing.
+	\item For all possible combinations in the hyperparameter space~\footnote{
+		      For all intents and pourposes we do not do a full exploration of the
+		      hyperparameter space, because it's an infinite space. Therefore we do an
+		      exploration of a user-defined hyperparameter grid (cfr. \Cref{tbl:params}).
+		      Since we consider all the possibilities the computational complexity of such
+		      exploration is exponential.\label{foot:hypr-grid}
+	      } we repeat points 3 and 4.
 	\item The training set is now split again in $5$ folds, $160$ samples will be used to do
 	      model selection, $40$ samples will be used to validate the performance that has been
 	      found. This is highlighted in \Cref{fig:nested-cv} by the $5$ smaller bars below each bar indicated in step 1.
@@ -347,24 +354,25 @@ samples (an outline of the \ncv\ procedure is shown in \Cref{fig:nested-cv}).
 	      In practice, as was anticipated in \Cref{sec:sml}, when we do model selection
 	      (or hyperparameter fine-tuning) we explore only a very limited portion of the
 	      hyperparameter space, and we select the combination that yields the best performance
-	      during validation. \emph{De facto}, we used a hyperparameter grid (cfr.
-	      \Cref{tbl:params}), each combination yielded a different model that was later validated.
-	\item Step 2 is repeated until all folds have been used for validation; in
+	      during validation.
+	\item Step 3 is repeated until all folds have been used for validation; in
 	      \Cref{fig:nested-cv} we can see that each of the available partitions in the smaller
 	      bars becomes bright green once before moving to the next iteration of the outer loop.
+	      Since we use an hyperparameter grid (see footnote~\ref{foot:hypr-grid})\emph{De facto}, we used a hyperparameter grid (cfr. \Cref{tbl:params}), each combination yielded a different model that was later validated.
 	\item The model found at the previous step is retrained on the whole $200$ training samples
 	      (the green partitions in the larger bars in \Cref{fig:nested-cv}), and the
 	      performance is tested on the fold that was kept aside in the first step (the red one
 	      in \Cref{fig:nested-cv}).
-	\item Steps 1, 2, 3, 4 are repeated until every sample in the original dataset has been used
-	      only onj time for the final testing run. This is indicated in \Cref{fig:nested-cv}
+	\item Steps 1, 2, 3, 4, 5 are repeated until every sample in the original dataset has been used
+	      only one time for the final testing run. This is indicated in \Cref{fig:nested-cv}
 	      by the fact that all the available partitions in the longer bars become red just
 	      once.
 \end{enumerate}
 \begin{figure}[!t]
 	\centering
 	\includegraphics[scale=.3]{./img/nested-cv.png}
-	\caption{Visualization of the nested cross validation procedure taken from~\cite{lavasa2021}}
+	\caption{Visualization of the nested cross validation procedure (taken
+		from~\cite{lavasa2021}).}
 	\label{fig:nested-cv}
 \end{figure}
 
@@ -471,6 +479,8 @@ gives us a rough idea of the model performance: a high accuracy means that the m
 capable of recognizing well both positives and negatives. While this metric alone cannot tell us the
 whole story (for instance, with a very high accuracy that is only sending $1$ as output), is a very
 good large-grain metric. Any finer analysis can be done using the other metrics just described.
+Furthermore the dataset (as we saw in this chapter) is essentially balanced, therefore we didn't
+have any particular necessities to cover.
 
 
 
