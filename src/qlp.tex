@@ -361,6 +361,14 @@ enough as a classifier; we could still use it as a preprocessor for the models w
 \Cref{chp:qrp}. Alternatively, we could think of correcting misclassification errors by running an
 instance of $k$-nn on top of $k$-means, in order to move misclissified points closer to where they
 should be.
+$k$-nn is the supervised alternative to $k$-means clustering. The algorithm is
+non-parametric, as it does not assume a fixed form for the decision boundary and instead
+relies directly on the training data, and instance-based, meaning that the outcome of the
+algorithm depends directly from the training data, no pattern is abstracted from the samples
+for later reuse. The classification outcome is computed by majority voting on the $k$ nearest
+neighbours; the choice of the $k$ hyperparameter dictates how the algorithm behaves: a higher $k$
+reduces the impact of noise by averaging over a larger number of neighbors, leading to a smoother
+decision boundary~\cite{syriopoulos2025-knn}.
 
 \section{Results}
 After our brief exploration of the possibilities offered by clustering algorithms, we moved back to
