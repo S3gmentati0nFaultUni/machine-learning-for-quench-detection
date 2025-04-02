@@ -1,6 +1,6 @@
 \chapter{Karush-Kuhn-Tucker conditions}
 \label{app:kkt}
-\Cref{eq:opt-problem} defines a non-linear optimization problem, we consider a minimization
+Equation~\ref{eq:opt-problem} defines a non-linear optimization problem, we consider a minimization
 problem, with both inequality and equality constraints. Karush-Kuhn-Tucker conditions (\kkt) are
 necessary conditions to solve such problems.
 \begin{equation}
@@ -27,7 +27,7 @@ minimum for the objective function:
 This is only a small selection of the available conditions, the lower the rank, the broader the
 applicability ($\textsc{lcq} \implies \textsc{licq} \implies \textsc{crcq}$).
 
-If $x*$ is a point that satisfies the regularity conditions just introduced, $f: \R^n \rightarrow
+If $x^*$ is a point that satisfies the regularity conditions just introduced, $f: \R^n \rightarrow
 	\R$, $g_i: \R^n \rightarrow \R$, $h_j: \R^n \rightarrow \R$ and the functions are continuously
 differentiable functions, then we can define Lagrange multipliers $m_j, j = 1, \ldots, l$ and
 $\lambda_i, i = 1, \ldots, m$ such that the following conditions hold:
@@ -35,21 +35,22 @@ $\lambda_i, i = 1, \ldots, m$ such that the following conditions hold:
 	\item Stationarity condition,
 	      \begin{equation*}
 		      \grad{f(x^*)} + \sum_{i = 1}^m{\lambda_i\grad{g_i(x^*)}} + \sum_{j =
-			      1}^l{\mu_j\grad{h_j(x^*)}} = 0
+			      1}^l{\mu_j\grad{h_j(x^*)}} = 0 \enspace.
 	      \end{equation*}
 	\item Primal feasibility conditions
 	      \begin{equation*}
 		      \begin{aligned}
-			      g_i(x^*) & \leq 0 \hspace{10pt} \forall i \in \{1, \ldots, m\} \\
-			      h_j(x^*) & = 0 \hspace{10pt} \forall j \in \{1, \ldots, l\}
+			      g_i(x^*) & \leq 0 \hspace{10pt} \forall i \in \{1, \ldots, m\}
+			      \enspace,                                                             \\
+			      h_j(x^*) & = 0 \hspace{10pt} \forall j \in \{1, \ldots, l\} \enspace.
 		      \end{aligned}
 	      \end{equation*}
 	\item Dual feasibility condition
 	      \begin{equation*}
-		      \lambda_i \geq 0 \hspace{10pt} \forall i \in \{1, \ldots, m\}
+		      \lambda_i \geq 0 \hspace{10pt} \forall i \in \{1, \ldots, m\} \enspace.
 	      \end{equation*}
 	\item Complementary slackness condition
 	      \begin{equation*}
-		      \sum_{i = 1}^m \lambda_i g_i(x^*) = 0
+		      \sum_{i = 1}^m \lambda_i g_i(x^*) = 0 \enspace.
 	      \end{equation*}
 \end{enumerate}

@@ -25,13 +25,12 @@ explaining quench events and which harmonics are more important to do localizati
 	\item To create new quench antennae or quench protection systems capable of efficiently
 	      detecting quenches within magnets. This can only be done if we know which are the
 	      harmonics that best describe the event.
-	\item Support in the magnet design process.
+	\item To Support the magnet design process.
 \end{itemize}
 
 \subsubsection{Fuzzification of quench-event description}
-For both our problems the quench-event was described by a binary value, if $0$ then the sample
-remained in the superconducting state, if $1$, then the material transitioned to the
-normal-conducting state. An interesting option would be to change the description of quenches,
+For both our problems the quench-event was described by a binary value, if $0$ then the coil(s)
+remained in the superconducting state, if $1$, then a quench event was measured. An interesting option would be to change the description of quenches,
 moving to a representation of the label as a real number in the interval $[0, 1]$.
 
 By fuzzifying the labels we could leverage a higher expressivity, highlighting different
@@ -54,21 +53,21 @@ we are starting a cooperation between Milan University, INFN LASA and Naples Uni
 high-performance models trained on such data.
 
 \subsubsection{High performance quench localization}
-High-performance models for online quench detection and localization, are a different area of
+High-performance models for online quench detection and localization are a different area of
 research (quite active at the moment~\cite{hoang2021, zhou2021, einstein2023}).
 
 Many are the alternatives: the \svcs\ explored in this thesis, neural networks or anomaly detection
 via autoencoders. Clearly, pursuing such path forces us to invalid the explainability property we
-granted throughout the project, unless explainable-ai models were used.
+granted throughout the project, unless explainable-AI models were used.
 
 \subsubsection{Clustering-based preprocessing for classification}
 Another technique that could be worth exploring is Clustering. We saw in the last chapter how the
 samples were very nicely distributed in bidimensional space, specifically for attributes \an\ and
 \cnmod.
 
-As we said in \Cref{sec:qlp-cluster} we could likely use clustering as a preprocessing step and then
+As we said in \Cref{sec:qlp-cluster}, we could likely use clustering as a preprocessing step and then
 extrapolate the results using highly explainable models like \dts\ and \rfs. We could also do a
-first run of $k$-means clustering and then finalize classification using $k$-nn. Both approaches
+first run of $k$-means clustering and then finalize classification using $k$-NN. Both approaches
 would be extremely viable, at the expense, once more, of explainability (since we use $k$-means and
 \pca, which are inherently non-explainable).
 
