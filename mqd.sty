@@ -179,3 +179,16 @@
 \newcommand{\ohm}{\Omega}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Openingquote command ~ From Sgorblex
+\usepackage{epigraph}
+\newcommand{\openingquote}[2]{
+	\cleardoublepage
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\setlength{\epigraphwidth}{0.6\textwidth}
+	\epigraph{#1}{#2}
+	\vspace*{\fill}
+	\cleardoublepage
+}
