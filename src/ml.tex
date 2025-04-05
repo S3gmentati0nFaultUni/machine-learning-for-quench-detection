@@ -328,7 +328,7 @@ leading to a lower entropy decrease and a higher information gain.
 \emph{Gain ratio} is an alternative to information gain, it is defined as follows
 \begin{equation}
 	\label{eq:gain-ratio}
-	\textsc{GainRatio}(D, a) = \frac{\textsc{Gain}(D, a)}{\textsc{iv}(a)}
+	\textsc{GainRatio}(D, a) = \frac{\textsc{Gain}(D, a)}{\textsc{iv}(a)} \enspace;
 \end{equation}
 the \textsc{iv} function is the \emph{intrinsic value} of feature $a$
 \begin{equation}
@@ -630,6 +630,7 @@ in~\ref{eq:pd-lagrangian}:
 \begin{equation}
 	\label{eq:of}
 	f(\vec{x}) = \vec{w}^\top\vec{x} + b = \sum_{i = 1}^n\alpha_iy_i\vec{x}_i\vec{x} + b
+	\enspace.
 \end{equation}
 Since~\ref{eq:primal} is an optimization problem with inequality constraints, it must satisfy
 Karush-Kuhn-Tucker necessary conditions~\cite{kkt1951}\footnote{For a small ex-cursus on
@@ -798,7 +799,7 @@ We can rewrite~\ref{eq:hd-dual} to use the newly introduced function.
 		 & \max_{\vec{\alpha}}\left(\sum_{i = 1}^n{\alpha_i} - \frac{1}{2}\sum_{i =
 		1}^n\sum_{j = 1}^n{\alpha_i\alpha_j y_i y_j \kappa(\vec{x}_i, \vec{x}_j)}\right) \\
 		 & \text{s.t.} \sum_{i = 1}^n{\alpha_i y_i} = 0 \hspace{10pt} i = 1, \ldots, n
-		 \hspace{10pt} \alpha_i \geq 0 \hspace{3pt} \forall i
+		 \hspace{10pt} \alpha_i \geq 0 \hspace{3pt} \forall i \enspace.
 	\end{aligned}
 \end{equation}
 
@@ -806,7 +807,7 @@ If we solve the problem using the same procedure applied in the beginning of \Cr
 an expression of the hyperplane which is dependent from the kernel function $\kappa$.
 \begin{equation}
 	\label{eq:hd-of}
-	f(\vec{x}) = \sum_{i = 1}^n\alpha_iy_i\kappa(\vec{x}_i, \vec{x}) + b
+	f(\vec{x}) = \sum_{i = 1}^n\alpha_iy_i\kappa(\vec{x}_i, \vec{x}) + b \enspace.
 \end{equation}
 
 Until now we have used the kernel function but without giving a definition for it; that is due to its
@@ -925,7 +926,7 @@ therefore, we only used external indices; for completeness's sake we will includ
 		$a + b + c + d = \binom{n}{2}$, therefore $\textsc{ri}$ divides the number of true
 		positives and negatives $(a, d)$, by all the possibilities:
 		\begin{equation*}
-			\textsc{ri} = \frac{2(a + d)}{n(n - 1)} /enspace.
+			\textsc{ri} = \frac{2(a + d)}{n(n - 1)} \enspace.
 		\end{equation*}
 \end{itemize}
 
