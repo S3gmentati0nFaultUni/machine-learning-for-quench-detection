@@ -414,7 +414,7 @@ denominated the metric 'Hamming score' ($\hs$ in the following), and it computes
 distance between the expected and the predicted label vectors, and then normalizes it.
 \begin{equation}
 	\label{eq:hamming}
-	\hs = 1 - \frac{d_h(\hat{y}, y)}{4} \enspace.
+	\hs = 1 - \frac{d_h(y, \hat{y})}{4} \enspace.
 \end{equation}
 
 \Cref{fig:bdts-qlp} visualizes the performance metrics obtained in the outer loop of a $5\times5$ \ncv\ for the best single tree trained on each coil. The metrics are quite close to each other,
